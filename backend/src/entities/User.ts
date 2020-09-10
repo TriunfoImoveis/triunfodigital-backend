@@ -29,7 +29,7 @@ class User {
     this.name = name;
     this.email = email;
     this.password = password;
-    this.phone = password;
+    this.phone = phone;
     this.admissionDate = admissionDate;
     this.goal = goal;
     this.active = true;
