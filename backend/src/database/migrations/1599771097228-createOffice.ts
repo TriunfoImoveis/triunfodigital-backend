@@ -41,6 +41,6 @@ export default class createOffice1599771097228 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.dropTable('offices');
+    await queryRunner.dropTable('offices');
   }
 }
