@@ -1,4 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+
+import Departament from './Departament';
+import Office from './Office';
 
 @Entity('users')
 class User {
@@ -25,6 +36,14 @@ class User {
 
   @Column({ type: 'boolean', default: true })
   active: boolean;
+
+  @ManyToOne(() => Departament)
+  @JoinColumn({ name: 'departament_id' })
+  departamentId: Departament;
+
+  @ManyToOne(() => Office)
+  @JoinColumn({ name: 'office_id' })
+  officeId: Office;
 
   @CreateDateColumn()
   createdAt: Date;
