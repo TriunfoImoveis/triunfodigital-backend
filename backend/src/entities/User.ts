@@ -39,17 +39,17 @@ class User {
 
   @ManyToOne(() => Departament)
   @JoinColumn({ name: 'departament_id' })
-  departamentId: Departament;
+  departament_id: Departament;
 
   @ManyToOne(() => Office)
   @JoinColumn({ name: 'office_id' })
-  officeId: Office;
+  office_id: Office;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }
 
 export default User;
