@@ -22,7 +22,7 @@ class Departament {
 
   @ManyToOne(() => Subsidiary)
   @JoinColumn({ name: 'subsidiary_id' })
-  subsidiaryId: Subsidiary;
+  subsidiary_id: Subsidiary;
 
   @Column({ type: 'decimal', precision: 14, scale: 2 })
   goal: number;
@@ -31,10 +31,10 @@ class Departament {
   active: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }
 
 export default Departament;
