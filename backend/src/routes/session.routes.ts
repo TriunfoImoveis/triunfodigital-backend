@@ -15,8 +15,6 @@ sessionsRouter.post('/', async (request, response) => {
     office,
   });
 
-  user.password = '';
-
   return response.json({ user, token });
 });
 

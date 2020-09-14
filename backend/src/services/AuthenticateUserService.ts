@@ -3,7 +3,7 @@ import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 
 import authConfig from '../config/auth';
-import AppError from '../errors/AppErrors';
+import AppError from '../errors/AppError';
 
 import User from '../entities/User';
 
@@ -26,7 +26,10 @@ class AuthenticateUserService {
   }: Request): Promise<Response> {
     const userRepository = getRepository(User);
 
-    const user = await userRepository.findOne({ where: { email } });
+    const user = await userRepository.findOne({
+      select: ['departament_id', 'email', 'goal', 'name'],
+      where: { email },
+    });
 
     if (!user) {
       throw new AppError('Incorrect email/password combination.', 401);
