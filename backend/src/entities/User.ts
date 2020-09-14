@@ -29,7 +29,7 @@ class User {
   phone: string;
 
   @Column({ type: 'date' })
-  admissionDate: Date;
+  admission_date: Date;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   goal: number;

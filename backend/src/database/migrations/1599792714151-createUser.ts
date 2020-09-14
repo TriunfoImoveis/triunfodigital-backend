@@ -36,7 +36,7 @@ export default class createUser1599792714151 implements MigrationInterface {
             type: 'varchar(11)',
           },
           {
-            name: 'admissionDate',
+            name: 'admission_date',
             type: 'date',
           },
           {
@@ -52,10 +52,12 @@ export default class createUser1599792714151 implements MigrationInterface {
           {
             name: 'departament_id',
             type: 'uuid',
+            isNullable: true,
           },
           {
             name: 'office_id',
             type: 'uuid',
+            isNullable: true,
           },
           {
             name: 'created_at',
@@ -74,7 +76,7 @@ export default class createUser1599792714151 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'users',
       new TableForeignKey({
-        name: 'DepertamentUsers',
+        name: 'DepartamentUsers',
         columnNames: ['departament_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'departaments',
