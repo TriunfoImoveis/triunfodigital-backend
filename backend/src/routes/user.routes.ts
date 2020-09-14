@@ -4,10 +4,11 @@ import { getRepository } from 'typeorm';
 import User from '../entities/User';
 import CreateUserService from '../services/CreateUserService';
 
+import AppError from '../errors/AppError';
 
 const usersRouter = Router();
 
-usersRouter.get('/', async (request, response) =>{
+usersRouter.get('/', async (request, response) => {
   const usersRepository = getRepository(User);
 
   const usersList = await usersRepository.find({
@@ -32,41 +33,31 @@ usersRouter.get('/', async (request, response) =>{
 });
 
 usersRouter.post('/', async (request, response) => {
-  try {
-      const {
-        name,
-        email,
-        password,
-        phone,
-        admission_date,
-        goal,
-        departament_id,
-        office_id,
-      } = request.body;
+  const {
+    name,
+    email,
+    password,
+    phone,
+    admission_date,
+    goal,
+    departament_id,
+    office_id,
+  } = request.body;
 
-      const createUser = new CreateUserService();
+  const createUser = new CreateUserService();
 
-      await createUser.execute({
-        name,
-        email,
-        password,
-        phone,
-        admission_date,
-        goal,
-        departament_id,
-        office_id,
-      });
+  const newUser = await createUser.execute({
+    name,
+    email,
+    password,
+    phone,
+    admission_date,
+    goal,
+    departament_id,
+    office_id,
+  });
 
-      return response.status(201).json({
-        message: 'User created with success.'
-      });
-
-  } catch (e) {
-      return response.status(400).json({
-        status: 'Bad Request',
-        message: e.message,
-      });
-  }
+  return response.json(newUser);
 });
 
 export default usersRouter;

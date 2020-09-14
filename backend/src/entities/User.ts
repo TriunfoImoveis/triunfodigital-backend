@@ -37,13 +37,19 @@ class User {
   @Column({ type: 'boolean', default: true })
   active: boolean;
 
+  @Column()
+  departament_id: string;
+
   @ManyToOne(() => Departament)
   @JoinColumn({ name: 'departament_id' })
-  departament_id: Departament;
+  departament: Departament;
+
+  @Column()
+  office_id: string;
 
   @ManyToOne(() => Office)
   @JoinColumn({ name: 'office_id' })
-  office_id: Office;
+  office: Office;
 
   @CreateDateColumn()
   created_at: Date;

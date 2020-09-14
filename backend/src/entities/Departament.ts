@@ -20,9 +20,12 @@ class Departament {
   @Column({ type: 'varchar', length: 50 })
   initials: string;
 
+  @Column()
+  subsidiary_id: string;
+
   @ManyToOne(() => Subsidiary)
   @JoinColumn({ name: 'subsidiary_id' })
-  subsidiary_id: Subsidiary;
+  subsidiary: Subsidiary;
 
   @Column({ type: 'decimal', precision: 14, scale: 2 })
   goal: number;
