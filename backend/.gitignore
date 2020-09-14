@@ -103,5 +103,4 @@ dist
 # TernJS port file
 .tern-port
 
-credencials.json
-*.xlsx
+ormconfig.json
