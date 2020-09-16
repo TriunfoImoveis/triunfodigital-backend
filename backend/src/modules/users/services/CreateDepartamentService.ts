@@ -12,7 +12,7 @@ interface Request {
   subsidiary_id: string;
 }
 
-class CreateUserService {
+class CreateDepartamenrService {
   public async execute({
     name,
     initials,
@@ -66,4 +66,4 @@ class CreateUserService {
   }
 }
 
-export default CreateUserService;
+export default CreateDepartamenrService;

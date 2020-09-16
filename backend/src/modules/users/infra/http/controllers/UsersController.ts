@@ -1,29 +1,13 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
-import User from '@modules/users/infra/typeorm/entities/User';
 
 import CreateUserService from '@modules/users/services/CreateUserService';
-import UpdateUser from '@modules/users/services/UpdateUser';
+import UpdateUserService from '@modules/users/services/UpdateUserService';
+import UsersRepository from '../../typeorm/repositories/UsersRepository';
 
 class UsersController {
   async index(request: Request, response: Response): Promise<Response> {
-    const usersRepository = getRepository(User);
-
-    const usersList = await usersRepository.find({
-      select: [
-        'name',
-        'email',
-        'phone',
-        'admission_date',
-        'goal',
-        'departament_id',
-        'office_id',
-      ],
-      where: {
-        active: true,
-      },
-    });
-
+    const usersRepository = new UsersRepository();
+    const usersList = await usersRepository.findUsersActive();
     return response.json(usersList);
   }
 
@@ -38,8 +22,8 @@ class UsersController {
       departament_id,
       office_id,
     } = request.body;
-
-    const createUser = new CreateUserService();
+    const usersRepository = new UsersRepository();
+    const createUser = new CreateUserService(usersRepository);
 
     const newUser = await createUser.execute({
       name,
@@ -57,8 +41,8 @@ class UsersController {
 
   async update(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
-
-    const updateUser = new UpdateUser();
+    const usersRepository = new UsersRepository();
+    const updateUser = new UpdateUserService(usersRepository);
     const updatedUser = await updateUser.excute({
       user_id: id,
       body: request.body,

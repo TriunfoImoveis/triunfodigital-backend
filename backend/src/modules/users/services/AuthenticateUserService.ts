@@ -1,19 +1,17 @@
-import { getRepository } from 'typeorm';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 
 import authConfig from '@config/auth';
 import AppError from '@shared/errors/AppError';
+import IUserRepository from '../repositories/IUserRepository';
 
-import User from '@modules/users/infra/typeorm/entities/User';
-
-interface Request {
+interface IRequest {
   email: string;
   password: string;
   office: string;
 }
 
-interface UserResponse {
+interface IUserResponse {
   id: string;
   name: string;
   email: string;
@@ -23,21 +21,19 @@ interface UserResponse {
 }
 
 interface Response {
-  userAuth: UserResponse;
+  userAuth: IUserResponse;
   token: string;
 }
 
 class AuthenticateUserService {
+  constructor(private usersRepository: IUserRepository) {}
+
   public async execute({
     email,
     password,
     office,
-  }: Request): Promise<Response> {
-    const userRepository = getRepository(User);
-
-    const user = await userRepository.findOne({
-      where: { email },
-    });
+  }: IRequest): Promise<Response> {
+    const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
       throw new AppError('Incorrect email/password combination.', 401);
@@ -62,7 +58,7 @@ class AuthenticateUserService {
       expiresIn,
     });
 
-    const userAuth: UserResponse = {
+    const userAuth: IUserResponse = {
       id: user.id,
       name: user.name,
       email: user.email,

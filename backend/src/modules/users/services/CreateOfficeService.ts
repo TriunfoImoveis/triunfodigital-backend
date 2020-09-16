@@ -1,35 +1,28 @@
-import { getRepository } from 'typeorm';
-
 import AppError from '@shared/errors/AppError';
 import Office from '../infra/typeorm/entities/Office';
+import IOfficeRepository from '../repositories/IOfficeRepository';
 
 interface Request {
   name: string;
 }
 
 class CreateOfficeService {
-  public async execute({ name }: Request): Promise<Office> {
-    const officeRepository = getRepository(Office);
+  constructor(private officesRepository: IOfficeRepository) {}
 
-    const checkOfficeExist = await officeRepository.findOne({
-      where: { name },
-    });
+  public async execute({ name }: Request): Promise<Office> {
+    const checkOfficeExist = await this.officesRepository.findByName(name);
 
     if (checkOfficeExist) {
       throw new AppError('Office already used.');
     }
 
-    const office = officeRepository.create({
-      name,
-    });
+    const office = await this.officesRepository.create({ name });
 
     if (!office) {
       throw new AppError('error when creating the office, check your data');
     }
 
-    await officeRepository.save(office);
-
-    return office || undefined;
+    return office;
   }
 }
 
