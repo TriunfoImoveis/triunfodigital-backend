@@ -1,7 +1,9 @@
 import { getRepository } from 'typeorm';
+import { validate } from 'uuid';
 
 import AppError from '../errors/AppError';
 import Departament from '../entities/Departament';
+import Subsidiary from '../entities/Subsidiary';
 
 interface Request {
   name: string;
@@ -18,13 +20,24 @@ class CreateUserService {
     subsidiary_id,
   }: Request): Promise<Departament> {
     const departamentRepository = getRepository(Departament);
+    const subsidiaryRepository = getRepository(Subsidiary);
 
-    const checkdepartamentExist = await departamentRepository.findOne({
+    const checkDepartamentExist = await departamentRepository.findOne({
       where: { name },
     });
 
-    if (checkdepartamentExist) {
-      throw new AppError('departament already used.');
+    if (checkDepartamentExist) {
+      throw new AppError('Departament already exist.');
+    }
+
+    const subsidiaryIsValid = validate(subsidiary_id);
+    if (!subsidiaryIsValid) {
+      throw new AppError('Subsidiary id invalid.');
+    }
+
+    const subsidiaryNotExist = await subsidiaryRepository.findOne(subsidiary_id);
+    if (!subsidiaryNotExist) {
+      throw new AppError('Subsidiary not exist.');
     }
 
     let goalDepartament = goal;
