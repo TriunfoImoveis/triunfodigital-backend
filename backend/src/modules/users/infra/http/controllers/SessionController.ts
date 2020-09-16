@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import AuthenticateUserService from '../services/AuthenticateUserService';
+import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
 
 class SessionController {
   async create(request: Request, response: Response): Promise<Response> {

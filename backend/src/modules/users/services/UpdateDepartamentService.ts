@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 
-import AppError from '../errors/AppError';
-import Departament from '../entities/Departament';
+import AppError from '@shared/errors/AppError';
+import Departament from '../infra/typeorm/entities/Departament';
 
 interface RequestDTO {
   id: string;

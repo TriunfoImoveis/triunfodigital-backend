@@ -1,8 +1,8 @@
 import { getRepository } from 'typeorm';
 
-import AppError from '../errors/AppError';
+import AppError from '@shared/errors/AppError';
 
-import User from '../entities/User';
+import User from '../infra/typeorm/entities/User';
 
 interface Request {
   user_id: string;

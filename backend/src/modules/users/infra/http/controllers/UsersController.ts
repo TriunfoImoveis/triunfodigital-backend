@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
-import User from '../entities/User';
+import User from '@modules/users/infra/typeorm/entities/User';
 
-import CreateUserService from '../services/CreateUserService';
-import UpdateUser from '../services/UpdateUser';
+import CreateUserService from '@modules/users/services/CreateUserService';
+import UpdateUser from '@modules/users/services/UpdateUser';
 
 class UsersController {
   async index(request: Request, response: Response): Promise<Response> {

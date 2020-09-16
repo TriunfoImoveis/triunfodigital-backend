@@ -1,9 +1,9 @@
 import { getRepository } from 'typeorm';
-import { validate } from 'uuid';
+import { isUuid } from 'uuidv4';
 
-import AppError from '../errors/AppError';
-import Departament from '../entities/Departament';
-import Subsidiary from '../entities/Subsidiary';
+import AppError from '@shared/errors/AppError';
+import Departament from '../infra/typeorm/entities/Departament';
+import Subsidiary from '../infra/typeorm/entities/Subsidiary';
 
 interface Request {
   name: string;
@@ -30,12 +30,14 @@ class CreateUserService {
       throw new AppError('Departament already exist.');
     }
 
-    const subsidiaryIsValid = validate(subsidiary_id);
+    const subsidiaryIsValid = isUuid(subsidiary_id);
     if (!subsidiaryIsValid) {
       throw new AppError('Subsidiary id invalid.');
     }
 
-    const subsidiaryNotExist = await subsidiaryRepository.findOne(subsidiary_id);
+    const subsidiaryNotExist = await subsidiaryRepository.findOne(
+      subsidiary_id,
+    );
     if (!subsidiaryNotExist) {
       throw new AppError('Subsidiary not exist.');
     }

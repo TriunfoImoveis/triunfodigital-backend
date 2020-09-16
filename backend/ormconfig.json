@@ -6,13 +6,13 @@
   "password": "docker",
   "database": "triunfo_digital_db",
   "entities": [
-    "./src/entities/*.ts"
+    "./src/modules/*/infra/typeorm/entities/*.ts"
  ],
   "migrations": [
-    "./src/database/migrations/*.ts"
+    "./src/shared/infra/typeorm/migrations/*.ts"
   ],
   "cli": {
-    "migrationsDir": "./src/database/migrations",
-    "entitiesDir": ".src/entities"
+    "migrationsDir": "./src/shared/infra/typeorm/migrations",
+    "entitiesDir": "./src/modules/*/infra/typeorm/entities"
   }
 }

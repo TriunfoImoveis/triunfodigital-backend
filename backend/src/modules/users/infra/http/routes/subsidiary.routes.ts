@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { getRepository } from 'typeorm';
 
-import AppError from '../errors/AppError';
-import Subsidiary from '../entities/Subsidiary';
-import idValidUuid from '../middlewares/idValidedUuid';
-import UpdateSubsidiaryService from '../services/UpdateSubsidiaryService';
+import AppError from '@shared/errors/AppError';
+import Subsidiary from '@modules/users/infra/typeorm/entities/Subsidiary';
+import idValidUuid from '@shared/infra/http/middlewares/idValidedUuid';
+import UpdateSubsidiaryService from '@modules/users/services/UpdateSubsidiaryService';
 
 const subsidiaryRouter = Router();
 

@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { getRepository } from 'typeorm';
 
-import AppError from '../errors/AppError';
-import Office from '../entities/Office';
-import CreateOfficeService from '../services/CreateOfficeService';
-import idValidUuid from '../middlewares/idValidedUuid';
-import UpdateOfficeService from '../services/UpdateOfficeService';
+import AppError from '@shared/errors/AppError';
+import idValidUuid from '@shared/infra/http/middlewares/idValidedUuid';
+import CreateOfficeService from '@modules/users/services/CreateOfficeService';
+import UpdateOfficeService from '@modules/users/services/UpdateOfficeService';
+import Office from '@modules/users/infra/typeorm/entities/Office';
 
 const officeRouter = Router();
 

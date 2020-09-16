@@ -1,7 +1,7 @@
-import { getRepository } from "typeorm";
+import { getRepository } from 'typeorm';
 
-import Subsidiary from "../entities/Subsidiary";
-import AppError from '../errors/AppError';
+import AppError from '@shared/errors/AppError';
+import Subsidiary from '../infra/typeorm/entities/Subsidiary';
 
 interface RequestDTO {
   id: string;
@@ -9,7 +9,10 @@ interface RequestDTO {
 }
 
 class UpdateSubsidiaryService {
-  public async execute({ id, body }: RequestDTO): Promise<Subsidiary | undefined> {
+  public async execute({
+    id,
+    body,
+  }: RequestDTO): Promise<Subsidiary | undefined> {
     const subsidiaryRepository = getRepository(Subsidiary);
     const checkSubsidiaryExist = await subsidiaryRepository.findOne(id);
 

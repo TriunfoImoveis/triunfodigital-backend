@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 
-import AppError from '../errors/AppError';
-import Office from '../entities/Office';
+import AppError from '@shared/errors/AppError';
+import Office from '../infra/typeorm/entities/Office';
 
 interface Request {
   name: string;
