@@ -13,8 +13,17 @@ interface Request {
   office: string;
 }
 
+interface UserResponse {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  admission_date: Date;
+  goal: number;
+}
+
 interface Response {
-  user: User;
+  userAuth: UserResponse;
   token: string;
 }
 
@@ -27,7 +36,6 @@ class AuthenticateUserService {
     const userRepository = getRepository(User);
 
     const user = await userRepository.findOne({
-      select: ['departament_id', 'email', 'goal', 'name'],
       where: { email },
     });
 
@@ -41,7 +49,7 @@ class AuthenticateUserService {
       throw new AppError('Incorrect email/password combination.', 401);
     }
 
-    if (office !== user.office_id.name) {
+    if (office !== user.office_id) {
       throw new AppError(
         'Incorrect email/password and office combination',
         401,
@@ -54,8 +62,16 @@ class AuthenticateUserService {
       expiresIn,
     });
 
+    const userAuth: UserResponse = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      admission_date: user.admission_date,
+      goal: user.goal,
+    };
     return {
-      user,
+      userAuth,
       token,
     };
   }

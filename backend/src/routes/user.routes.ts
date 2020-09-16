@@ -4,8 +4,6 @@ import { getRepository } from 'typeorm';
 import User from '../entities/User';
 import CreateUserService from '../services/CreateUserService';
 
-import AppError from '../errors/AppError';
-
 const usersRouter = Router();
 
 usersRouter.get('/', async (request, response) => {
@@ -20,9 +18,6 @@ usersRouter.get('/', async (request, response) => {
       'goal',
       'departament_id',
       'office_id',
-      'active',
-      'created_at',
-      'updated_at',
     ],
     where: {
       active: true,
@@ -58,6 +53,10 @@ usersRouter.post('/', async (request, response) => {
   });
 
   return response.json(newUser);
+});
+
+usersRouter.patch('/:id', async (request, response) => {
+  // código da atualização
 });
 
 export default usersRouter;
