@@ -17,7 +17,6 @@ officeRouter.get('/', async (request, response) => {
   return response.json(officesList);
 });
 
-
 officeRouter.post('/', async (request, response) => {
   const { name } = request.body;
 
@@ -27,23 +26,19 @@ officeRouter.post('/', async (request, response) => {
   return response.json(office);
 });
 
-
-officeRouter.get('/:id', idValidUuid, async (request, response) =>{
-
+officeRouter.get('/:id', idValidUuid, async (request, response) => {
   const officeRepository = getRepository(Office);
 
   const office = await officeRepository.findOne(request.params.id);
 
-  if (!office){
+  if (!office) {
     throw new AppError('Office not exist.');
   }
 
   return response.json(office);
 });
 
-
 officeRouter.put('/:id', idValidUuid, async (request, response) => {
-
   const officeUpdateService = new UpdateOfficeService();
   const officeUpdated = await officeUpdateService.execute({
     id: request.params.id,
@@ -53,9 +48,7 @@ officeRouter.put('/:id', idValidUuid, async (request, response) => {
   return response.json(officeUpdated);
 });
 
-
 officeRouter.delete('/:id', idValidUuid, async (request, response) => {
-
   const officeRepository = getRepository(Office);
   await officeRepository.delete(request.params.id);
 

@@ -1,62 +1,15 @@
 import { Router } from 'express';
-import { getRepository } from 'typeorm';
 
-import User from '../entities/User';
-import CreateUserService from '../services/CreateUserService';
+import UsersController from '../controllers/UsersController';
+import idValidUuid from '../middlewares/idValidedUuid';
 
 const usersRouter = Router();
+const usersController = new UsersController();
 
-usersRouter.get('/', async (request, response) => {
-  const usersRepository = getRepository(User);
+usersRouter.get('/', usersController.index);
 
-  const usersList = await usersRepository.find({
-    select: [
-      'name',
-      'email',
-      'phone',
-      'admission_date',
-      'goal',
-      'departament_id',
-      'office_id',
-    ],
-    where: {
-      active: true,
-    },
-  });
+usersRouter.post('/', usersController.create);
 
-  return response.json(usersList);
-});
-
-usersRouter.post('/', async (request, response) => {
-  const {
-    name,
-    email,
-    password,
-    phone,
-    admission_date,
-    goal,
-    departament_id,
-    office_id,
-  } = request.body;
-
-  const createUser = new CreateUserService();
-
-  const newUser = await createUser.execute({
-    name,
-    email,
-    password,
-    phone,
-    admission_date,
-    goal,
-    departament_id,
-    office_id,
-  });
-
-  return response.json(newUser);
-});
-
-usersRouter.patch('/:id', async (request, response) => {
-  // código da atualização
-});
+usersRouter.patch('/:id', idValidUuid, usersController.update);
 
 export default usersRouter;

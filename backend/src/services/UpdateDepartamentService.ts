@@ -1,8 +1,7 @@
-import { getRepository } from "typeorm";
-import { validate } from 'uuid';
+import { getRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
-import Departament from "../entities/Departament";
+import Departament from '../entities/Departament';
 
 interface RequestDTO {
   id: string;
@@ -10,7 +9,10 @@ interface RequestDTO {
 }
 
 class UpdateDepartamentService {
-  public async execute({ id, body }: RequestDTO): Promise<Departament | undefined> {
+  public async execute({
+    id,
+    body,
+  }: RequestDTO): Promise<Departament | undefined> {
     const departamentRepository = getRepository(Departament);
     const checkDepartamentExist = await departamentRepository.findOne(id);
 

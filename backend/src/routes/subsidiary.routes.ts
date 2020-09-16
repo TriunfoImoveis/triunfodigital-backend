@@ -16,7 +16,6 @@ subsidiaryRouter.get('/', async (request, response) => {
   return response.json(subsidiarys);
 });
 
-
 subsidiaryRouter.post('/', async (request, response) => {
   const { name, goal } = request.body;
 
@@ -28,7 +27,6 @@ subsidiaryRouter.post('/', async (request, response) => {
 
   return response.json(newSubsidiary);
 });
-
 
 subsidiaryRouter.get('/:id', idValidUuid, async (request, response) => {
   const subsidiaryRepository = getRepository(Subsidiary);
@@ -42,7 +40,6 @@ subsidiaryRouter.get('/:id', idValidUuid, async (request, response) => {
   return response.json(subsidiary);
 });
 
-
 subsidiaryRouter.put('/:id', idValidUuid, async (request, response) => {
   const subsidiaryUpdateService = new UpdateSubsidiaryService();
   const subsidiaryUpdated = await subsidiaryUpdateService.execute({
@@ -52,7 +49,6 @@ subsidiaryRouter.put('/:id', idValidUuid, async (request, response) => {
 
   return response.json(subsidiaryUpdated);
 });
-
 
 subsidiaryRouter.delete('/:id', idValidUuid, async (request, response) => {
   const subsidiaryRepository = getRepository(Subsidiary);
