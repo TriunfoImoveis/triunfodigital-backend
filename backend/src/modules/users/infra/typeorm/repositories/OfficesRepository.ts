@@ -21,7 +21,11 @@ class OfficesRepository implements IOfficeRepository {
   }
 
   async findByName(name: string): Promise<Office | undefined> {
-    const office = await this.ormRepository.findOne(name);
+    const office = await this.ormRepository.findOne({
+      where: {
+        name,
+      },
+    });
     return office;
   }
 

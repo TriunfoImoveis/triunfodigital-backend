@@ -1,61 +1,19 @@
 import { Router } from 'express';
-import { getRepository } from 'typeorm';
 
-import AppError from '@shared/errors/AppError';
-import Subsidiary from '@modules/users/infra/typeorm/entities/Subsidiary';
 import idValidUuid from '@shared/infra/http/middlewares/idValidedUuid';
-import UpdateSubsidiaryService from '@modules/users/services/UpdateSubsidiaryService';
+import SubsidiaryController from '@modules/users/infra/http/controllers/SubsidiaryController';
 
 const subsidiaryRouter = Router();
+const subsidiaryController = new SubsidiaryController();
 
-subsidiaryRouter.get('/', async (request, response) => {
-  const subsidiaryRepository = getRepository(Subsidiary);
+subsidiaryRouter.get('/', subsidiaryController.index);
 
-  const subsidiarys = await subsidiaryRepository.find();
+subsidiaryRouter.get('/:id', idValidUuid, subsidiaryController.show);
 
-  return response.json(subsidiarys);
-});
+subsidiaryRouter.post('/', subsidiaryController.create);
 
-subsidiaryRouter.post('/', async (request, response) => {
-  const { name, goal } = request.body;
+subsidiaryRouter.put('/:id', idValidUuid, subsidiaryController.update);
 
-  const subsidiaryRepository = getRepository(Subsidiary);
-
-  const subsidiary = subsidiaryRepository.create({ name, goal });
-
-  const newSubsidiary = await subsidiaryRepository.save(subsidiary);
-
-  return response.json(newSubsidiary);
-});
-
-subsidiaryRouter.get('/:id', idValidUuid, async (request, response) => {
-  const subsidiaryRepository = getRepository(Subsidiary);
-
-  const subsidiary = await subsidiaryRepository.findOne(request.params.id);
-
-  if (!subsidiary) {
-    throw new AppError('Subsidiary not exist.');
-  }
-
-  return response.json(subsidiary);
-});
-
-subsidiaryRouter.put('/:id', idValidUuid, async (request, response) => {
-  const subsidiaryUpdateService = new UpdateSubsidiaryService();
-  const subsidiaryUpdated = await subsidiaryUpdateService.execute({
-    id: request.params.id,
-    body: request.body,
-  });
-
-  return response.json(subsidiaryUpdated);
-});
-
-subsidiaryRouter.delete('/:id', idValidUuid, async (request, response) => {
-  const subsidiaryRepository = getRepository(Subsidiary);
-
-  await subsidiaryRepository.delete(request.params.id);
-
-  return response.status(204).send();
-});
+subsidiaryRouter.delete('/:id', idValidUuid, subsidiaryController.delete);
 
 export default subsidiaryRouter;

@@ -10,10 +10,7 @@ class CreateOfficeService {
   constructor(private officesRepository: IOfficeRepository) {}
 
   public async execute({ name }: IRequest): Promise<Office> {
-    const nameUppercase = name.toUpperCase();
-    const checkOfficeExist = await this.officesRepository.findByName(
-      nameUppercase,
-    );
+    const checkOfficeExist = await this.officesRepository.findByName(name);
 
     if (checkOfficeExist) {
       throw new AppError('Office already used.');

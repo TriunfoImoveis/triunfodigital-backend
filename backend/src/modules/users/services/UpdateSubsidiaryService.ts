@@ -1,34 +1,36 @@
-import { getRepository } from 'typeorm';
-
 import AppError from '@shared/errors/AppError';
+import ISubsidiaryRepository from '@modules/users/repositories/ISubsidiaryRepository';
 import Subsidiary from '../infra/typeorm/entities/Subsidiary';
+import IUpdateSubsidiaryDTO from '../dtos/IUpdateSubsidiaryDTO';
 
-interface RequestDTO {
+interface IRequest {
   id: string;
-  body: Object;
+  subsidiary: IUpdateSubsidiaryDTO;
 }
 
 class UpdateSubsidiaryService {
+  constructor(private subsidiariesRepository: ISubsidiaryRepository) {}
+
   public async execute({
     id,
-    body,
-  }: RequestDTO): Promise<Subsidiary | undefined> {
-    const subsidiaryRepository = getRepository(Subsidiary);
-    const checkSubsidiaryExist = await subsidiaryRepository.findOne(id);
+    subsidiary,
+  }: IRequest): Promise<Subsidiary | undefined> {
+    const checkSubsidiaryExist = await this.subsidiariesRepository.findById(id);
 
     if (!checkSubsidiaryExist) {
       throw new AppError('Subsidiary not exist.');
     }
 
-    const subsidiaryUpdated = await subsidiaryRepository.update(id, body);
+    const subsidiaryUpdated = await this.subsidiariesRepository.update(
+      id,
+      subsidiary,
+    );
 
     if (!subsidiaryUpdated) {
       throw new AppError('error when updating the subsidiary, check your data');
     }
 
-    const subsidiary = await subsidiaryRepository.findOne(id);
-
-    return subsidiary;
+    return subsidiaryUpdated;
   }
 }
 
