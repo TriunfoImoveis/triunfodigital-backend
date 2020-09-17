@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 
-import UpdateUserService from '@modules/users/services/UpdateOfficeService';
-import CreateUserService from '@modules/users/services/CreateOfficeService';
 import CreateOfficeService from '@modules/users/services/CreateOfficeService';
-import UsersRepository from '../../typeorm/repositories/UsersRepository';
+import AppError from '@shared/errors/AppError';
+import UpdateOfficeService from '@modules/users/services/UpdateOfficeService';
 import OfficesRepository from '../../typeorm/repositories/OfficesRepository';
 
 class OfficeController {
@@ -14,10 +13,19 @@ class OfficeController {
     return response.json(officesList);
   }
 
+  async show(request: Request, response: Response): Promise<Response> {
+    const officesRepository = new OfficesRepository();
+    const office = await officesRepository.findById(request.params.id);
+
+    if (!office) {
+      throw new AppError('Office not exist.');
+    }
+
+    return response.json(office);
+  }
+
   async create(request: Request, response: Response): Promise<Response> {
-    const {
-      name,
-    } = request.body;
+    const { name } = request.body;
     const officesRepository = new OfficesRepository();
     const createOffice = new CreateOfficeService(officesRepository);
 
@@ -28,16 +36,23 @@ class OfficeController {
     return response.json(newOffice);
   }
 
-  // async update(request: Request, response: Response): Promise<Response> {
-  //   const { id } = request.params;
-  //   const usersRepository = new UsersRepository();
-  //   const updateUser = new UpdateUserService(usersRepository);
-  //   const updatedUser = await updateUser.excute({
-  //     user_id: id,
-  //     body: request.body,
-  //   });
+  async update(request: Request, response: Response): Promise<Response> {
+    const { id } = request.params;
+    const officesRepository = new OfficesRepository();
+    const updateOffice = new UpdateOfficeService(officesRepository);
+    const updatedOffice = await updateOffice.execute({
+      id,
+      body: request.body,
+    });
 
-    return response.json(updatedUser);
+    return response.json(updatedOffice);
+  }
+
+  async delete(request: Request, response: Response): Promise<Response> {
+    const officesRepository = new OfficesRepository();
+    await officesRepository.delete(request.params.id);
+
+    return response.status(204).send();
   }
 }
 

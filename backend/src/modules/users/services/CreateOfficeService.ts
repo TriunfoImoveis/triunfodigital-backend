@@ -2,15 +2,18 @@ import AppError from '@shared/errors/AppError';
 import Office from '../infra/typeorm/entities/Office';
 import IOfficeRepository from '../repositories/IOfficeRepository';
 
-interface Request {
+interface IRequest {
   name: string;
 }
 
 class CreateOfficeService {
   constructor(private officesRepository: IOfficeRepository) {}
 
-  public async execute({ name }: Request): Promise<Office> {
-    const checkOfficeExist = await this.officesRepository.findByName(name);
+  public async execute({ name }: IRequest): Promise<Office> {
+    const nameUppercase = name.toUpperCase();
+    const checkOfficeExist = await this.officesRepository.findByName(
+      nameUppercase,
+    );
 
     if (checkOfficeExist) {
       throw new AppError('Office already used.');

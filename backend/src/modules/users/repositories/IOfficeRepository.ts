@@ -8,4 +8,5 @@ export default interface IOfficeRepository {
   findOfficesActive(): Promise<Office[] | undefined>;
   create(data: ICreateOfficeDTO): Promise<Office>;
   update(office: IUpdateOfficeDTO): Promise<Office>;
+  delete(id: string): Promise<void>;
 }

@@ -40,6 +40,10 @@ class OfficesRepository implements IOfficeRepository {
     const officeUpdatted = await this.ormRepository.save(office);
     return officeUpdatted;
   }
+
+  async delete(id: string): Promise<void> {
+    await this.ormRepository.delete(id);
+  }
 }
 
 export default OfficesRepository;
