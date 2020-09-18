@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
   html, body, #root {
     font-size: 62.5%; /* 1rem = 10px */
     height: 100%;
+    font-family: 'Roboto';
   }
   body {
     background: #C32925;
@@ -19,7 +20,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body, input, button {
     font-family: 'Roboto', -apple - system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans - serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size: 16px;
+    font-size: 1.6rem;
   }
   input, button {
     cursor: pointer;
