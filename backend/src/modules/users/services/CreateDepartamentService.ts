@@ -1,44 +1,36 @@
-import { getRepository } from 'typeorm';
-import { isUuid } from 'uuidv4';
+import { validate } from 'uuid';
 
 import AppError from '@shared/errors/AppError';
 import Departament from '../infra/typeorm/entities/Departament';
-import Subsidiary from '../infra/typeorm/entities/Subsidiary';
+import IDepartamentRepository from '../repositories/IDepartamentRepository';
+import ICreateDepartamentDTO from '../dtos/ICreateDepartamentDTO';
+import ISubsidiaryRepository from '../repositories/ISubsidiaryRepository';
 
-interface Request {
-  name: string;
-  initials: string;
-  goal?: number;
-  subsidiary_id: string;
-}
+class CreateDepartamentService {
+  constructor(
+    private departamentsRepository: IDepartamentRepository,
+    private subsidiaryRepository: ISubsidiaryRepository
+  ){}
 
-class CreateDepartamenrService {
   public async execute({
     name,
     initials,
     goal,
     subsidiary_id,
-  }: Request): Promise<Departament> {
-    const departamentRepository = getRepository(Departament);
-    const subsidiaryRepository = getRepository(Subsidiary);
+  }: ICreateDepartamentDTO): Promise<Departament | undefined> {
+    const checkDepartamentExist = await this.departamentsRepository.findByNameAndSubsidiary(name, subsidiary_id);
 
-    const checkDepartamentExist = await departamentRepository.findOne({
-      where: { name },
-    });
-
-    if (checkDepartamentExist) {
-      throw new AppError('Departament already exist.');
+    if (checkDepartamentExist.length !== 0) {
+      throw new AppError('Departament already exist in this Subsidiary.');
     }
 
-    const subsidiaryIsValid = isUuid(subsidiary_id);
+    const subsidiaryIsValid = validate(subsidiary_id);
     if (!subsidiaryIsValid) {
       throw new AppError('Subsidiary id invalid.');
     }
 
-    const subsidiaryNotExist = await subsidiaryRepository.findOne(
-      subsidiary_id,
-    );
-    if (!subsidiaryNotExist) {
+    const checkSubsidiaryExist = await this.subsidiaryRepository.findById(subsidiary_id);
+    if (!checkSubsidiaryExist) {
       throw new AppError('Subsidiary not exist.');
     }
 
@@ -47,7 +39,7 @@ class CreateDepartamenrService {
       goalDepartament = 0;
     }
 
-    const departament = departamentRepository.create({
+    const departament = await this.departamentsRepository.create({
       name,
       initials,
       goal: goalDepartament,
@@ -60,10 +52,8 @@ class CreateDepartamenrService {
       );
     }
 
-    await departamentRepository.save(departament);
-
-    return departament || undefined;
+    return departament;
   }
 }
 
-export default CreateDepartamenrService;
+export default CreateDepartamentService;

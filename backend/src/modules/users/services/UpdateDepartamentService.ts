@@ -1,20 +1,21 @@
-import { getRepository } from 'typeorm';
-
 import AppError from '@shared/errors/AppError';
-import Departament from '../infra/typeorm/entities/Departament';
+import Departament from '@modules/users/infra/typeorm/entities/Departament';
+import IUpdateDepartamentDTO from '@modules/users/dtos/IUpdateDepartamentDTO';
+import IDepartamentRepository from '@modules/users/repositories/IDepartamentRepository';
 
-interface RequestDTO {
+interface IRequestDTO {
   id: string;
-  body: Object;
+  data: IUpdateDepartamentDTO;
 }
 
 class UpdateDepartamentService {
+  constructor(private departamentsRepository: IDepartamentRepository) {}
+
   public async execute({
     id,
-    body,
-  }: RequestDTO): Promise<Departament | undefined> {
-    const departamentRepository = getRepository(Departament);
-    const checkDepartamentExist = await departamentRepository.findOne(id);
+    data,
+  }: IRequestDTO): Promise<Departament | undefined> {
+    const checkDepartamentExist = await this.departamentsRepository.findById(id);
 
     if (!checkDepartamentExist) {
       throw new AppError('Departament not exist.');
@@ -25,9 +26,9 @@ class UpdateDepartamentService {
     //   // const subsidiaryIsValid = validate();
     // }
 
-    await departamentRepository.update(id, body);
-
-    const departamentUpdated = await departamentRepository.findOne(id);
+    const departamentUpdated = await this.departamentsRepository.update(
+      id, data
+    );
 
     return departamentUpdated;
   }
