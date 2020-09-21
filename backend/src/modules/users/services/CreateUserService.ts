@@ -1,9 +1,9 @@
 import { hash } from 'bcryptjs';
 
 import AppError from '@shared/errors/AppError';
-import User from '../infra/typeorm/entities/User';
-import IUserRepository from '../repositories/IUserRepository';
-import ICreateUsersDTO from '../dtos/ICreateUsersDTO';
+import User from '@modules/users/infra/typeorm/entities/User';
+import IUserRepository from '@modules/users/repositories/IUserRepository';
+import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
 
 class CreateUserService {
   constructor(private usersRepository: IUserRepository) {}

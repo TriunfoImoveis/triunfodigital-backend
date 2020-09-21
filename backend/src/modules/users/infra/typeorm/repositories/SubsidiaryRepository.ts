@@ -1,8 +1,9 @@
 import { getRepository, Repository } from 'typeorm';
+
 import ICreateSubsidiaryDTO from '@modules/users/dtos/ICreateSubsidiaryDTO';
 import IUpdateOfficeDTO from '@modules/users/dtos/IUpdateOfficeDTO';
 import ISubsidiaryRepository from '@modules/users/repositories/ISubsidiaryRepository';
-import Subsidiary from '../entities/Subsidiary';
+import Subsidiary from '@modules/users/infra/typeorm/entities/Subsidiary';
 
 class SubsidiaryRepository implements ISubsidiaryRepository {
   private ormRepository: Repository<Subsidiary>;

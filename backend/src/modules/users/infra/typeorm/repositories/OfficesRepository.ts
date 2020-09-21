@@ -1,8 +1,9 @@
+import { getRepository, Repository } from 'typeorm';
+
 import ICreateOfficeDTO from '@modules/users/dtos/ICreateOfficeDTO';
 import IUpdateOfficeDTO from '@modules/users/dtos/IUpdateOfficeDTO';
 import IOfficeRepository from '@modules/users/repositories/IOfficeRepository';
-import { getRepository, Repository } from 'typeorm';
-import Office from '../entities/Office';
+import Office from '@modules/users/infra/typeorm/entities/Office';
 
 class OfficesRepository implements IOfficeRepository {
   private ormRepository: Repository<Office>;

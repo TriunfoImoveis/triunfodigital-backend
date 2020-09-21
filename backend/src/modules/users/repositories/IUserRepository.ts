@@ -1,6 +1,6 @@
 import User from '@modules/users/infra/typeorm/entities/User';
-import ICreateUsersDTO from '../dtos/ICreateUsersDTO';
-import IUpdateUserDTO from '../dtos/IUpdateUserDTO';
+import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
+import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 
 export default interface IUserRepository {
   findByEmail(email: string): Promise<User | undefined>;

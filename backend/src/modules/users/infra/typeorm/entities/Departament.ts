@@ -7,6 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+
 import Subsidiary from './Subsidiary';
 
 @Entity('departaments')

@@ -1,6 +1,6 @@
 import AppError from '@shared/errors/AppError';
-import Subsidiary from '../infra/typeorm/entities/Subsidiary';
-import ISubsidiaryRepository from '../repositories/ISubsidiaryRepository';
+import Subsidiary from '@modules/users/infra/typeorm/entities/Subsidiary';
+import ISubsidiaryRepository from '@modules/users/repositories/ISubsidiaryRepository';
 
 interface IRequest {
   name: string;

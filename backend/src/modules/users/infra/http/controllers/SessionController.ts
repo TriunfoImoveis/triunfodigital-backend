@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
-import UsersRepository from '../../typeorm/repositories/UsersRepository';
+import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 
 class SessionController {
   async create(request: Request, response: Response): Promise<Response> {

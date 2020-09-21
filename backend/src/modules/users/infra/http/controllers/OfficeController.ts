@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import CreateOfficeService from '@modules/users/services/CreateOfficeService';
 import AppError from '@shared/errors/AppError';
 import UpdateOfficeService from '@modules/users/services/UpdateOfficeService';
-import OfficesRepository from '../../typeorm/repositories/OfficesRepository';
+import OfficesRepository from '@modules/users/infra/typeorm/repositories/OfficesRepository';
 
 class OfficeController {
   async index(request: Request, response: Response): Promise<Response> {

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { isUuid } from 'uuidv4';
 
-import AppError from '../../../errors/AppError';
+import AppError from '@shared/errors/AppError';
 
 export default function idValidedUiid(
   request: Request,

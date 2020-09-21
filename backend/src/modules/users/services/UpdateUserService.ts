@@ -1,8 +1,7 @@
 import AppError from '@shared/errors/AppError';
-import IUpdateUserDTO from '../dtos/IUpdateUserDTO';
-
-import User from '../infra/typeorm/entities/User';
-import IUserRepository from '../repositories/IUserRepository';
+import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
+import User from '@modules/users/infra/typeorm/entities/User';
+import IUserRepository from '@modules/users/repositories/IUserRepository';
 
 interface IRequest {
   user_id: string;

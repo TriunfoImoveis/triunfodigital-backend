@@ -1,7 +1,7 @@
 import { getRepository, Repository } from "typeorm";
 
 import IDepartamentRepository from "@modules/users/repositories/IDepartamentRepository";
-import Departament from "../entities/Departament";
+import Departament from "@modules/users/infra/typeorm/entities/Departament";
 import ICreateDepartamentDTO from "@modules/users/dtos/ICreateDepartamentDTO";
 import IUpdateDepartamentDTO from "@modules/users/dtos/IUpdateDepartamentDTO";
 

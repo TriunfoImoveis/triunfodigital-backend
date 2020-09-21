@@ -3,7 +3,7 @@ import { Request,Response } from "express";
 import AppError from '@shared/errors/AppError';
 import DepartamentsRepository from '@modules/users/infra/typeorm/repositories/DepartamentsRepository';
 import CreateDepartamentService from "@modules/users/services/CreateDepartamentService";
-import SubsidiaryRepository from "../../typeorm/repositories/SubsidiaryRepository";
+import SubsidiaryRepository from "@modules/users/infra/typeorm/repositories/SubsidiaryRepository";
 import UpdateDepartamentService from "@modules/users/services/UpdateDepartamentService";
 
 class DepartamentController {

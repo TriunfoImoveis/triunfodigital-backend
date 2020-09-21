@@ -1,10 +1,10 @@
 import { validate } from 'uuid';
 
 import AppError from '@shared/errors/AppError';
-import Departament from '../infra/typeorm/entities/Departament';
-import IDepartamentRepository from '../repositories/IDepartamentRepository';
-import ICreateDepartamentDTO from '../dtos/ICreateDepartamentDTO';
-import ISubsidiaryRepository from '../repositories/ISubsidiaryRepository';
+import Departament from '@modules/users/infra/typeorm/entities/Departament';
+import IDepartamentRepository from '@modules/users/repositories/IDepartamentRepository';
+import ICreateDepartamentDTO from '@modules/users/dtos/ICreateDepartamentDTO';
+import ISubsidiaryRepository from '@modules/users/repositories/ISubsidiaryRepository';
 
 class CreateDepartamentService {
   constructor(

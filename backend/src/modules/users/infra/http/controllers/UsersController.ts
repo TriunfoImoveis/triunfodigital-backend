@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import CreateUserService from '@modules/users/services/CreateUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
-import UsersRepository from '../../typeorm/repositories/UsersRepository';
+import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 
 class UsersController {
   async index(request: Request, response: Response): Promise<Response> {

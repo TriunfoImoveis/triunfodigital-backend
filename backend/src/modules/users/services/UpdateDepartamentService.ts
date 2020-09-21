@@ -21,11 +21,6 @@ class UpdateDepartamentService {
       throw new AppError('Departament not exist.');
     }
 
-    // if (body.hasOwnProperty('subsidiary_id')) {
-    //   console.log(body["subsidiary_id"]);
-    //   // const subsidiaryIsValid = validate();
-    // }
-
     const departamentUpdated = await this.departamentsRepository.update(
       id, data
     );

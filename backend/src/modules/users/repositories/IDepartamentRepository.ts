@@ -1,6 +1,6 @@
-import Departament from "../infra/typeorm/entities/Departament";
+import Departament from "@modules/users/infra/typeorm/entities/Departament";
 import ICreateDepartamentDTO from '@modules/users/dtos/ICreateDepartamentDTO';
-import IUpdateDepartamentDTO from "../dtos/IUpdateDepartamentDTO";
+import IUpdateDepartamentDTO from "@modules/users/dtos/IUpdateDepartamentDTO";
 
 export default interface IDepartamentRepository {
   findByName(name: string): Promise<Departament | undefined>;
