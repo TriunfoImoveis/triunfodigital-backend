@@ -14,10 +14,10 @@ class UpdateUserService {
     const user = await this.usersRepository.findById(user_id);
 
     if (!user) {
-      throw new AppError('user not exists', 401);
+      throw new AppError('User not exists.', 401);
     }
 
-    const userUpdate = await this.usersRepository.update(body);
+    const userUpdate = await this.usersRepository.update(user_id, body);
 
     return userUpdate;
   }

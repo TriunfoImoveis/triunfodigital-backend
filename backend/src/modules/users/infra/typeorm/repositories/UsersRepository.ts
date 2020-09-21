@@ -1,5 +1,6 @@
 import { getRepository, Repository } from 'typeorm';
 
+import AppError from '@shared/errors/AppError';
 import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
 import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
@@ -15,6 +16,7 @@ class UsersRepository implements IUserRepository {
   async findUsersActive(): Promise<User[] | undefined> {
     const users = await this.ormRepository.find({
       select: [
+        'id',
         'name',
         'email',
         'phone',
@@ -32,7 +34,18 @@ class UsersRepository implements IUserRepository {
   }
 
   async findById(id: string): Promise<User | undefined> {
-    const user = await this.ormRepository.findOne(id);
+    const user = await this.ormRepository.findOne(id, {
+      select: [
+        'id',
+        'name',
+        'email',
+        'phone',
+        'admission_date',
+        'goal',
+        'departament_id',
+        'office_id',
+      ]
+    });
 
     return user;
   }
@@ -50,8 +63,14 @@ class UsersRepository implements IUserRepository {
     return newUser;
   }
 
-  async update(user: IUpdateUserDTO): Promise<User> {
-    const userUpdated = await this.ormRepository.save(user);
+  async update(id: string, body: IUpdateUserDTO): Promise<User> {
+    await this.ormRepository.update(id, body);
+    const userUpdated = await this.findById(id);
+
+    if (!userUpdated) {
+      throw new AppError('error when updating the user, check your data');
+    }
+
     return userUpdated;
   }
 }
