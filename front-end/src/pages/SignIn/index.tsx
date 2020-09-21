@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 
+import { MdMailOutline, MdLockOutline } from 'react-icons/md';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import Button from '../../components/Button';
@@ -20,17 +21,18 @@ const SignIn: React.FC = () => {
 
           <Input
             name="email"
-            label="E-mail"
+            icon={MdMailOutline}
             placeholder="exemplo@email.com"
             type="email"
           />
           <Input
             name="password"
-            label="Senha"
             type="password"
             placeholder="**********************"
+            maxLength={8}
+            icon={MdLockOutline}
           />
-          <Select name="cargo" />
+          <Select name="office" />
           <Button>ENTRAR</Button>
         </Form>
       </Content>

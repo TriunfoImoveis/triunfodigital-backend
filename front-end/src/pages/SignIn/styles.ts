@@ -22,5 +22,15 @@ export const Content = styled.div`
       color: #fff;
       font-size: 1.8rem;
     }
+
+    label {
+      font-weight: 400;
+      font-size: 1.6rem;
+      line-height: 1.4rem;
+
+      color: #ffffff;
+      padding-left: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
   }
 `;

@@ -1,32 +1,60 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Container = styled.div`
+interface ContainerProps {
+  isFocused: boolean;
+  isFilled: boolean;
+  isErrored: boolean;
+}
+
+export const Container = styled.div<ContainerProps>`
+  background: none;
+  border-radius: 0.5rem;
+  border: 0.2rem solid #f5f5f5;
+  color: #f5f5f5;
+  padding: 1.6rem;
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  text-align: left;
+  align-items: center;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
-  label {
-    font-weight: 400;
-    font-size: 1.6rem;
-    line-height: 1.4rem;
-
-    color: #ffffff;
-    padding-left: 0.8rem;
-    margin-bottom: 0.8rem;
+  & + div {
+    margin-top: 0.8rem;
   }
+
+  /* display: flex;
+  align-items: center;
+  text-align: left;
+  border: 0.2rem solid #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin-bottom: 0.8rem; */
+
+  ${props =>
+    props.isErrored &&
+    css`
+      border-color: #c53030;
+    `}
+  ${props =>
+    props.isFocused &&
+    css`
+      color: #ff9000;
+      border-color: #ff9000;
+    `}
+  ${props =>
+    props.isFilled &&
+    css`
+      color: #ff9000;
+    `}
   input {
-    width: 100%;
-    border: 0.2rem solid #ffffff;
-    border-radius: 0.5rem;
-    background: none;
-    padding: 1.6rem;
-    margin-bottom: 1.6rem;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-
-    color: #ffffff;
-
-    ::placeholder {
-      color: rgba(255, 255, 255, 0.5);
+    background: transparent;
+    flex: 1;
+    border: 0;
+    color: #f4ede8;
+    &::placeholder {
+      color: #f4ede8;
     }
+  }
+  svg {
+    margin-right: 1.6rem;
   }
 `;

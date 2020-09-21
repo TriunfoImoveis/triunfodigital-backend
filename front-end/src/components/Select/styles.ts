@@ -27,10 +27,11 @@ export const DropDownList = styled.ul`
   margin: 0;
   border: 2px solid #e5e5e5;
   border-radius: 0.5rem;
-  color: #fff;
+  color: #c32925;
   font-size: 1.3rem;
   font-weight: 500;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  background: #fff;
 `;
 export const ListItem = styled.li`
   list-style: none;
@@ -39,7 +40,7 @@ export const ListItem = styled.li`
   border-bottom: 0.1rem solid #fff;
 
   &:hover {
-    background: #fff;
-    color: #c32925;
+    color: #fff;
+    background: #c32925;
   }
 `;
