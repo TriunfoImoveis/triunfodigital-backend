@@ -20,7 +20,7 @@ class DepartamentController {
     const departament = await departamentsRepository.findById(id);
 
     if (!departament) {
-      throw new AppError('Departament not exist.');
+      throw new AppError('Departament not exists.');
     }
 
     return response.json(departament);

@@ -10,6 +10,8 @@ usersRouter.get('/', usersController.index);
 
 usersRouter.post('/', usersController.create);
 
+usersRouter.get('/:id', idValidUuid, usersController.show);
+
 usersRouter.patch('/:id', idValidUuid, usersController.update);
 
 export default usersRouter;

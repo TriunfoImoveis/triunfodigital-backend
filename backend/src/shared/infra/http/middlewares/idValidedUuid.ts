@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { isUuid } from 'uuidv4';
+import { validate } from 'uuid';
 
 import AppError from '@shared/errors/AppError';
 
@@ -8,7 +8,7 @@ export default function idValidedUiid(
   response: Response,
   next: NextFunction,
 ): void {
-  const validId = isUuid(request.params.id);
+  const validId = validate(request.params.id);
 
   if (!validId) {
     throw new AppError('ID is invalid.');

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+import AppError from '@shared/errors/AppError';
 import CreateUserService from '@modules/users/services/CreateUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
 import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
@@ -37,6 +38,17 @@ class UsersController {
     });
 
     return response.json(newUser);
+  }
+
+  async show(request: Request, response: Response): Promise<Response> {
+    const userRepository = new UsersRepository();
+    const user = await userRepository.findById(request.params.id);
+
+    if (!user) {
+      throw new AppError('User not exists.');
+    }
+
+    return response.json(user);
   }
 
   async update(request: Request, response: Response): Promise<Response> {
