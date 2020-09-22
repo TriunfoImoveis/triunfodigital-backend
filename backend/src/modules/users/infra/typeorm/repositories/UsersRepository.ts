@@ -63,13 +63,9 @@ class UsersRepository implements IUserRepository {
     return newUser;
   }
 
-  async update(id: string, body: IUpdateUserDTO): Promise<User> {
+  async update(id: string, body: IUpdateUserDTO): Promise<User | undefined> {
     await this.ormRepository.update(id, body);
     const userUpdated = await this.findById(id);
-
-    if (!userUpdated) {
-      throw new AppError('error when updating the user, check your data');
-    }
 
     return userUpdated;
   }

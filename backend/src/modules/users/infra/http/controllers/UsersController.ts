@@ -62,6 +62,10 @@ class UsersController {
 
     return response.json(updatedUser);
   }
+
+  async uploadAvatar(request: Request, response: Response): Promise<Response> {
+    return response.status(200).send("ok");
+  }
 }
 
 export default UsersController;

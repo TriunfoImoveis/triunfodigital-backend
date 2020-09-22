@@ -12,6 +12,8 @@ usersRouter.post('/', usersController.create);
 
 usersRouter.get('/:id', idValidUuid, usersController.show);
 
-usersRouter.patch('/:id', idValidUuid, usersController.update);
+usersRouter.put('/:id', idValidUuid, usersController.update);
+
+usersRouter.patch('/avatar/:id', idValidUuid, usersController.uploadAvatar);
 
 export default usersRouter;
