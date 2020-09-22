@@ -1,46 +1,34 @@
 import styled from 'styled-components';
+import ReactSelect from 'react-select';
 
-export const DropDownContainer = styled.div`
-  cursor: pointer;
-`;
-export const DropDownHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-bottom: 0.8em;
-  padding: 0.4em 2em 0.4em 1em;
-  font-weight: 500;
-  font-size: 1.3rem;
-  color: #fff;
-  background: none;
-  border: 0.2rem solid #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-
-  > svg {
-    margin-left: 11rem;
-  }
-`;
-export const DropDownListContainer = styled.div``;
-export const DropDownList = styled.ul`
-  padding: 0;
-  margin: 0;
-  border: 2px solid #e5e5e5;
-  border-radius: 0.5rem;
-  color: #c32925;
-  font-size: 1.3rem;
-  font-weight: 500;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  background: #fff;
-`;
-export const ListItem = styled.li`
-  list-style: none;
-  padding: 0.8rem;
-  border-top: 0.1rem solid #fff;
-  border-bottom: 0.1rem solid #fff;
-
-  &:hover {
+export const SelectInput = styled(ReactSelect)`
+  & .react-select__control {
+    background: none;
+    border: 0.2rem solid #fff;
+    font-size: 1.4rem;
     color: #fff;
-    background: #c32925;
+  }
+  & .react-select__single-value {
+    font-size: 1.4rem;
+    padding-left: 0.8rem;
+    color: #fff;
+  }
+
+  & .react-select__indicator {
+    color: #fff;
+  }
+
+  & .react-select__placeholder {
+    color: #fff;
+    font-size: 1.4rem;
+    padding-left: 0.8rem;
+  }
+
+  & .react-select__menu-list {
+    background: #fff;
+  }
+
+  & .react-select__option:hover {
+    color: #c32925;
   }
 `;
