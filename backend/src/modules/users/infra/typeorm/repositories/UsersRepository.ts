@@ -1,6 +1,5 @@
 import { getRepository, Repository } from 'typeorm';
 
-import AppError from '@shared/errors/AppError';
 import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
 import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
@@ -18,6 +17,7 @@ class UsersRepository implements IUserRepository {
       select: [
         'id',
         'name',
+        'avatar',
         'email',
         'phone',
         'admission_date',
@@ -38,6 +38,7 @@ class UsersRepository implements IUserRepository {
       select: [
         'id',
         'name',
+        'avatar',
         'email',
         'phone',
         'admission_date',
@@ -68,6 +69,12 @@ class UsersRepository implements IUserRepository {
     const userUpdated = await this.findById(id);
 
     return userUpdated;
+  }
+
+  async updateAvatar(data: IUpdateUserDTO): Promise<User> {
+    const user = await this.ormRepository.save(data);
+
+    return user;
   }
 }
 

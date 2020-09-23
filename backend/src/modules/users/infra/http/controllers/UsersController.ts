@@ -4,6 +4,8 @@ import AppError from '@shared/errors/AppError';
 import CreateUserService from '@modules/users/services/CreateUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
 import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
+import UploadAvatarUserService from '@modules/users/services/UploadAvatarUserService';
+
 
 class UsersController {
   async index(request: Request, response: Response): Promise<Response> {
@@ -64,7 +66,15 @@ class UsersController {
   }
 
   async uploadAvatar(request: Request, response: Response): Promise<Response> {
-    return response.status(200).send("ok");
+    const userRepository = new UsersRepository();
+    const uploadAvatarService = new UploadAvatarUserService(userRepository);
+
+    await uploadAvatarService.execute({
+      user_id: request.user.id,
+      avatarFilename: request.file.filename,
+    });
+
+    return response.status(200).send();
   }
 }
 

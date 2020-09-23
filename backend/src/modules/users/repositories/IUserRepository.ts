@@ -8,4 +8,5 @@ export default interface IUserRepository {
   findUsersActive(): Promise<User[] | undefined>;
   create(data: ICreateUsersDTO): Promise<User>;
   update(id: string, data: IUpdateUserDTO): Promise<User | undefined>;
+  updateAvatar(data: IUpdateUserDTO): Promise<User>;
 }
