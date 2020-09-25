@@ -3,7 +3,7 @@ import multer from 'multer';
 
 import UsersController from '@modules/users/infra/http/controllers/UsersController';
 import idValidUuid from '@shared/infra/http/middlewares/idValidedUuid';
-import ensuredAuthenticated from '@modules/users/infra/http/middlewares/ensuredAuthenticated';
+import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 import uploadConfig from '@config/upload';
 
 const usersRouter = Router();
