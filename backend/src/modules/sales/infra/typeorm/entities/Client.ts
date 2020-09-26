@@ -16,7 +16,7 @@ class Client {
   @Column({ type: 'varchar', length: 80 })
   name: string;
 
-  @Column({ type: 'varchar', length: 11 })
+  @Column({ type: 'varchar', length: 11, unique: true })
   cpf: string;
 
   @Column({ type: 'date' })

@@ -2,6 +2,7 @@ import { Repository, getRepository } from 'typeorm';
 
 import Client from '@modules/sales/infra/typeorm/entities/Client';
 import IClientRepository from '@modules/sales/repositories/IClientRepository';
+import ICreateClientDTO from '@modules/sales/dtos/ICreateClientDTO';
 
 
 class ClientsReository implements IClientRepository {
@@ -18,7 +19,14 @@ class ClientsReository implements IClientRepository {
 
   async findByName(name: string): Promise<Client | undefined> {
     const client = await this.ormRepository.findOne({
-      where: name,
+      where: { name },
+    });
+    return client;
+  }
+
+  async findByCPF(cpf: string): Promise<Client | undefined> {
+    const client = await this.ormRepository.findOne({
+      where: { cpf },
     });
     return client;
   }
@@ -31,6 +39,13 @@ class ClientsReository implements IClientRepository {
     });
 
     return clients;
+  }
+
+  async create(data: ICreateClientDTO): Promise<Client> {
+    const client = this.ormRepository.create(data);
+    const newClient = await this.ormRepository.save(client);
+
+    return newClient;
   }
 }
 

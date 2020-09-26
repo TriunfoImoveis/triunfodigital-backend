@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 
-import AppError from '@shared/errors/AppError';
 import ClientsReository from '@modules/sales/infra/typeorm/repositories/ClientsRepository';
+import ShowClientService from '@modules/sales/services/ShowClientService';
+import CreateClientService from '@modules/sales/services/CreateClientService';
 
 
 class ClientController {
@@ -15,16 +16,45 @@ class ClientController {
 
   async show(request: Request, response: Response): Promise<Response> {
     const clientsRepository = new ClientsReository();
-    const client = await clientsRepository.findById(request.params.id);
+    const showClientServivce = new ShowClientService(clientsRepository);
 
-    if (!client) {
-      throw new AppError('Client not exists.');
-    }
+    const client = await showClientServivce.execute({
+      id: request.params.id,
+    });
 
     return response.json(client);
   }
 
-  async create(request: Request, response: Response): Promise<void> {}
+  async create(request: Request, response: Response): Promise<Response> {
+    const {
+      name,
+      cpf,
+      date_birth,
+      email,
+      phone,
+      occupation,
+      civil_status,
+      number_children,
+      gender,
+    } = request.body;
+
+    const clientsRepository = new ClientsReository();
+    const createClientService = new CreateClientService(clientsRepository);
+
+    const newclient = await createClientService.execute({
+      name,
+      cpf,
+      date_birth,
+      email,
+      phone,
+      occupation,
+      civil_status,
+      number_children,
+      gender,
+    });
+
+    return response.json(newclient);
+  }
 
   async update(request: Request, response: Response): Promise<void> {}
 

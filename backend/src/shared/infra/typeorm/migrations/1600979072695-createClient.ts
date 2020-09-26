@@ -24,6 +24,7 @@ export default class createClient1600979072695 implements MigrationInterface {
           {
             name: 'cpf',
             type: 'varchar(11)',
+            isUnique: true,
             isNullable: false,
           },
           {
