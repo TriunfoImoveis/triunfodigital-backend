@@ -24,7 +24,9 @@
   ],
   "rules": {
     "prettier/prettier": "error",
+    "@typescript-eslint/ban-types": "off",
     "camelcase": "off",
+    "no-useless-constructor": "off",
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "class-methods-use-this": "off",
