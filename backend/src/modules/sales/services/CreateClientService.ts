@@ -1,7 +1,7 @@
 import ICreateClientDTO from "@modules/sales/dtos/ICreateClientDTO";
 import IClientRepository from "@modules/sales/repositories/IClientRepository";
 import AppError from '@shared/errors/AppError';
-import Client from "../infra/typeorm/entities/Client";
+import Client from "@modules/sales/infra/typeorm/entities/Client";
 
 class CreateClientService {
  constructor(private clientsRepository: IClientRepository) {}

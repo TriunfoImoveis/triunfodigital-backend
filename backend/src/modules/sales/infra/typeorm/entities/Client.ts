@@ -35,7 +35,7 @@ class Client {
   civil_status: string;
 
   @Column({ type: 'integer' })
-  number_children: string;
+  number_children: number;
 
   @Column({ type: 'varchar', length: 50 })
   gender: string;

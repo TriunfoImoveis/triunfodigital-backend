@@ -1,5 +1,5 @@
 import Client from '@modules/sales/infra/typeorm/entities/Client';
-import ICreateClientDTO from '../dtos/ICreateClientDTO';
+import ICreateClientDTO from '@modules/sales/dtos/ICreateClientDTO';
 
 
 export default interface IClientRepository {

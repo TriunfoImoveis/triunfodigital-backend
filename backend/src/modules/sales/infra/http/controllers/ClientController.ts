@@ -41,7 +41,7 @@ class ClientController {
     const clientsRepository = new ClientsReository();
     const createClientService = new CreateClientService(clientsRepository);
 
-    const newclient = await createClientService.execute({
+    const newClient = await createClientService.execute({
       name,
       cpf,
       date_birth,
@@ -53,7 +53,7 @@ class ClientController {
       gender,
     });
 
-    return response.json(newclient);
+    return response.json(newClient);
   }
 
   async update(request: Request, response: Response): Promise<void> {}
