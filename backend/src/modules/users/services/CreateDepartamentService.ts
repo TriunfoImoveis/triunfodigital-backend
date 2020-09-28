@@ -1,5 +1,3 @@
-import { validate } from 'uuid';
-
 import AppError from '@shared/errors/AppError';
 import Departament from '@modules/users/infra/typeorm/entities/Departament';
 import IDepartamentRepository from '@modules/users/repositories/IDepartamentRepository';
@@ -22,11 +20,6 @@ class CreateDepartamentService {
 
     if (checkDepartamentExist.length !== 0) {
       throw new AppError('Departament already exist in this Subsidiary.');
-    }
-
-    const subsidiaryIsValid = validate(subsidiary_id);
-    if (!subsidiaryIsValid) {
-      throw new AppError('Subsidiary id invalid.');
     }
 
     const checkSubsidiaryExist = await this.subsidiaryRepository.findById(subsidiary_id);
