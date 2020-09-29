@@ -1,21 +1,22 @@
 import { Request, Response } from 'express';
 
-import ClientsReository from '@modules/sales/infra/typeorm/repositories/ClientsRepository';
+import ClientsRepository from '@modules/sales/infra/typeorm/repositories/ClientsRepository';
 import ShowClientService from '@modules/sales/services/ShowClientService';
 import CreateClientService from '@modules/sales/services/CreateClientService';
+import UpdateClientService from '@modules/sales/services/UpdateClientService';
 
 
 class ClientController {
 
   async index(request: Request, response: Response): Promise<Response> {
-    const clientsRepository = new ClientsReository();
+    const clientsRepository = new ClientsRepository();
     const clients = await clientsRepository.findClientsActive();
 
     return response.json(clients);
   }
 
   async show(request: Request, response: Response): Promise<Response> {
-    const clientsRepository = new ClientsReository();
+    const clientsRepository = new ClientsRepository();
     const showClientServivce = new ShowClientService(clientsRepository);
 
     const client = await showClientServivce.execute({
@@ -38,7 +39,7 @@ class ClientController {
       gender,
     } = request.body;
 
-    const clientsRepository = new ClientsReository();
+    const clientsRepository = new ClientsRepository();
     const createClientService = new CreateClientService(clientsRepository);
 
     const newClient = await createClientService.execute({
@@ -56,7 +57,17 @@ class ClientController {
     return response.json(newClient);
   }
 
-  async update(request: Request, response: Response): Promise<void> {}
+  async update(request: Request, response: Response): Promise<Response> {
+    const { id } = request.params;
+    const clientsRepository = new ClientsRepository();
+    const updateClientService = new UpdateClientService(clientsRepository);
+    const updatedClient = await updateClientService.execute({
+      client_id: id,
+      data: request.body,
+    });
+
+    return response.json(updatedClient);
+  }
 
   async delete(request: Request, response: Response): Promise<void> {}
 }

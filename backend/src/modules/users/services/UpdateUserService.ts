@@ -11,7 +11,7 @@ interface IRequest {
 class UpdateUserService {
   constructor(private usersRepository: IUserRepository) {}
 
-  public async excute({ user_id, body }: IRequest): Promise<User | undefined> {
+  public async execute({ user_id, body }: IRequest): Promise<User | undefined> {
     const user = await this.usersRepository.findById(user_id);
 
     if (!user) {
