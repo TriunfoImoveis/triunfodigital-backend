@@ -3,6 +3,7 @@ import { Repository, getRepository } from 'typeorm';
 import Client from '@modules/sales/infra/typeorm/entities/Client';
 import IClientRepository from '@modules/sales/repositories/IClientRepository';
 import ICreateClientDTO from '@modules/sales/dtos/ICreateClientDTO';
+import IUpdateClientDTO from '@modules/sales/dtos/IUpdateClientDTO';
 
 
 class ClientsReository implements IClientRepository {
@@ -46,6 +47,13 @@ class ClientsReository implements IClientRepository {
     const newClient = await this.ormRepository.save(client);
 
     return newClient;
+  }
+
+  async update(id: string, data: IUpdateClientDTO): Promise<Client | undefined> {
+    await this.ormRepository.update(id, data);
+    const clientUpdated = await this.ormRepository.findOne(id);
+
+    return clientUpdated;
   }
 }
 

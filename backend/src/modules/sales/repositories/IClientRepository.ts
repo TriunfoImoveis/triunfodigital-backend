@@ -1,5 +1,6 @@
 import Client from '@modules/sales/infra/typeorm/entities/Client';
 import ICreateClientDTO from '@modules/sales/dtos/ICreateClientDTO';
+import IUpdateClientDTO from '../dtos/IUpdateClientDTO';
 
 
 export default interface IClientRepository {
@@ -8,4 +9,5 @@ export default interface IClientRepository {
   findByCPF(cpf: string): Promise<Client | undefined>;
   findClientsActive(): Promise<Client[]>;
   create(data: ICreateClientDTO): Promise<Client>;
+  update(id: string, data: IUpdateClientDTO): Promise<Client | undefined>;
 }

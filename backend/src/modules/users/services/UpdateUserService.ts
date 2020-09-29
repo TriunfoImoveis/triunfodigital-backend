@@ -7,6 +7,7 @@ interface IRequest {
   user_id: string;
   body: IUpdateUserDTO;
 }
+
 class UpdateUserService {
   constructor(private usersRepository: IUserRepository) {}
 
