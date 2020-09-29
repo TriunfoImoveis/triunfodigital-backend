@@ -2,9 +2,12 @@ import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 
 import DepartamentController from '@modules/users/infra/http/controllers/DepartamentController';
+import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 
 const departamentRouter = Router();
 const departamentController = new DepartamentController();
+
+departamentRouter.use(ensuredAuthenticated);
 
 departamentRouter.get('/', departamentController.index);
 

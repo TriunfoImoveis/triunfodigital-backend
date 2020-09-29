@@ -20,7 +20,7 @@ class CreateClientService {
   const checkClientExists = await this.clientsRepository.findByCPF(cpf);
 
   if (checkClientExists) {
-    throw new AppError('Client already exists.');
+    throw new AppError('Client with this CPF already exists.');
   }
 
   const client = await this.clientsRepository.create({

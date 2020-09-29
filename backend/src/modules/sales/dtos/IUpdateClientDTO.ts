@@ -6,6 +6,6 @@ export default interface IUpdateClientDTO {
   phone?: string;
   occupation?: string;
   civil_status?: string;
-  number_children?: string;
+  number_children?: number;
   gender?: string;
 }

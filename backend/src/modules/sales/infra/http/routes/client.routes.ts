@@ -14,14 +14,14 @@ clientRouter.get('/', clientController.index);
 clientRouter.post('/', celebrate({
   [Segments.BODY]: {
     name: Joi.string().required(),
-    cpf: Joi.string().required(),
+    cpf: Joi.string().pattern(/^[0-9]{11,11}$/).required(),
     email: Joi.string().email().required(),
-    phone: Joi.string().required(),
+    phone: Joi.string().pattern(/^[0-9]{11,11}$/).required(),
     date_birth: Joi.date().required(),
     occupation: Joi.string().required(),
-    civil_status: Joi.string().required(),
-    number_children: Joi.number().required(),
-    gender: Joi.string().required(),
+    civil_status: Joi.string().valid('C', 'D', 'S', 'V').required(),
+    number_children: Joi.number().integer().min(0).required(),
+    gender: Joi.string().valid('M', 'F', 'O').required(),
   }
 }), clientController.create);
 
@@ -37,14 +37,14 @@ clientRouter.put('/:id', celebrate({
   },
   [Segments.BODY]: {
     name: Joi.string(),
-    cpf: Joi.string(),
+    cpf: Joi.string().pattern(/^[0-9]{11,11}$/),
     email: Joi.string().email(),
-    phone: Joi.string(),
+    phone: Joi.string().pattern(/^[0-9]{11,11}$/),
     date_birth: Joi.date(),
     occupation: Joi.string(),
-    civil_status: Joi.string(),
-    number_children: Joi.number(),
-    gender: Joi.string(),
+    civil_status: Joi.string().valid('C', 'D', 'S', 'V'),
+    number_children: Joi.number().integer().min(0),
+    gender: Joi.string().valid('M', 'F', 'O'),
   }
 }), clientController.update);
 

@@ -2,9 +2,12 @@ import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 
 import OfficeController from '@modules/users/infra/http/controllers/OfficeController';
+import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 
 const officeRouter = Router();
 const officeController = new OfficeController();
+
+officeRouter.use(ensuredAuthenticated);
 
 officeRouter.get('/', officeController.index);
 

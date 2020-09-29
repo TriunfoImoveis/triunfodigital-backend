@@ -10,13 +10,18 @@ const usersRouter = Router();
 const usersController = new UsersController();
 const upload = multer(uploadConfig);
 
+usersRouter.use(ensuredAuthenticated);
+
 usersRouter.get('/', usersController.index);
 
 usersRouter.post('/', celebrate({
   [Segments.BODY]: {
     name: Joi.string().required(),
     email: Joi.string().email().required(),
-    password: Joi.string().required(),
+    password: Joi.string().min(6).max(15).required(),
+    password_confirmation: Joi.string()
+      .required()
+      .valid(Joi.ref('password')),
     phone: Joi.string().required(),
     goal: Joi.number().required(),
     admission_date: Joi.date().required(),
@@ -39,6 +44,7 @@ usersRouter.put('/:id', celebrate({
     name: Joi.string(),
     email: Joi.string().email(),
     password: Joi.string(),
+    password_confirmation: Joi.string().valid(Joi.ref('password')),
     phone: Joi.string(),
     goal: Joi.number(),
     admission_date: Joi.date(),
@@ -47,10 +53,7 @@ usersRouter.put('/:id', celebrate({
   }
 }), usersController.update);
 
-usersRouter.patch('/avatar',
-  ensuredAuthenticated,
-  upload.single('avatar'),
-  usersController.uploadAvatar
+usersRouter.patch('/avatar', upload.single('avatar'), usersController.uploadAvatar
 );
 
 export default usersRouter;

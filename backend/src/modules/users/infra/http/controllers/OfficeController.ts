@@ -26,6 +26,7 @@ class OfficeController {
 
   async create(request: Request, response: Response): Promise<Response> {
     const { name } = request.body;
+
     const officesRepository = new OfficesRepository();
     const createOffice = new CreateOfficeService(officesRepository);
 
@@ -38,6 +39,7 @@ class OfficeController {
 
   async update(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
+
     const officesRepository = new OfficesRepository();
     const updateOffice = new UpdateOfficeService(officesRepository);
     const updatedOffice = await updateOffice.execute({
