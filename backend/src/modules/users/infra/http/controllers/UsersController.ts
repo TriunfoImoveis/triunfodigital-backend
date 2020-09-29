@@ -57,7 +57,7 @@ class UsersController {
     const { id } = request.params;
     const usersRepository = new UsersRepository();
     const updateUser = new UpdateUserService(usersRepository);
-    const updatedUser = await updateUser.excute({
+    const updatedUser = await updateUser.execute({
       user_id: id,
       body: request.body,
     });

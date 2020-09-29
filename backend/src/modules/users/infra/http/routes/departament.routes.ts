@@ -1,19 +1,47 @@
 import { Router } from 'express';
+import { celebrate, Joi, Segments } from 'celebrate';
 
-import idValidedUiid from '@shared/infra/http/middlewares/idValidedUuid';
 import DepartamentController from '@modules/users/infra/http/controllers/DepartamentController';
+import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 
 const departamentRouter = Router();
 const departamentController = new DepartamentController();
 
+departamentRouter.use(ensuredAuthenticated);
+
 departamentRouter.get('/', departamentController.index);
 
-departamentRouter.post('/', departamentController.create);
+departamentRouter.post('/', celebrate({
+  [Segments.BODY]: {
+    name: Joi.string().required(),
+    initials: Joi.string(),
+    goal: Joi.number(),
+    subsidiary_id: Joi.string().uuid().required(),
+  }
+}), departamentController.create);
 
-departamentRouter.get('/:id', idValidedUiid, departamentController.show);
+departamentRouter.get('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  }
+}), departamentController.show);
 
-departamentRouter.put('/:id', idValidedUiid, departamentController.update);
+departamentRouter.put('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  },
+  [Segments.BODY]: {
+    name: Joi.string(),
+    initials: Joi.string(),
+    goal: Joi.number(),
+    subsidiary_id: Joi.string().uuid(),
+  }
+}), departamentController.update);
 
-departamentRouter.delete('/:id', idValidedUiid, departamentController.delete);
+departamentRouter.delete('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  }
+}), departamentController.delete);
 
 export default departamentRouter;
