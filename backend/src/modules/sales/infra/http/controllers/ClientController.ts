@@ -4,6 +4,8 @@ import ClientsRepository from '@modules/sales/infra/typeorm/repositories/Clients
 import ShowClientService from '@modules/sales/services/ShowClientService';
 import CreateClientService from '@modules/sales/services/CreateClientService';
 import UpdateClientService from '@modules/sales/services/UpdateClientService';
+import DeactivateClientService from '@modules/sales/services/DeactivateClientService';
+import ActivateClientService from '@modules/sales/services/ActivateClientService';
 
 
 class ClientController {
@@ -69,7 +71,27 @@ class ClientController {
     return response.json(updatedClient);
   }
 
-  async delete(request: Request, response: Response): Promise<void> {}
+  async deactivate(request: Request, response: Response): Promise<Response> {
+    const clientsRepository = new ClientsRepository();
+    const deactivateClientServivce = new DeactivateClientService(clientsRepository);
+
+    await deactivateClientServivce.execute({
+      id: request.params.id,
+    });
+
+    return response.status(204).send();
+  }
+
+  async activate(request: Request, response: Response): Promise<Response> {
+    const clientsRepository = new ClientsRepository();
+    const activateClientService = new ActivateClientService(clientsRepository);
+
+    const client = await activateClientService.execute({
+      id: request.params.id,
+    });
+
+    return response.json(client);
+  }
 }
 
 export default ClientController;

@@ -6,6 +6,7 @@ import officeRouter from '@modules/users/infra/http/routes/office.routes';
 import departamentRouter from '@modules/users/infra/http/routes/departament.routes';
 import subsidiaryRouter from '@modules/users/infra/http/routes/subsidiary.routes';
 import clientRouter from '@modules/sales/infra/http/routes/client.routes';
+import builderRouter from '@modules/sales/infra/http/routes/builder.routes';
 
 
 const routes = Router();
@@ -15,5 +16,6 @@ routes.use('/office', officeRouter);
 routes.use('/departament', departamentRouter);
 routes.use('/subsidiary', subsidiaryRouter);
 routes.use('/client', clientRouter);
+routes.use('/builder', builderRouter);
 
 export default routes;

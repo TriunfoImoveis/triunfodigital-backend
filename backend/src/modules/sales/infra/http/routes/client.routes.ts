@@ -48,10 +48,17 @@ clientRouter.put('/:id', celebrate({
   }
 }), clientController.update);
 
-clientRouter.delete('/:id', celebrate({
+clientRouter.patch('/deactivate/:id', celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),
   }
-}), clientController.delete);
+}), clientController.deactivate);
+
+
+clientRouter.patch('/activate/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  }
+}), clientController.activate);
 
 export default clientRouter;
