@@ -7,19 +7,49 @@ import BuilderController from '@modules/sales/infra/http/controllers/BuilderCont
 const builderRouter = Router();
 const builderController = new BuilderController();
 
-// builderRouter.use(ensuredAthenticated);
+builderRouter.use(ensuredAthenticated);
 
-// builderRouter.get('/', builderController.index);
+builderRouter.get('/', builderController.index);
 
-builderRouter.post('/', builderController.create);
+builderRouter.post('/', celebrate({
+  [Segments.BODY]: {
+    name: Joi.string().required(),
+    cnpj: Joi.string().pattern(/^[0-9]{14,14}$/).required(),
+    email: Joi.string().email().required(),
+    phone: Joi.string().pattern(/^[0-9]{11,11}$/).required(),
+    responsible: Joi.string().required(),
+  },
+}), builderController.create);
 
-// builderRouter.get('/:id', builderController.show);
+builderRouter.get('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  },
+}), builderController.show);
 
-// builderRouter.put('/:id', builderController.update);
+builderRouter.put('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  },
+  [Segments.BODY]: {
+    name: Joi.string(),
+    cnpj: Joi.string().pattern(/^[0-9]{14,14}$/),
+    email: Joi.string().email(),
+    phone: Joi.string().pattern(/^[0-9]{11,11}$/),
+    responsible: Joi.string(),
+  }
+}), builderController.update);
 
-// builderRouter.patch('/deactivate/:id', builderController.deactivate);
+builderRouter.patch('/deactivate/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  },
+}), builderController.deactivate);
 
-
-// builderRouter.patch('/activate/:id', builderController.activate);
+builderRouter.patch('/activate/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  }
+}), builderController.activate);
 
 export default builderRouter;

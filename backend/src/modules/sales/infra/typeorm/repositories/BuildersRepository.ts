@@ -3,6 +3,7 @@ import { getRepository, Repository } from 'typeorm';
 import ICreateBuilderDTO from '@modules/sales/dtos/ICreateBuilderDTO';
 import IBuilderRepository from '@modules/sales/repositories/IBuilderRepository';
 import Builder from '@modules/sales/infra/typeorm/entities/Builder';
+import IUpdateBuilderDTO from '@modules/sales/dtos/IUpdateBuilderDTO';
 
 class BuildersRespository implements IBuilderRepository {
   private ormRepository: Repository<Builder>;
@@ -57,15 +58,22 @@ class BuildersRespository implements IBuilderRepository {
     return newBuilder;
   }
 
-  // async deactivate(id: string): Promise<void> {
-  //   await this.ormRepository.update(id, {active: false});
-  // }
+  async update(id: string, data: IUpdateBuilderDTO): Promise<Builder | undefined> {
+    await this.ormRepository.update(id, data);
+    const builderUpdated = await this.ormRepository.findOne(id);
 
-  // async activate(id: string): Promise<Client | undefined> {
-  //   await this.ormRepository.update(id, {active: true});
-  //   const client = await this.ormRepository.findOne(id);
-  //   return client;
-  // }
+    return builderUpdated;
+  }
+
+  async deactivate(id: string): Promise<void> {
+    await this.ormRepository.update(id, {active: false});
+  }
+
+  async activate(id: string): Promise<Builder | undefined> {
+    await this.ormRepository.update(id, {active: true});
+    const builder = await this.ormRepository.findOne(id);
+    return builder;
+  }
 }
 
 export default BuildersRespository;

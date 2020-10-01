@@ -16,7 +16,7 @@ class CreateBuilderService {
     const checkBuilderExists = await this.buildersRespository.findByCNPJ(cnpj);
 
     if (checkBuilderExists) {
-      throw new AppError('Client with this CPF already exists.');
+      throw new AppError('Builder with this CNPJ already exists.');
     }
 
     const builder = await this.buildersRespository.create({
