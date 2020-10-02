@@ -14,17 +14,17 @@ class UsersRepository implements IUserRepository {
 
   async findUsersActive(): Promise<User[] | undefined> {
     const users = await this.ormRepository.find({
-      select: [
-        'id',
-        'name',
-        'avatar',
-        'email',
-        'phone',
-        'admission_date',
-        'goal',
-        'departament_id',
-        'office_id',
-      ],
+      // select: [
+      //   'id',
+      //   'name',
+      //   'avatar',
+      //   'email',
+      //   'phone',
+      //   'admission_date',
+      //   'goal',
+      //   'departament_id',
+      //   'office_id',
+      // ],
       where: {
         active: true,
       },
@@ -34,19 +34,7 @@ class UsersRepository implements IUserRepository {
   }
 
   async findById(id: string): Promise<User | undefined> {
-    const user = await this.ormRepository.findOne(id, {
-      select: [
-        'id',
-        'name',
-        'avatar',
-        'email',
-        'phone',
-        'admission_date',
-        'goal',
-        'departament_id',
-        'office_id',
-      ]
-    });
+    const user = await this.ormRepository.findOne(id);
 
     return user;
   }
@@ -57,7 +45,7 @@ class UsersRepository implements IUserRepository {
     return user;
   }
 
-  async create(data: ICreateUsersDTO): Promise<User> {
+  async create(data: ICreateUsersDTO): Promise<User | undefined> {
     const user = this.ormRepository.create(data);
     const newUser = await this.ormRepository.save(user);
 

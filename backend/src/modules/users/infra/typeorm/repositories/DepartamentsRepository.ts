@@ -22,12 +22,12 @@ class DepartamentsRepository implements IDepartamentRepository {
   }
 
   async findByNameAndSubsidiary(
-    name: string, subsidiary_id: string
+    name: string, subsidiary: string
   ): Promise<Departament[]> {
     const departament = await this.ormRepository.find({
       where: {
         name: name,
-        subsidiary_id: subsidiary_id
+        subsidiary: subsidiary
       }
     });
 

@@ -6,7 +6,7 @@ export default interface IDepartamentRepository {
   findByName(name: string): Promise<Departament | undefined>;
   findByNameAndSubsidiary(
     name: string,
-    subsidiary_id: string
+    subsidiary: string
   ): Promise<Departament[]>;
   findById(id: string): Promise<Departament | undefined>;
   findDepartamentsActive(): Promise<Departament[] | undefined>;

@@ -40,18 +40,12 @@ class User {
   @Column({ type: 'boolean', default: true })
   active: boolean;
 
-  @Column()
-  departament_id: string;
-
-  @ManyToOne(() => Departament)
-  @JoinColumn({ name: 'departament_id' })
+  @ManyToOne(type => Departament, users => User, {eager: true})
+  @JoinColumn({name: 'departament_id'})
   departament: Departament;
 
-  @Column()
-  office_id: string;
-
-  @ManyToOne(() => Office)
-  @JoinColumn({ name: 'office_id' })
+  @ManyToOne(type => Office, users => User, {eager: true})
+  @JoinColumn({name: 'office_id'})
   office: Office;
 
   @CreateDateColumn()

@@ -5,6 +5,8 @@ import CreateUserService from '@modules/users/services/CreateUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
 import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 import UploadAvatarUserService from '@modules/users/services/UploadAvatarUserService';
+import DepartamentsRepository from '@modules/users/infra/typeorm/repositories/DepartamentsRepository';
+import OfficesRepository from '@modules/users/infra/typeorm/repositories/OfficesRepository';
 
 
 class UsersController {
@@ -22,9 +24,22 @@ class UsersController {
       phone,
       admission_date,
       goal,
-      departament_id,
-      office_id,
+      departament,
+      office,
     } = request.body;
+
+    const departamentsRepository = new DepartamentsRepository();
+    const checkDepartamentExists = await departamentsRepository.findById(departament);
+    if (!checkDepartamentExists) {
+      throw new AppError('Departament not exists.');
+    }
+
+    const officesRepository = new OfficesRepository();
+    const checkOfficeExists = await officesRepository.findById(office);
+    if (!checkOfficeExists) {
+      throw new AppError('Office not exists.');
+    }
+
     const usersRepository = new UsersRepository();
     const createUser = new CreateUserService(usersRepository);
 
@@ -35,8 +50,8 @@ class UsersController {
       phone,
       admission_date,
       goal,
-      departament_id,
-      office_id,
+      departament,
+      office,
     });
 
     return response.json(newUser);
