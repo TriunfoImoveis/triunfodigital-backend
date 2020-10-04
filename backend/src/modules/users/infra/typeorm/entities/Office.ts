@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany
 } from 'typeorm';
+
 import User from './User';
 
 @Entity('offices')
