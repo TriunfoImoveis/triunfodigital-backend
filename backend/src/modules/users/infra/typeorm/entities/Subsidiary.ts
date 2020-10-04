@@ -13,7 +13,7 @@ class Subsidiary {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'varchar', length: 150 })
   name: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })

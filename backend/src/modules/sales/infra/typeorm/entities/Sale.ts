@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+
 import Builder from "./Builder";
 import Client from "./Client";
 import OriginSale from "./OriginSale";
@@ -18,6 +19,7 @@ class Sale {
   @Column({ type: 'enum', enum: SaleType })
   sale_type: SaleType;
 
+  @OneToOne(type => Realty)
   realy: Realty;
 
   sale_date: Date;
