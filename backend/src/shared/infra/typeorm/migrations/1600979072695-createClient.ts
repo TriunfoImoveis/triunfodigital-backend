@@ -49,7 +49,8 @@ export default class createClient1600979072695 implements MigrationInterface {
           },
           {
             name: 'civil_status',
-            type: 'varchar(50)',
+            type: 'char(1)',
+            enum: ['C', 'D', 'S', 'V'],
             isNullable: false,
           },
           {
@@ -59,7 +60,8 @@ export default class createClient1600979072695 implements MigrationInterface {
           },
           {
             name: 'gender',
-            type: 'varchar(50)',
+            type: 'char(1)',
+            enum: ['F', 'M'],
             isNullable: false,
           },
           {

@@ -21,7 +21,7 @@ clientRouter.post('/', celebrate({
     occupation: Joi.string().required(),
     civil_status: Joi.string().valid('C', 'D', 'S', 'V').required(),
     number_children: Joi.number().integer().min(0).required(),
-    gender: Joi.string().valid('M', 'F', 'O').required(),
+    gender: Joi.string().valid('M', 'F').required(),
   }
 }), clientController.create);
 
