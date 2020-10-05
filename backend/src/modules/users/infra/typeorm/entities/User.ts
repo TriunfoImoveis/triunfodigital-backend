@@ -8,6 +8,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 
+import { Exclude, Expose } from 'class-transformer';
+
 import Departament from './Departament';
 import Office from './Office';
 
@@ -26,6 +28,7 @@ class User {
   email: string;
 
   @Column({ type: 'varchar', length: 150 })
+  @Exclude()
   password: string;
 
   @Column({ type: 'varchar', length: 11 })
@@ -40,12 +43,12 @@ class User {
   @Column({ type: 'boolean', default: true })
   active: boolean;
 
-  @ManyToOne(type => Departament, users => User, {eager: true})
-  @JoinColumn({name: 'departament_id'})
+  @ManyToOne(type => Departament, users => User, { eager: true })
+  @JoinColumn({ name: 'departament_id' })
   departament: Departament;
 
-  @ManyToOne(type => Office, users => User, {eager: true})
-  @JoinColumn({name: 'office_id'})
+  @ManyToOne(type => Office, users => User, { eager: true })
+  @JoinColumn({ name: 'office_id' })
   office: Office;
 
   @CreateDateColumn()
@@ -53,6 +56,13 @@ class User {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Expose({ name: 'avatar_url' })
+  getAvatarUrl(): string | null {
+    return this.avatar
+      ? `${process.env.APP_API_URL}/files/${this.avatar}`
+      : null;
+  }
 }
 
 export default User;

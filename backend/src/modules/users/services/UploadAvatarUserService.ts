@@ -4,9 +4,8 @@ import fs from 'fs';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 import AppError from '@shared/errors/AppError';
 import uploadConfig from '@config/upload';
-import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 import User from '@modules/users/infra/typeorm/entities/User';
-
+import { classToClass } from 'class-transformer';
 
 interface IRequestDTO {
   user_id: string;
@@ -18,7 +17,7 @@ class UploadAvatarUserService {
 
   public async execute({
     user_id,
-    avatarFilename
+    avatarFilename,
   }: IRequestDTO): Promise<User | undefined> {
     const user = await this.usersRepository.findById(user_id);
 

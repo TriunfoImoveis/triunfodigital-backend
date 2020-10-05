@@ -7,13 +7,13 @@ import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepo
 import UploadAvatarUserService from '@modules/users/services/UploadAvatarUserService';
 import DepartamentsRepository from '@modules/users/infra/typeorm/repositories/DepartamentsRepository';
 import OfficesRepository from '@modules/users/infra/typeorm/repositories/OfficesRepository';
-
+import { classToClass } from 'class-transformer';
 
 class UsersController {
   async index(request: Request, response: Response): Promise<Response> {
     const usersRepository = new UsersRepository();
     const usersList = await usersRepository.findUsersActive();
-    return response.json(usersList);
+    return response.json(classToClass(usersList));
   }
 
   async create(request: Request, response: Response): Promise<Response> {
@@ -29,7 +29,9 @@ class UsersController {
     } = request.body;
 
     const departamentsRepository = new DepartamentsRepository();
-    const checkDepartamentExists = await departamentsRepository.findById(departament);
+    const checkDepartamentExists = await departamentsRepository.findById(
+      departament,
+    );
     if (!checkDepartamentExists) {
       throw new AppError('Departament not exists.');
     }
@@ -54,7 +56,7 @@ class UsersController {
       office,
     });
 
-    return response.json(newUser);
+    return response.json(classToClass(newUser));
   }
 
   async show(request: Request, response: Response): Promise<Response> {
@@ -65,7 +67,7 @@ class UsersController {
       throw new AppError('User not exists.');
     }
 
-    return response.json(user);
+    return response.json(classToClass(user));
   }
 
   async update(request: Request, response: Response): Promise<Response> {
@@ -77,7 +79,7 @@ class UsersController {
       body: request.body,
     });
 
-    return response.json(updatedUser);
+    return response.json(classToClass(updatedUser));
   }
 
   async uploadAvatar(request: Request, response: Response): Promise<Response> {

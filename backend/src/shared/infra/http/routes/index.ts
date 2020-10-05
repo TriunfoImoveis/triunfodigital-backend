@@ -12,7 +12,6 @@ import propertyRoutes from '@modules/sales/infra/http/routes/property.routes';
 import originRoutes from '@modules/sales/infra/http/routes/origin.routes';
 import realtyRoutes from '@modules/sales/infra/http/routes/realty.routes';
 
-
 const routes = Router();
 
 // Module Users
