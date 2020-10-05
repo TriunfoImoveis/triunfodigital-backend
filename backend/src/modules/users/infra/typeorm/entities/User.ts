@@ -19,7 +19,7 @@ class User {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   avatar: string;
 
   @Column({ type: 'varchar', length: 150 })

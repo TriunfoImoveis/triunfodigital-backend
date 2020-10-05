@@ -5,10 +5,11 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
-  Entity
+  Entity, OneToOne
 } from "typeorm";
 
 import PropertyType from "./PropertyType";
+import Sale from "./Sale";
 
 @Entity('realties')
 class Realty {
@@ -42,6 +43,9 @@ class Realty {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToOne(type => Sale, realty => Realty)
+  sale: Sale;
 }
 
 export default Realty;
