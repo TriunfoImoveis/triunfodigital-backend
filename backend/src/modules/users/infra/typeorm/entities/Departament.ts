@@ -6,9 +6,11 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany
 } from 'typeorm';
 
 import Subsidiary from './Subsidiary';
+import User from './User';
 
 @Entity('departaments')
 class Departament {
@@ -21,11 +23,11 @@ class Departament {
   @Column({ type: 'varchar', length: 50 })
   initials: string;
 
-  @Column()
-  subsidiary_id: string;
+  @OneToMany(type => User, departament => Departament)
+  users: User[];
 
-  @ManyToOne(() => Subsidiary)
-  @JoinColumn({ name: 'subsidiary_id' })
+  @ManyToOne(type => Subsidiary, departaments => Departament, {eager: true})
+  @JoinColumn({name: 'subsidiary_id'})
   subsidiary: Subsidiary;
 
   @Column({ type: 'decimal', precision: 14, scale: 2 })

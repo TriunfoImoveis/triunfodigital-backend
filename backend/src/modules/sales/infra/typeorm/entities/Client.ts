@@ -6,6 +6,17 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+export enum CivilStatus {
+  C = 'Casado(a)',
+  D = 'Divorciado(a)',
+  S = 'Solteiro(a)',
+  V = 'Viúvo(a)',
+}
+
+export enum Gender {
+  F = 'Feminino',
+  M = 'Masculino',
+}
 
 @Entity('clients')
 class Client {
@@ -31,14 +42,14 @@ class Client {
   @Column({ type: 'varchar', length: 150 })
   occupation: string;
 
-  @Column({ type: 'varchar', length: 50 })
-  civil_status: string;
+  @Column({ type: 'enum', enum: CivilStatus })
+  civil_status: CivilStatus;
 
   @Column({ type: 'integer' })
   number_children: number;
 
-  @Column({ type: 'varchar', length: 50 })
-  gender: string;
+  @Column({ type: 'enum', enum: Gender })
+  gender: Gender;
 
   @Column({ type: 'boolean', default: true })
   active: boolean;

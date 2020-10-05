@@ -4,9 +4,13 @@ import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/User';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
+import IDepartamentRepository from '@modules/users/repositories/IDepartamentRepository';
+import IOfficeRepository from '@modules/users/repositories/IOfficeRepository';
 
 class CreateUserService {
-  constructor(private usersRepository: IUserRepository) {}
+  constructor(
+    private usersRepository: IUserRepository
+  ) {}
 
   public async execute({
     name,
@@ -15,8 +19,8 @@ class CreateUserService {
     phone,
     admission_date,
     goal,
-    departament_id,
-    office_id,
+    departament,
+    office,
   }: ICreateUsersDTO): Promise<User> {
     const checkEmailExist = await this.usersRepository.findByEmail(email);
 
@@ -33,8 +37,8 @@ class CreateUserService {
       goal,
       phone,
       admission_date,
-      departament_id,
-      office_id,
+      departament,
+      office,
     });
 
     if (!user) {

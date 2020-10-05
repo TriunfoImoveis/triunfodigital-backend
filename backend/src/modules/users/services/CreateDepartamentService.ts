@@ -14,15 +14,15 @@ class CreateDepartamentService {
     name,
     initials,
     goal,
-    subsidiary_id,
+    subsidiary,
   }: ICreateDepartamentDTO): Promise<Departament | undefined> {
-    const checkDepartamentExist = await this.departamentsRepository.findByNameAndSubsidiary(name, subsidiary_id);
+    const checkDepartamentExist = await this.departamentsRepository.findByNameAndSubsidiary(name, subsidiary.id);
 
     if (checkDepartamentExist.length !== 0) {
       throw new AppError('Departament already exist in this Subsidiary.');
     }
 
-    const checkSubsidiaryExist = await this.subsidiaryRepository.findById(subsidiary_id);
+    const checkSubsidiaryExist = await this.subsidiaryRepository.findById(subsidiary.id);
     if (!checkSubsidiaryExist) {
       throw new AppError('Subsidiary not exist.');
     }
@@ -36,7 +36,7 @@ class CreateDepartamentService {
       name,
       initials,
       goal: goalDepartament,
-      subsidiary_id,
+      subsidiary,
     });
 
     if (!departament) {

@@ -4,7 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany
 } from 'typeorm';
+
+import User from './User';
 
 @Entity('offices')
 class Office {
@@ -13,6 +16,9 @@ class Office {
 
   @Column({ type: 'varchar', length: 200 })
   name: string;
+
+  @OneToMany(type => User, office => Office)
+  users: User[];
 
   @Column({ default: true })
   active: boolean;

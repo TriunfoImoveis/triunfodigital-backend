@@ -21,7 +21,7 @@ clientRouter.post('/', celebrate({
     occupation: Joi.string().required(),
     civil_status: Joi.string().valid('C', 'D', 'S', 'V').required(),
     number_children: Joi.number().integer().min(0).required(),
-    gender: Joi.string().valid('M', 'F', 'O').required(),
+    gender: Joi.string().valid('M', 'F').required(),
   }
 }), clientController.create);
 
@@ -48,10 +48,17 @@ clientRouter.put('/:id', celebrate({
   }
 }), clientController.update);
 
-clientRouter.delete('/:id', celebrate({
+clientRouter.patch('/deactivate/:id', celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),
   }
-}), clientController.delete);
+}), clientController.deactivate);
+
+
+clientRouter.patch('/activate/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  }
+}), clientController.activate);
 
 export default clientRouter;

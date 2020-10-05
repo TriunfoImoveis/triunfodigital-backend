@@ -25,8 +25,8 @@ usersRouter.post('/', celebrate({
     phone: Joi.string().required(),
     goal: Joi.number().required(),
     admission_date: Joi.date().required(),
-    departament_id: Joi.string().uuid().required(),
-    office_id: Joi.string().uuid().required(),
+    departament: Joi.string().uuid().required(),
+    office: Joi.string().uuid().required(),
   }
 }), usersController.create);
 
@@ -48,8 +48,8 @@ usersRouter.put('/:id', celebrate({
     phone: Joi.string(),
     goal: Joi.number(),
     admission_date: Joi.date(),
-    departament_id: Joi.string().uuid(),
-    office_id: Joi.string().uuid(),
+    departament: Joi.string().uuid(),
+    office: Joi.string().uuid(),
   }
 }), usersController.update);
 

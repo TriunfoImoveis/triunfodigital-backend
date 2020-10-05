@@ -1,3 +1,6 @@
+import Departament from '@modules/users/infra/typeorm/entities/Departament';
+import Office from '@modules/users/infra/typeorm/entities/Office';
+
 export default interface IUpdateUserDTO {
   name?: string;
   email?: string;
@@ -5,6 +8,6 @@ export default interface IUpdateUserDTO {
   phone?: string;
   admission_date?: Date;
   goal?: number;
-  departament_id?: string;
-  office_id?: string;
+  departament?: Departament;
+  office?: Office;
 }

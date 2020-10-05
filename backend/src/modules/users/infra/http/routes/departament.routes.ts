@@ -16,7 +16,7 @@ departamentRouter.post('/', celebrate({
     name: Joi.string().required(),
     initials: Joi.string(),
     goal: Joi.number(),
-    subsidiary_id: Joi.string().uuid().required(),
+    subsidiary: Joi.string().uuid().required(),
   }
 }), departamentController.create);
 
@@ -34,7 +34,7 @@ departamentRouter.put('/:id', celebrate({
     name: Joi.string(),
     initials: Joi.string(),
     goal: Joi.number(),
-    subsidiary_id: Joi.string().uuid(),
+    subsidiary: Joi.string().uuid(),
   }
 }), departamentController.update);
 

@@ -31,7 +31,7 @@ class DepartamentController {
       name,
       initials,
       goal,
-      subsidiary_id,
+      subsidiary,
     } = request.body;
 
     const departamentsRepository = new DepartamentsRepository();
@@ -42,7 +42,7 @@ class DepartamentController {
       name,
       initials,
       goal,
-      subsidiary_id,
+      subsidiary,
     });
 
     return response.json(newDepartament);

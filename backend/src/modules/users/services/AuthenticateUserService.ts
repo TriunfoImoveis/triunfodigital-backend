@@ -45,7 +45,7 @@ class AuthenticateUserService {
       throw new AppError('Incorrect email/password combination.', 401);
     }
 
-    if (office !== user.office_id) {
+    if (office !== user.office.id) {
       throw new AppError(
         'Incorrect email/password and office combination',
         401,

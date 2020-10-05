@@ -18,6 +18,16 @@ class ClientsReository implements IClientRepository {
     return client;
   }
 
+  async findByIdAndActivate(id: string): Promise<Client | undefined> {
+    const client = await this.ormRepository.findOne(
+      id,
+      {
+        where: { active: true }
+      }
+    );
+    return client;
+  }
+
   async findByName(name: string): Promise<Client | undefined> {
     const client = await this.ormRepository.findOne({
       where: { name },
@@ -54,6 +64,16 @@ class ClientsReository implements IClientRepository {
     const clientUpdated = await this.ormRepository.findOne(id);
 
     return clientUpdated;
+  }
+
+  async deactivate(id: string): Promise<void> {
+    await this.ormRepository.update(id, {active: false});
+  }
+
+  async activate(id: string): Promise<Client | undefined> {
+    await this.ormRepository.update(id, {active: true});
+    const client = await this.ormRepository.findOne(id);
+    return client;
   }
 }
 
