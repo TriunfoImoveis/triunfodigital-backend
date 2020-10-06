@@ -19,9 +19,11 @@ clientRouter.post('/', celebrate({
     phone: Joi.string().pattern(/^[0-9]{11,11}$/).required(),
     date_birth: Joi.date().required(),
     occupation: Joi.string().required(),
-    civil_status: Joi.string().valid('C', 'D', 'S', 'V').required(),
+    civil_status: Joi.string().valid(
+      'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
+    ).required(),
     number_children: Joi.number().integer().min(0).required(),
-    gender: Joi.string().valid('M', 'F').required(),
+    gender: Joi.string().valid('MASCULINO', 'FEMININO').required(),
   }
 }), clientController.create);
 

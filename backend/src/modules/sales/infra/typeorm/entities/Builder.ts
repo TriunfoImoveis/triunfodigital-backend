@@ -4,7 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+
+import Sale from './Sale';
 
 @Entity('builders')
 class Builder {
@@ -26,6 +29,9 @@ class Builder {
 
   @Column({ type: 'varchar', length: 150 })
   responsible: string;
+
+  @OneToMany(type => Sale, builder => Builder)
+  sales: Sale[];
 
   @Column({ type: 'boolean', default: true })
   active: boolean;
