@@ -25,3 +25,5 @@ class DiskStorageProvider implements IStorageProvider {
     await fs.promises.unlink(filePath);
   }
 }
+
+export default DiskStorageProvider;

@@ -8,6 +8,7 @@ import UploadAvatarUserService from '@modules/users/services/UploadAvatarUserSer
 import DepartamentsRepository from '@modules/users/infra/typeorm/repositories/DepartamentsRepository';
 import OfficesRepository from '@modules/users/infra/typeorm/repositories/OfficesRepository';
 import { classToClass } from 'class-transformer';
+import { container } from 'tsyringe';
 
 class UsersController {
   async index(request: Request, response: Response): Promise<Response> {
@@ -83,8 +84,7 @@ class UsersController {
   }
 
   async uploadAvatar(request: Request, response: Response): Promise<Response> {
-    const userRepository = new UsersRepository();
-    const uploadAvatarService = new UploadAvatarUserService(userRepository);
+    const uploadAvatarService = container.resolve(UploadAvatarUserService);
 
     await uploadAvatarService.execute({
       user_id: request.user.id,

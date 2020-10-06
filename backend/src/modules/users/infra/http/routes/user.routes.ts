@@ -8,7 +8,7 @@ import uploadConfig from '@config/upload';
 
 const usersRouter = Router();
 const usersController = new UsersController();
-const upload = multer(uploadConfig);
+const upload = multer(uploadConfig.multer);
 
 usersRouter.use(ensuredAuthenticated);
 

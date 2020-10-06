@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import 'dotenv/config';
+import * as dotenv from 'dotenv';
 
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
@@ -11,11 +11,15 @@ import AppError from '@shared/errors/AppError';
 import uploadConfig from '@config/upload';
 
 import '@shared/infra/typeorm';
+import '@shared/container';
+import '@shared/container/providers';
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use('/files', express.static(uploadConfig.directory));
+app.use('/files', express.static(uploadConfig.tmpFolder));
 app.use(routes);
 
 app.use(errors());
