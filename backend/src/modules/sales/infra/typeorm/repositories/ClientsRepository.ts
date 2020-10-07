@@ -1,5 +1,6 @@
 import { Repository, getRepository } from 'typeorm';
 
+import AppError from '@shared/errors/AppError';
 import Client from '@modules/sales/infra/typeorm/entities/Client';
 import IClientRepository from '@modules/sales/repositories/IClientRepository';
 import ICreateClientDTO from '@modules/sales/dtos/ICreateClientDTO';
@@ -53,17 +54,24 @@ class ClientsReository implements IClientRepository {
   }
 
   async create(data: ICreateClientDTO): Promise<Client> {
-    const client = this.ormRepository.create(data);
-    const newClient = await this.ormRepository.save(client);
+    try {
+      const client = this.ormRepository.create(data);
+      const newClient = await this.ormRepository.save(client);
 
-    return newClient;
+      return newClient;
+    } catch (err) {
+      throw new AppError(err);
+    }
   }
 
   async update(id: string, data: IUpdateClientDTO): Promise<Client | undefined> {
-    await this.ormRepository.update(id, data);
-    const clientUpdated = await this.ormRepository.findOne(id);
-
-    return clientUpdated;
+    try {
+      await this.ormRepository.update(id, data);
+      const clientUpdated = await this.ormRepository.findOne(id);
+      return clientUpdated;
+    } catch (err) {
+      throw new AppError(err);
+    }
   }
 
   async deactivate(id: string): Promise<void> {
