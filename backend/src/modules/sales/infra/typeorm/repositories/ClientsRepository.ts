@@ -7,7 +7,7 @@ import ICreateClientDTO from '@modules/sales/dtos/ICreateClientDTO';
 import IUpdateClientDTO from '@modules/sales/dtos/IUpdateClientDTO';
 
 
-class ClientsReository implements IClientRepository {
+class ClientsRepository implements IClientRepository {
   private ormRepository: Repository<Client>;
 
   constructor() {
@@ -85,4 +85,4 @@ class ClientsReository implements IClientRepository {
   }
 }
 
-export default ClientsReository;
+export default ClientsRepository;

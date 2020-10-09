@@ -11,6 +11,7 @@ import builderRouter from '@modules/sales/infra/http/routes/builder.routes';
 import propertyRoutes from '@modules/sales/infra/http/routes/property.routes';
 import originRoutes from '@modules/sales/infra/http/routes/origin.routes';
 import realtyRoutes from '@modules/sales/infra/http/routes/realty.routes';
+import saleRoutes from '@modules/sales/infra/http/routes/sale.routes';
 
 
 const routes = Router();
@@ -28,5 +29,6 @@ routes.use('/builder', builderRouter);
 routes.use('/property-type', propertyRoutes);
 routes.use('/origin-sale', originRoutes);
 routes.use('/realty', realtyRoutes);
+routes.use('/sale', saleRoutes);
 
 export default routes;

@@ -73,23 +73,23 @@ class Sale {
   @JoinColumn({ name: 'builder_id' })
   builder: Builder;
 
-  @OneToOne(type => Client, { nullable: false })
+  @OneToOne(type => Client, { nullable: false, eager: true })
   @JoinColumn({ name: 'client_buyer' })
   client_buyer: Client;
 
-  @OneToOne(type => Client, { nullable: true })
+  @OneToOne(type => Client, { nullable: true, eager: true })
   @JoinColumn({ name: 'client_saller' })
   client_saller: Client;
 
-  @OneToOne(type => User, {nullable: false})
+  @OneToOne(type => User, {nullable: false, eager: true})
   @JoinColumn({ name: 'user_captivator' })
   user_captivator: User;
 
-  @OneToOne(type => User, {nullable: false})
+  @OneToOne(type => User, {nullable: false, eager: true})
   @JoinColumn({ name: 'user_director' })
   user_director: User;
 
-  @OneToOne(type => User, {nullable: true})
+  @OneToOne(type => User, {nullable: true, eager: true})
   @JoinColumn({ name: 'user_coordinator' })
   user_coordinator: User;
 

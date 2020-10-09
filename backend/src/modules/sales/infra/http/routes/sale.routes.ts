@@ -6,10 +6,12 @@ import SaleController from '@modules/sales/infra/http/controllers/SaleController
 const saleRoutes = Router();
 const saleController = new SaleController();
 
-saleRoutes.get('/');
+saleRoutes.get('/', saleController.index);
 
-saleRoutes.post('/');
+saleRoutes.post('/new', saleController.createNew);
 
-saleRoutes.get('/:id');
+saleRoutes.post('/used', saleController.createUsed);
 
-saleRoutes.put('/:id');
+saleRoutes.get('/:id', saleController.show);
+
+export default saleRoutes;
