@@ -8,7 +8,6 @@ import {
 
 @Entity('builders')
 class Builder {
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

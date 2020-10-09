@@ -86,12 +86,12 @@ class UsersController {
   async uploadAvatar(request: Request, response: Response): Promise<Response> {
     const uploadAvatarService = container.resolve(UploadAvatarUserService);
 
-    await uploadAvatarService.execute({
+    const user = await uploadAvatarService.execute({
       user_id: request.user.id,
       avatarFilename: request.file.filename,
     });
 
-    return response.status(200).send();
+    return response.json(classToClass(user));
   }
 }
 

@@ -1,6 +1,9 @@
+import dotenv from 'dotenv';
 import multer, { StorageEngine } from 'multer';
 import path from 'path';
 import crypto from 'crypto';
+
+dotenv.config();
 
 const tmpFolder = path.resolve(__dirname, '..', '..', 'tmp');
 
@@ -15,10 +18,13 @@ interface IUploadConfig {
   };
   config: {
     disk: {};
+    aws: {
+      bucket: string;
+    };
   };
 }
 export default {
-  driver: process.env.STORAGE_DRIVER || 'disk',
+  driver: process.env.STORAGE_DRIVER,
   tmpFolder,
   uploadsFolder: path.resolve(tmpFolder, 'uploads'),
 
@@ -35,5 +41,8 @@ export default {
   },
   config: {
     disk: {},
+    aws: {
+      bucket: 'triunfo-digital',
+    },
   },
 } as IUploadConfig;
