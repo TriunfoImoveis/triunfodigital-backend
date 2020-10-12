@@ -25,8 +25,8 @@ class RealtyRepository implements IRealtyRepository {
   async create(data: ICreateRealtyDTO): Promise<Realty | undefined> {
     try {
       const realty = this.ormRepository.create(data);
-      const newRealty = await this.ormRepository.save(realty);
-      return newRealty;
+      // const newRealty = await this.ormRepository.save(realty);
+      return realty;
     } catch (err) {
       throw new AppError(err.detail);
     }

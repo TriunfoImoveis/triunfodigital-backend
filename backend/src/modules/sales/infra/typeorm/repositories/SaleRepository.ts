@@ -1,4 +1,4 @@
-import { getRepository, Repository } from "typeorm";
+import { getRepository, Repository, getConnection } from "typeorm";
 
 import AppError from '@shared/errors/AppError';
 import Sale from "@modules/sales/infra/typeorm/entities/Sale";
@@ -21,13 +21,36 @@ class SaleRepository {
     return sale;
   }
 
-  async create(data: ICreateSaleDTO): Promise<Sale> {
+  async create(data: ICreateSaleDTO): Promise<Sale | undefined> {
+    const connection = getConnection();
+    const queryRunner = connection.createQueryRunner();
+
+    const {realty, client_buyer} = data;
+
+    await queryRunner.startTransaction();
+
     try {
-      const sale = this.ormRepository.create(data);
-      const newSale = this.ormRepository.save(sale);
-      return newSale;
+
+        const realtyId = await queryRunner.manager.save(realty);
+        const Client_buyerId = await queryRunner.manager.save(client_buyer);
+
+        data.realty = realtyId;
+        data.client_buyer = Client_buyerId;
+
+        const sale = this.ormRepository.create(data);
+        const newSale = await queryRunner.manager.save(sale);
+
+        await queryRunner.commitTransaction();
+
+        return newSale;
+
     } catch (err) {
-      throw new AppError(err.detail);
+
+        await queryRunner.rollbackTransaction();
+        throw new AppError(err);
+
+    } finally {
+        await queryRunner.release();
     }
   }
 }
