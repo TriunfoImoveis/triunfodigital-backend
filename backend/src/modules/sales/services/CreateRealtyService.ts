@@ -15,7 +15,7 @@ class CreateRealtyService {
     property,
   }: ICreateRealtyDTO): Promise<Realty> {
 
-    const newRealty = await this.realtyRepository.create({
+    const newRealty = await this.realtyRepository.createInstance({
       enterprise,
       unit,
       state,

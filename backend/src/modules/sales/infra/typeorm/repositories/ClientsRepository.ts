@@ -53,10 +53,9 @@ class ClientsRepository implements IClientRepository {
     return clients;
   }
 
-  async create(data: ICreateClientDTO): Promise<Client> {
+  async createInstance(data: ICreateClientDTO): Promise<Client | undefined> {
     try {
       const client = this.ormRepository.create(data);
-      // const newClient = await this.ormRepository.save(client);
 
       return client;
     } catch (err) {

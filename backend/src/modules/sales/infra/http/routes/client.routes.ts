@@ -11,21 +11,21 @@ clientRouter.use(ensuredAthenticated);
 
 clientRouter.get('/', clientController.index);
 
-clientRouter.post('/', celebrate({
-  [Segments.BODY]: {
-    name: Joi.string().required(),
-    cpf: Joi.string().pattern(/^[0-9]{11,11}$/).required(),
-    email: Joi.string().email().required(),
-    phone: Joi.string().pattern(/^[0-9]{11,11}$/).required(),
-    date_birth: Joi.date().required(),
-    occupation: Joi.string().required(),
-    civil_status: Joi.string().valid(
-      'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
-    ).required(),
-    number_children: Joi.number().integer().min(0).required(),
-    gender: Joi.string().valid('MASCULINO', 'FEMININO').required(),
-  }
-}), clientController.create);
+// clientRouter.post('/', celebrate({
+//   [Segments.BODY]: {
+//     name: Joi.string().required(),
+//     cpf: Joi.string().pattern(/^[0-9]{11,11}$/).required(),
+//     email: Joi.string().email().required(),
+//     phone: Joi.string().pattern(/^[0-9]{11,11}$/).required(),
+//     date_birth: Joi.date().required(),
+//     occupation: Joi.string().required(),
+//     civil_status: Joi.string().valid(
+//       'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
+//     ).required(),
+//     number_children: Joi.number().integer().min(0).required(),
+//     gender: Joi.string().valid('MASCULINO', 'FEMININO').required(),
+//   }
+// }), clientController.create);
 
 clientRouter.get('/:id', celebrate({
   [Segments.PARAMS]: {
@@ -55,7 +55,6 @@ clientRouter.patch('/deactivate/:id', celebrate({
     id: Joi.string().uuid(),
   }
 }), clientController.deactivate);
-
 
 clientRouter.patch('/activate/:id', celebrate({
   [Segments.PARAMS]: {

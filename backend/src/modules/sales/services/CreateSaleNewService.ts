@@ -24,8 +24,11 @@ class CreateSaleNewService {
     user_director,
     user_coordinator,
   }: ICreateSaleDTO): Promise<Sale> {
+    const {id} = client_buyer;
 
-    const sale = await this.saleRepository.create({
+    console.log(id);
+
+    const sale = await this.saleRepository.createSaleAndClient({
       sale_type,
       sale_date,
       realty_ammount,

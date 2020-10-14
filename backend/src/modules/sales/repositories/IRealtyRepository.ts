@@ -4,5 +4,5 @@ import ICreateRealtyDTO from "@modules/sales/dtos/ICreateRealtyDTO";
 export default interface IRealtyRepository {
   findAll(): Promise<Realty[]>;
   findById(id: string): Promise<Realty | undefined>;
-  create(data: ICreateRealtyDTO): Promise<Realty | undefined>;
+  createInstance(data: ICreateRealtyDTO): Promise<Realty | undefined>;
 }

@@ -3,8 +3,9 @@ import { getRepository, Repository, getConnection } from "typeorm";
 import AppError from '@shared/errors/AppError';
 import Sale from "@modules/sales/infra/typeorm/entities/Sale";
 import ICreateSaleDTO from "@modules/sales/dtos/ICreateSaleDTO";
+import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 
-class SaleRepository {
+class SaleRepository implements ISaleRepository {
   private ormRepository: Repository<Sale>;
 
   constructor() {
@@ -21,7 +22,7 @@ class SaleRepository {
     return sale;
   }
 
-  async create(data: ICreateSaleDTO): Promise<Sale | undefined> {
+  async createSaleAndClient(data: ICreateSaleDTO): Promise<Sale | undefined> {
     const connection = getConnection();
     const queryRunner = connection.createQueryRunner();
 

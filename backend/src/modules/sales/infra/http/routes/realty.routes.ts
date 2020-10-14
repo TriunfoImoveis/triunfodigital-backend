@@ -15,15 +15,15 @@ realtyRoutes.get('/:id', celebrate({
   }
 }), realtyController.show);
 
-realtyRoutes.post('/', celebrate({
-  [Segments.BODY]: {
-    enterprise: Joi.string().required(),
-    unit: Joi.string().required(),
-    state: Joi.string().required(),
-    city: Joi.string().required(),
-    neighborhood: Joi.string().required(),
-    property: Joi.string().uuid().required(),
-  }
-}), realtyController.create);
+// realtyRoutes.post('/', celebrate({
+//   [Segments.BODY]: {
+//     enterprise: Joi.string().required(),
+//     unit: Joi.string().required(),
+//     state: Joi.string().required(),
+//     city: Joi.string().required(),
+//     neighborhood: Joi.string().required(),
+//     property: Joi.string().uuid().required(),
+//   }
+// }), realtyController.create);
 
 export default realtyRoutes;
