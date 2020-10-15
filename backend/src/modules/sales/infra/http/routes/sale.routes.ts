@@ -8,9 +8,9 @@ const saleController = new SaleController();
 
 saleRoutes.get('/', saleController.index);
 
-saleRoutes.post('/new', saleController.createNew);
+saleRoutes.post('/new', saleController.createSaleNew);
 
-saleRoutes.post('/used', saleController.createUsed);
+saleRoutes.post('/used', saleController.createSaleUsed);
 
 saleRoutes.get('/:id', saleController.show);
 

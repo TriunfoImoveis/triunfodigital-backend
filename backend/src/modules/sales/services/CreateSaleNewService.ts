@@ -1,7 +1,7 @@
 import AppError from '@shared/errors/AppError';
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleDTO from "@modules/sales/dtos/ICreateSaleDTO";
-import Sale from '../infra/typeorm/entities/Sale';
+import Sale from '@modules/sales/infra/typeorm/entities/Sale';
 
 class CreateSaleNewService {
   constructor(private saleRepository: ISaleRepository) {}
@@ -23,12 +23,10 @@ class CreateSaleNewService {
     user_captivator,
     user_director,
     user_coordinator,
+    users_sellers,
   }: ICreateSaleDTO): Promise<Sale> {
-    const {id} = client_buyer;
 
-    console.log(id);
-
-    const sale = await this.saleRepository.createSaleAndClient({
+    const sale = await this.saleRepository.createSaleNew({
       sale_type,
       sale_date,
       realty_ammount,
@@ -45,6 +43,7 @@ class CreateSaleNewService {
       user_captivator,
       user_director,
       user_coordinator,
+      users_sellers,
     });
 
     if (!sale) {

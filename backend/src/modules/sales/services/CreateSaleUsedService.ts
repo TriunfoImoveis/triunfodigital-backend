@@ -1,13 +1,56 @@
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleDTO from "@modules/sales/dtos/ICreateSaleDTO";
+import AppError from "@shared/errors/AppError";
+import Sale from "@modules/sales/infra/typeorm/entities/Sale";
 
 class CreateSaleUsedService {
   constructor(private saleRepository: ISaleRepository) {}
 
   public async execute({
+    sale_type,
+    sale_date,
+    realty_ammount,
+    percentage_sale,
+    percentage_company,
+    commission,
+    details_payment,
+    bonus,
+    observation,
+    origin,
+    realty,
+    client_buyer,
+    client_seller,
+    user_captivator,
+    user_director,
+    user_coordinator,
+    users_sellers,
+  }: ICreateSaleDTO): Promise<Sale> {
 
-  }: ICreateSaleDTO): Promise<void> {
+    const sale = await this.saleRepository.createSaleUsed({
+      sale_type,
+      sale_date,
+      realty_ammount,
+      percentage_sale,
+      percentage_company,
+      commission,
+      details_payment,
+      bonus,
+      observation,
+      origin,
+      realty,
+      client_buyer,
+      client_seller,
+      user_captivator,
+      user_director,
+      user_coordinator,
+      users_sellers,
+    });
 
+    if (!sale) {
+      throw new AppError('Error when creating the sale, check your data');
+    }
+
+    return sale;
   }
 }
 

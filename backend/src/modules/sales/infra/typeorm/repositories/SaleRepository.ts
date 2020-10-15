@@ -12,33 +12,83 @@ class SaleRepository implements ISaleRepository {
     this.ormRepository = getRepository(Sale);
   }
 
+
   async findAll(): Promise<Sale[]> {
     const sales = this.ormRepository.find();
     return sales;
   }
+
 
   async findById(id: string): Promise<Sale | undefined> {
     const sale = this.ormRepository.findOne(id);
     return sale;
   }
 
-  async createSaleAndClient(data: ICreateSaleDTO): Promise<Sale | undefined> {
+
+  async createSaleNew(data: ICreateSaleDTO): Promise<Sale | undefined> {
     const connection = getConnection();
     const queryRunner = connection.createQueryRunner();
 
-    const {realty, client_buyer} = data;
+    const {
+      realty,
+      client_buyer,
+      users_sellers,
+    } = data;
 
     await queryRunner.startTransaction();
 
     try {
 
         const realtyId = await queryRunner.manager.save(realty);
-        const Client_buyerId = await queryRunner.manager.save(client_buyer);
+        const client_buyerId = await queryRunner.manager.save(client_buyer);
 
         data.realty = realtyId;
-        data.client_buyer = Client_buyerId;
+        data.client_buyer = client_buyerId;
 
         const sale = this.ormRepository.create(data);
+        sale.sale_has_sellers = users_sellers;
+        const newSale = await queryRunner.manager.save(sale);
+
+        await queryRunner.commitTransaction();
+
+        return newSale;
+
+    } catch (err) {
+
+        await queryRunner.rollbackTransaction();
+        throw new AppError(err);
+
+    } finally {
+        await queryRunner.release();
+    }
+  }
+
+
+  async createSaleUsed(data: ICreateSaleDTO): Promise<Sale | undefined> {
+    const connection = getConnection();
+    const queryRunner = connection.createQueryRunner();
+
+    const {
+      realty,
+      client_buyer,
+      client_seller,
+      users_sellers,
+    } = data;
+
+    await queryRunner.startTransaction();
+
+    try {
+
+        const realtyId = await queryRunner.manager.save(realty);
+        const client_buyerId = await queryRunner.manager.save(client_buyer);
+        const client_sellerId = await queryRunner.manager.save(client_seller);
+
+        data.realty = realtyId;
+        data.client_buyer = client_buyerId;
+        data.client_seller = client_sellerId;
+
+        const sale = this.ormRepository.create(data);
+        sale.sale_has_sellers = users_sellers;
         const newSale = await queryRunner.manager.save(sale);
 
         await queryRunner.commitTransaction();

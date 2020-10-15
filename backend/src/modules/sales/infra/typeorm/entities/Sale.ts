@@ -73,29 +73,29 @@ class Sale {
   @JoinColumn({ name: 'builder_id' })
   builder: Builder;
 
-  @OneToOne(type => Client, { nullable: false, eager: true })
+  @ManyToOne(type => Client, { nullable: false, eager: true })
   @JoinColumn({ name: 'client_buyer' })
   client_buyer: Client;
 
-  @OneToOne(type => Client, { nullable: true, eager: true })
-  @JoinColumn({ name: 'client_saller' })
-  client_saller: Client;
+  @ManyToOne(type => Client, { nullable: true, eager: true })
+  @JoinColumn({ name: 'client_seller' })
+  client_seller: Client;
 
-  @OneToOne(type => User, {nullable: false, eager: true})
+  @ManyToOne(type => User, {nullable: false, eager: true})
   @JoinColumn({ name: 'user_captivator' })
   user_captivator: User;
 
-  @OneToOne(type => User, {nullable: false, eager: true})
+  @ManyToOne(type => User, {nullable: false, eager: true})
   @JoinColumn({ name: 'user_director' })
   user_director: User;
 
-  @OneToOne(type => User, {nullable: true, eager: true})
+  @ManyToOne(type => User, {nullable: true, eager: true})
   @JoinColumn({ name: 'user_coordinator' })
   user_coordinator: User;
 
   @ManyToMany(type => User)
-  @JoinTable({ name: 'sale_has_sallers' })
-  sale_has_sallers: User;
+  @JoinTable({ name: 'sale_has_sellers' })
+  sale_has_sellers: User[];
 }
 
 export default Sale;
