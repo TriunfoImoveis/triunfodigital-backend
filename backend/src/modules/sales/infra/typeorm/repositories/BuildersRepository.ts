@@ -12,6 +12,19 @@ class BuildersRespository implements IBuilderRepository {
     this.ormRepository = getRepository(Builder);
   }
 
+  async findBuildersActive(): Promise<Builder[]> {
+    const builders = await this.ormRepository.find({
+      where: {
+        active: true,
+      },
+      order: {
+        name: "ASC",
+      }
+    });
+
+    return builders;
+  }
+
   async findById(id: string): Promise<Builder | undefined> {
     const builder = await this.ormRepository.findOne(id);
     return builder;
@@ -39,16 +52,6 @@ class BuildersRespository implements IBuilderRepository {
       where: { cnpj },
     });
     return builder;
-  }
-
-  async findBuildersActive(): Promise<Builder[]> {
-    const builders = await this.ormRepository.find({
-      where: {
-        active: true,
-      }
-    });
-
-    return builders;
   }
 
   async create(data: ICreateBuilderDTO): Promise<Builder | undefined> {

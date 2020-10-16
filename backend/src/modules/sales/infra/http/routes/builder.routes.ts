@@ -14,7 +14,7 @@ builderRouter.post('/', ensuredAthenticated, celebrate({
     name: Joi.string().required(),
     cnpj: Joi.string().pattern(/^[0-9]{14,14}$/).required(),
     email: Joi.string().email().required(),
-    phone: Joi.string().pattern(/^[0-9]{11,11}$/).required(),
+    phone: Joi.string().pattern(/^[0-9]{10,11}$/).required(),
     responsible: Joi.string().required(),
   },
 }), builderController.create);

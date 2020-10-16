@@ -12,7 +12,11 @@ class OriginsRepository implements IOriginRepository {
   }
 
   async findAll(): Promise<OriginSale[]> {
-    const origins = await this.ormRepository.find();
+    const origins = await this.ormRepository.find({
+      order: {
+        name: "ASC",
+      }
+    });
 
     return origins;
   }

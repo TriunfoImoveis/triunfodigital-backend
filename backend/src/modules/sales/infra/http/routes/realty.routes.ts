@@ -8,11 +8,9 @@ import RealtyController from '@modules/sales/infra/http/controllers/RealtyContro
 const realtyRoutes = Router();
 const realtyController = new RealtyController();
 
-realtyRoutes.use(ensuredAthenticated);
-
 realtyRoutes.get('/', realtyController.index);
 
-realtyRoutes.get('/:id', celebrate({
+realtyRoutes.get('/:id', ensuredAthenticated, celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),
   }

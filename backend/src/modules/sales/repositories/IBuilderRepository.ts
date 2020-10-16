@@ -3,11 +3,11 @@ import ICreateBuilderDTO from "@modules/sales/dtos/ICreateBuilderDTO";
 import IUpdateBuilderDTO from "@modules/sales/dtos/IUpdateBuilderDTO";
 
 export default interface IBuilderRepository {
+  findBuildersActive(): Promise<Builder[]>;
   findByName(name: string): Promise<Builder | undefined>;
   findById(id: string): Promise<Builder | undefined>;
   findByIdAndActivate(id: string): Promise<Builder | undefined>;
   findByCNPJ(cnpj: string): Promise<Builder | undefined>;
-  findBuildersActive(): Promise<Builder[]>;
 
   create(data: ICreateBuilderDTO): Promise<Builder | undefined>;
   update(id: string, data: IUpdateBuilderDTO): Promise<Builder | undefined>;

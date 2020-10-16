@@ -25,7 +25,7 @@ export enum Status {
   PE  = 'PENDENTE',
   CA  = 'CAIU',
   EP  = 'EM PARTE',
-  PT = 'PAGO TOTAL',
+  PT  = 'PAGO TOTAL',
 }
 
 @Entity('sales')
