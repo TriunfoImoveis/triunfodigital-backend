@@ -17,13 +17,15 @@ import Realty from "./Realty";
 
 
 export enum SaleType {
-  N = 'Novo',
-  U = 'Usado',
+  N = 'NOVO',
+  U = 'USADO',
 }
 
 export enum Status {
-  PEN = 'Pendente',
-  CON = 'Confirmado'
+  PE  = 'PENDENTE',
+  CA  = 'CAIU',
+  EP  = 'EM PARTE',
+  PT = 'PAGO TOTAL',
 }
 
 @Entity('sales')
@@ -49,16 +51,10 @@ class Sale {
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false})
   commission: number;
 
-  @Column({ type: 'varchar', length: 150, nullable: true })
-  details_payment: string;
-
   @Column({ type: 'varchar', length: 50, nullable: true})
   bonus: string;
 
-  @Column({ type: 'varchar', length: 150, nullable: true })
-  observation: string;
-
-  @Column({ type: 'enum', enum: Status, default: Status.PEN  })
+  @Column({ type: 'enum', enum: Status, default: Status.PE })
   status: Status;
 
   @ManyToOne(type => OriginSale, sales => Sale, {nullable: false, eager: true})

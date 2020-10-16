@@ -8,20 +8,12 @@ import PropertyController from '@modules/sales/infra/http/controllers/PropertyCo
 const propertyRoutes = Router();
 const propertyController = new PropertyController();
 
-propertyRoutes.use(ensuredAthenticated);
-
 propertyRoutes.get('/', propertyController.index);
 
-propertyRoutes.post('/', celebrate({
+propertyRoutes.post('/', ensuredAthenticated, celebrate({
   [Segments.BODY]: {
     name: Joi.string().required(),
   }
 }), propertyController.create);
-
-propertyRoutes.get('/:id', celebrate({
-  [Segments.PARAMS]: {
-    id: Joi.string().uuid(),
-  }
-}), propertyController.show);
 
 export default propertyRoutes;

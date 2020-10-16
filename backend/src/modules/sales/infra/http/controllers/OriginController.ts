@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 
-import AppError from "@shared/errors/AppError";
 import OriginsRepository from "@modules/sales/infra/typeorm/repositories/OriginRepository";
 
 class OriginController {
@@ -9,17 +8,6 @@ class OriginController {
     const origins = await originsRepository.findAll();
 
     return response.json(origins);
-  }
-
-  async show(request: Request, response:Response): Promise<Response> {
-    const originsRepository = new OriginsRepository();
-    const origin = await originsRepository.findById(request.params.id);
-
-    if (!origin) {
-      throw new AppError('Origin Sale not exists.');
-    }
-
-    return response.json(origin);
   }
 
   async create(request: Request, response: Response): Promise<Response> {

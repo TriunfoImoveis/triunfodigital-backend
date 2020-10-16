@@ -33,22 +33,22 @@ clientRouter.get('/:id', celebrate({
   }
 }), clientController.show);
 
-clientRouter.put('/:id', celebrate({
-  [Segments.PARAMS]: {
-    id: Joi.string().uuid(),
-  },
-  [Segments.BODY]: {
-    name: Joi.string(),
-    cpf: Joi.string().pattern(/^[0-9]{11,11}$/),
-    email: Joi.string().email(),
-    phone: Joi.string().pattern(/^[0-9]{11,11}$/),
-    date_birth: Joi.date(),
-    occupation: Joi.string(),
-    civil_status: Joi.string().valid('C', 'D', 'S', 'V'),
-    number_children: Joi.number().integer().min(0),
-    gender: Joi.string().valid('M', 'F', 'O'),
-  }
-}), clientController.update);
+// clientRouter.put('/:id', celebrate({
+//   [Segments.PARAMS]: {
+//     id: Joi.string().uuid(),
+//   },
+//   [Segments.BODY]: {
+//     name: Joi.string(),
+//     cpf: Joi.string().pattern(/^[0-9]{11,11}$/),
+//     email: Joi.string().email(),
+//     phone: Joi.string().pattern(/^[0-9]{11,11}$/),
+//     date_birth: Joi.date(),
+//     occupation: Joi.string(),
+//     civil_status: Joi.string().valid('C', 'D', 'S', 'V'),
+//     number_children: Joi.number().integer().min(0),
+//     gender: Joi.string().valid('M', 'F', 'O'),
+//   }
+// }), clientController.update);
 
 clientRouter.patch('/deactivate/:id', celebrate({
   [Segments.PARAMS]: {
