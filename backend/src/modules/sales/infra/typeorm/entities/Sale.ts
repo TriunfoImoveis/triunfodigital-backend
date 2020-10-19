@@ -78,16 +78,16 @@ class Sale {
   client_seller: Client;
 
   @ManyToOne(type => User, {nullable: false, eager: true})
-  @JoinColumn({ name: 'user_captivator' })
-  user_captivator: User;
-
-  @ManyToOne(type => User, {nullable: false, eager: true})
   @JoinColumn({ name: 'user_director' })
   user_director: User;
 
   @ManyToOne(type => User, {nullable: true, eager: true})
   @JoinColumn({ name: 'user_coordinator' })
   user_coordinator: User;
+
+  @ManyToMany(type => User)
+  @JoinTable({ name: 'sale_has_captivators' })
+  sale_has_captivators: User[];
 
   @ManyToMany(type => User)
   @JoinTable({ name: 'sale_has_sellers' })

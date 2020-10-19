@@ -1,6 +1,6 @@
 import AppError from '@shared/errors/AppError';
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
-import ICreateSaleDTO from "@modules/sales/dtos/ICreateSaleDTO";
+import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
 
 class CreateSaleNewService {
@@ -13,18 +13,15 @@ class CreateSaleNewService {
     percentage_sale,
     percentage_company,
     commission,
-    details_payment,
     bonus,
-    observation,
     origin,
     realty,
     builder,
     client_buyer,
-    user_captivator,
     user_director,
     user_coordinator,
     users_sellers,
-  }: ICreateSaleDTO): Promise<Sale> {
+  }: ICreateSaleNewDTO): Promise<Sale> {
 
     const sale = await this.saleRepository.createSaleNew({
       sale_type,
@@ -33,14 +30,11 @@ class CreateSaleNewService {
       percentage_sale,
       percentage_company,
       commission,
-      details_payment,
       bonus,
-      observation,
       origin,
       realty,
       builder,
       client_buyer,
-      user_captivator,
       user_director,
       user_coordinator,
       users_sellers,

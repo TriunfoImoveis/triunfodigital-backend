@@ -2,7 +2,8 @@ import { getRepository, Repository, getConnection } from "typeorm";
 
 import AppError from '@shared/errors/AppError';
 import Sale from "@modules/sales/infra/typeorm/entities/Sale";
-import ICreateSaleDTO from "@modules/sales/dtos/ICreateSaleDTO";
+import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
+import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 
 class SaleRepository implements ISaleRepository {
@@ -25,7 +26,7 @@ class SaleRepository implements ISaleRepository {
   }
 
 
-  async createSaleNew(data: ICreateSaleDTO): Promise<Sale | undefined> {
+  async createSaleNew(data: ICreateSaleNewDTO): Promise<Sale | undefined> {
     const connection = getConnection();
     const queryRunner = connection.createQueryRunner();
 
@@ -64,7 +65,7 @@ class SaleRepository implements ISaleRepository {
   }
 
 
-  async createSaleUsed(data: ICreateSaleDTO): Promise<Sale | undefined> {
+  async createSaleUsed(data: ICreateSaleUsedDTO): Promise<Sale | undefined> {
     const connection = getConnection();
     const queryRunner = connection.createQueryRunner();
 
@@ -72,6 +73,7 @@ class SaleRepository implements ISaleRepository {
       realty,
       client_buyer,
       client_seller,
+      users_captivators,
       users_sellers,
     } = data;
 
@@ -88,6 +90,7 @@ class SaleRepository implements ISaleRepository {
         data.client_seller = client_sellerId;
 
         const sale = this.ormRepository.create(data);
+        sale.sale_has_captivators = users_captivators;
         sale.sale_has_sellers = users_sellers;
         const newSale = await queryRunner.manager.save(sale);
 
