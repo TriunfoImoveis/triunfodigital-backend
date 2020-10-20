@@ -22,6 +22,7 @@ saleRoutes.post('/new', celebrate({
     commission: Joi.number().required(),
     bonus: Joi.string(),
     origin: Joi.string().uuid().required(),
+    payment_type: Joi.string().uuid().required(),
     realty: Joi.object({
       enterprise: Joi.string().required(),
       unit: Joi.string().required(),
@@ -60,6 +61,7 @@ saleRoutes.post('/used', celebrate({
     commission: Joi.number().required(),
     bonus: Joi.string(),
     origin: Joi.string().uuid().required(),
+    payment_type: Joi.string().uuid().required(),
     realty: Joi.object({
       enterprise: Joi.string().required(),
       unit: Joi.string().required(),

@@ -13,6 +13,7 @@ import User from "../../../../users/infra/typeorm/entities/User";
 import Builder from "./Builder";
 import Client from "./Client";
 import OriginSale from "./OriginSale";
+import PaymentType from "./PaymentType";
 import Realty from "./Realty";
 
 
@@ -61,6 +62,10 @@ class Sale {
   @JoinColumn({ name: 'origin_id' })
   origin: OriginSale;
 
+  @ManyToOne(type => PaymentType, {nullable: false, eager: true})
+  @JoinColumn({ name: 'payment_type' })
+  payment_type: PaymentType;
+
   @OneToOne(type => Realty, sale => Sale, {nullable: false, eager: true})
   @JoinColumn({ name: 'realty_id' })
   realty: Realty;
@@ -69,19 +74,19 @@ class Sale {
   @JoinColumn({ name: 'builder_id' })
   builder: Builder;
 
-  @ManyToOne(type => Client, { nullable: false, eager: true })
+  @ManyToOne(type => Client, {nullable: false})
   @JoinColumn({ name: 'client_buyer' })
   client_buyer: Client;
 
-  @ManyToOne(type => Client, { nullable: true, eager: true })
+  @ManyToOne(type => Client, {nullable: true})
   @JoinColumn({ name: 'client_seller' })
   client_seller: Client;
 
-  @ManyToOne(type => User, {nullable: false, eager: true})
+  @ManyToOne(type => User, {nullable: false})
   @JoinColumn({ name: 'user_director' })
   user_director: User;
 
-  @ManyToOne(type => User, {nullable: true, eager: true})
+  @ManyToOne(type => User, {nullable: true})
   @JoinColumn({ name: 'user_coordinator' })
   user_coordinator: User;
 

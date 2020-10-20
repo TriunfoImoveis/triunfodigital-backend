@@ -4,6 +4,7 @@ import Client from "@modules/sales/infra/typeorm/entities/Client";
 import OriginSale from "@modules/sales/infra/typeorm/entities/OriginSale";
 import Realty from "@modules/sales/infra/typeorm/entities/Realty";
 import { SaleType } from "@modules/sales/infra/typeorm/entities/Sale";
+import PaymentType from "@modules/sales/infra/typeorm/entities/PaymentType";
 
 export default interface ICreateSaleNewDTO {
   sale_type: SaleType;
@@ -14,6 +15,7 @@ export default interface ICreateSaleNewDTO {
   commission: number;
   bonus?: string;
   origin: OriginSale;
+  payment_type: PaymentType;
   realty: Realty;
   builder: Builder;
   client_buyer: Client;

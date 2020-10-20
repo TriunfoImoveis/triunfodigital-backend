@@ -12,6 +12,7 @@ import propertyRoutes from '@modules/sales/infra/http/routes/property.routes';
 import originRoutes from '@modules/sales/infra/http/routes/origin.routes';
 import realtyRoutes from '@modules/sales/infra/http/routes/realty.routes';
 import saleRoutes from '@modules/sales/infra/http/routes/sale.routes';
+import paymentTypeRoutes from '@modules/sales/infra/http/routes/paymentType.routes';
 
 
 const routes = Router();
@@ -27,6 +28,7 @@ routes.use('/subsidiary', subsidiaryRouter);
 routes.use('/client', clientRouter);
 routes.use('/builder', builderRouter);
 routes.use('/property-type', propertyRoutes);
+routes.use('/payment-type', paymentTypeRoutes);
 routes.use('/origin-sale', originRoutes);
 routes.use('/realty', realtyRoutes);
 routes.use('/sale', saleRoutes);
