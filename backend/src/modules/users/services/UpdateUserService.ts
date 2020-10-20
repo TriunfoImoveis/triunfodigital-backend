@@ -2,6 +2,7 @@ import AppError from '@shared/errors/AppError';
 import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 import User from '@modules/users/infra/typeorm/entities/User';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
+import { classToClass } from 'class-transformer';
 
 interface IRequest {
   user_id: string;

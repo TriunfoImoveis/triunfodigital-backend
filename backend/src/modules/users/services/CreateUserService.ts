@@ -4,13 +4,10 @@ import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/User';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
-import IDepartamentRepository from '@modules/users/repositories/IDepartamentRepository';
-import IOfficeRepository from '@modules/users/repositories/IOfficeRepository';
+import { classToClass } from 'class-transformer';
 
 class CreateUserService {
-  constructor(
-    private usersRepository: IUserRepository
-  ) {}
+  constructor(private usersRepository: IUserRepository) {}
 
   public async execute({
     name,
