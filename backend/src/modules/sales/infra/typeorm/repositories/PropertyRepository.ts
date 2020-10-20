@@ -12,7 +12,11 @@ class PropertiesRepository implements IPropertyRepository {
   }
 
   async findAll(): Promise<PropertyType[]> {
-    const properties = await this.ormRepository.find();
+    const properties = await this.ormRepository.find({
+      order: {
+        name: "ASC",
+      },
+    });
 
     return properties;
   }

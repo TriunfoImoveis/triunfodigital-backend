@@ -1,3 +1,5 @@
+import { CivilStatus, Gender } from "@modules/sales/infra/typeorm/entities/Client";
+
 export default interface ICreateClientDTO {
   name: string;
   cpf: string;
@@ -5,7 +7,7 @@ export default interface ICreateClientDTO {
   email: string;
   phone: string;
   occupation: string;
-  civil_status: string;
+  civil_status: CivilStatus;
   number_children: number;
-  gender: string;
+  gender: Gender;
 }

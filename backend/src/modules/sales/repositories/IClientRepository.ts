@@ -10,7 +10,7 @@ export default interface IClientRepository {
   findByCPF(cpf: string): Promise<Client | undefined>;
   findClientsActive(): Promise<Client[]>;
 
-  create(data: ICreateClientDTO): Promise<Client>;
+  createInstance(data: ICreateClientDTO): Promise<Client | undefined>;
   update(id: string, data: IUpdateClientDTO): Promise<Client | undefined>;
   activate(id: string): Promise<Client | undefined>;
   deactivate(id: string): Promise<void>;

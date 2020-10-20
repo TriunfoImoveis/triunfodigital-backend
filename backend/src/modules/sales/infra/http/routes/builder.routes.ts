@@ -7,27 +7,25 @@ import BuilderController from '@modules/sales/infra/http/controllers/BuilderCont
 const builderRouter = Router();
 const builderController = new BuilderController();
 
-builderRouter.use(ensuredAthenticated);
-
 builderRouter.get('/', builderController.index);
 
-builderRouter.post('/', celebrate({
+builderRouter.post('/', ensuredAthenticated, celebrate({
   [Segments.BODY]: {
     name: Joi.string().required(),
     cnpj: Joi.string().pattern(/^[0-9]{14,14}$/).required(),
     email: Joi.string().email().required(),
-    phone: Joi.string().pattern(/^[0-9]{11,11}$/).required(),
+    phone: Joi.string().pattern(/^[0-9]{10,11}$/).required(),
     responsible: Joi.string().required(),
   },
 }), builderController.create);
 
-builderRouter.get('/:id', celebrate({
+builderRouter.get('/:id', ensuredAthenticated, celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),
   },
 }), builderController.show);
 
-builderRouter.put('/:id', celebrate({
+builderRouter.put('/:id', ensuredAthenticated, celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),
   },
@@ -40,13 +38,13 @@ builderRouter.put('/:id', celebrate({
   }
 }), builderController.update);
 
-builderRouter.patch('/deactivate/:id', celebrate({
+builderRouter.patch('/deactivate/:id', ensuredAthenticated, celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),
   },
 }), builderController.deactivate);
 
-builderRouter.patch('/activate/:id', celebrate({
+builderRouter.patch('/activate/:id', ensuredAthenticated, celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),
   }

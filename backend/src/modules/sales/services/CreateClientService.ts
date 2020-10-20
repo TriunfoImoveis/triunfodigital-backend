@@ -17,13 +17,13 @@ class CreateClientService {
   number_children,
   gender,
  }: ICreateClientDTO): Promise<Client> {
-  const checkClientExists = await this.clientsRepository.findByCPF(cpf);
+  const clientExists = await this.clientsRepository.findByCPF(cpf);
 
-  if (checkClientExists) {
-    throw new AppError('Client with this CPF already exists.');
+  if (clientExists) {
+    return clientExists;
   }
 
-  const client = await this.clientsRepository.create({
+  const client = await this.clientsRepository.createInstance({
     name,
     cpf,
     date_birth,

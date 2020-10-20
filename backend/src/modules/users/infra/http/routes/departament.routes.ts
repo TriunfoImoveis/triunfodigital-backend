@@ -14,7 +14,7 @@ departamentRouter.get('/', departamentController.index);
 departamentRouter.post('/', celebrate({
   [Segments.BODY]: {
     name: Joi.string().required(),
-    initials: Joi.string(),
+    initials: Joi.string().required(),
     goal: Joi.number(),
     subsidiary: Joi.string().uuid().required(),
   }

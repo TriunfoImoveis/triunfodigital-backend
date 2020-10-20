@@ -7,15 +7,15 @@ import {
 } from 'typeorm';
 
 export enum CivilStatus {
-  C = 'Casado(a)',
-  D = 'Divorciado(a)',
-  S = 'Solteiro(a)',
-  V = 'Viúvo(a)',
+  C = 'CASADO(A)',
+  D = 'DIVORCIADO(A)',
+  S = 'SOLTEIRO(A)',
+  V = 'VIUVO(A)',
 }
 
 export enum Gender {
-  F = 'Feminino',
-  M = 'Masculino',
+  F = 'FEMININO',
+  M = 'MASCULINO',
 }
 
 @Entity('clients')

@@ -1,28 +1,30 @@
-import { response, Router } from 'express';
-import { getRepository } from 'typeorm';
-import Realty from '../../typeorm/entities/Realty';
-import AppError from '@shared/errors/AppError';
+import { Router } from 'express';
+import { celebrate, Joi, Segments } from 'celebrate';
+
+import ensuredAthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
+import RealtyController from '@modules/sales/infra/http/controllers/RealtyController';
 
 
 const realtyRoutes = Router();
+const realtyController = new RealtyController();
 
-realtyRoutes.get('/', async (request, response) => {
-  const realtiesRepository = getRepository(Realty);
-  const realtys = await realtiesRepository.find();
+realtyRoutes.get('/', realtyController.index);
 
-  return response.json(realtys);
-})
-
-realtyRoutes.post('/', async (request, response) => {
-  try {
-    const realtiesRepository = getRepository(Realty);
-    const realty = realtiesRepository.create(request.body);
-    const newRealty = await realtiesRepository.save(realty);
-
-    return response.json(newRealty);
-  } catch (err) {
-    throw new AppError(err.detail);
+realtyRoutes.get('/:id', ensuredAthenticated, celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
   }
-});
+}), realtyController.show);
+
+// realtyRoutes.post('/', celebrate({
+//   [Segments.BODY]: {
+//     enterprise: Joi.string().required(),
+//     unit: Joi.string().required(),
+//     state: Joi.string().required(),
+//     city: Joi.string().required(),
+//     neighborhood: Joi.string().required(),
+//     property: Joi.string().uuid().required(),
+//   }
+// }), realtyController.create);
 
 export default realtyRoutes;

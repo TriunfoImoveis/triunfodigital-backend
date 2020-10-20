@@ -1,5 +1,3 @@
-import * as Yup from 'yup';
-
 import AppError from '@shared/errors/AppError';
 import Office from '@modules/users/infra/typeorm/entities/Office';
 import IOfficeRepository from '@modules/users/repositories/IOfficeRepository';
