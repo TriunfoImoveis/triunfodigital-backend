@@ -5,6 +5,8 @@ import authConfig from '@config/auth';
 import AppError from '@shared/errors/AppError';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 
+import { classToClass } from 'class-transformer';
+
 interface IRequest {
   email: string;
   password: string;
@@ -58,16 +60,8 @@ class AuthenticateUserService {
       expiresIn,
     });
 
-    const userAuth: IUserResponse = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      admission_date: user.admission_date,
-      goal: user.goal,
-    };
     return {
-      userAuth,
+      userAuth: classToClass(user),
       token,
     };
   }

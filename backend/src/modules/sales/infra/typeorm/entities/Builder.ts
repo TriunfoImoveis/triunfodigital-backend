@@ -11,7 +11,6 @@ import Sale from './Sale';
 
 @Entity('builders')
 class Builder {
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

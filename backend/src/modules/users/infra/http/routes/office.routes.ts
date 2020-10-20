@@ -7,36 +7,51 @@ import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenti
 const officeRouter = Router();
 const officeController = new OfficeController();
 
+officeRouter.get('/', officeController.index);
 officeRouter.use(ensuredAuthenticated);
 
-officeRouter.get('/', officeController.index);
+officeRouter.post(
+  '/',
+  celebrate({
+    [Segments.BODY]: {
+      name: Joi.string().required(),
+    },
+  }),
+  officeController.create,
+);
 
-officeRouter.post('/', celebrate({
-  [Segments.BODY]: {
-    name: Joi.string().required(),
-  }
-}), officeController.create);
+officeRouter.get(
+  '/:id',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid(),
+    },
+  }),
+  officeController.show,
+);
 
-officeRouter.get('/:id', celebrate({
-  [Segments.PARAMS]: {
-    id: Joi.string().uuid(),
-  }
-}), officeController.show);
+officeRouter.put(
+  '/:id',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid(),
+    },
+    [Segments.BODY]: {
+      name: Joi.string(),
+      active: Joi.boolean(),
+    },
+  }),
+  officeController.update,
+);
 
-officeRouter.put('/:id', celebrate({
-  [Segments.PARAMS]: {
-    id: Joi.string().uuid(),
-  },
-  [Segments.BODY]: {
-    name: Joi.string(),
-    active: Joi.boolean(),
-  }
-}), officeController.update);
-
-officeRouter.delete('/:id', celebrate({
-  [Segments.PARAMS]: {
-    id: Joi.string().uuid(),
-  }
-}), officeController.delete);
+officeRouter.delete(
+  '/:id',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid(),
+    },
+  }),
+  officeController.delete,
+);
 
 export default officeRouter;
