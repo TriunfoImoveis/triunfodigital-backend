@@ -1,18 +1,18 @@
 {
   "type": "postgres",
   "host": "localhost",
-  "port": 5432,
-  "username": "",
-  "password": "",
-  "database": "",
+  "port": 5434,
+  "username": "postgres",
+  "password": "docker",
+  "database": "triunfo_digital_db",
   "entities": [
-    ""
-  ],
+    "./dist/modules/*/infra/typeorm/entities/*.js"
+ ],
   "migrations": [
-    ""
+    "./dist/shared/infra/typeorm/migrations/*.js"
   ],
   "cli": {
-    "migrationsDir": "",
-    "entitiesDir": ""
+    "migrationsDir": "./dist/shared/infra/typeorm/migrations",
+    "entitiesDir": "./dist/modules/*/infra/typeorm/entities"
   }
 }
