@@ -60,7 +60,7 @@ jobs:
             cd ~/app/triunfodigital
             ./node_modules/.bin/typeorm migration:run
             
-      - name: Roda as migrations no banco de dados em produção 
+      - name: Restart da aplição no servidor
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
