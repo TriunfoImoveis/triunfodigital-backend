@@ -36,7 +36,7 @@ jobs:
           source: ".,!node_modules"
           target: "~/app/triunfodigital"
           
-      #Instala as Depependências no Servidor    
+      #Instala as dependencias, roda as migrations e restar do servidor    
       - name: Instala as Depependências no Servidor 
         uses: appleboy/ssh-action@master
         with:
@@ -47,25 +47,8 @@ jobs:
           script: |
             cd ~/app/triunfodigital
             yarn
-            
-            
-      - name: Roda as migrations no banco de dados em produção 
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          port: ${{ secrets.SSH_PORT }}
-          key: ${{ secrets.SSH_KEY}}
-          script: |
-            cd ~/app/triunfodigital
             ./node_modules/.bin/typeorm migration:run
+            pm2 restart api-triunfodigital
             
-      - name: Restart da aplição no servidor
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          port: ${{ secrets.SSH_PORT }}
-          key: ${{ secrets.SSH_KEY}}
-          script: pm2 restart api-triunfodigital
+            
       
