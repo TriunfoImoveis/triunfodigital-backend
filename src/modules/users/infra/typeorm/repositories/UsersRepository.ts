@@ -1,11 +1,12 @@
 import { getRepository, Repository } from 'typeorm';
 
+import AppError from "@shared/errors/AppError";
 import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
 import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 import User from '@modules/users/infra/typeorm/entities/User';
 import IRequestRankingDTO from '@modules/users/dtos/IRequestRankingDTO';
-import Subsidiary from '../entities/Subsidiary';
+import Subsidiary from '@modules/users/infra/typeorm/entities/Subsidiary';
 
 class UsersRepository implements IUserRepository {
   private ormRepository: Repository<User>;
@@ -46,10 +47,15 @@ class UsersRepository implements IUserRepository {
   }
 
   async create(data: ICreateUsersDTO): Promise<User | undefined> {
-    const user = this.ormRepository.create(data);
-    const newUser = await this.ormRepository.save(user);
+    try {
 
-    return newUser;
+      const user = this.ormRepository.create(data);
+      const newUser = await this.ormRepository.save(user);
+      return newUser;
+
+    } catch (err) {
+      throw new AppError(err);
+    }
   }
 
   async update(id: string, body: IUpdateUserDTO): Promise<User | undefined> {
