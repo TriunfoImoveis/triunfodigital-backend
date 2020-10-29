@@ -7,9 +7,9 @@ import ClientController from '@modules/sales/infra/http/controllers/ClientContro
 const clientRouter = Router();
 const clientController = new ClientController();
 
-clientRouter.use(ensuredAthenticated);
-
 clientRouter.get('/', clientController.index);
+
+clientRouter.use(ensuredAthenticated);
 
 // clientRouter.post('/', celebrate({
 //   [Segments.BODY]: {

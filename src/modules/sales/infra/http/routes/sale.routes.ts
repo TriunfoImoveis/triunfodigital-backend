@@ -8,10 +8,9 @@ import SaleController from '@modules/sales/infra/http/controllers/SaleController
 const saleRoutes = Router();
 const saleController = new SaleController();
 
-saleRoutes.use(ensuredAthenticated);
-
 saleRoutes.get('/', saleController.index);
 
+saleRoutes.use(ensuredAthenticated);
 
 saleRoutes.post('/new', celebrate({
   [Segments.BODY]: {

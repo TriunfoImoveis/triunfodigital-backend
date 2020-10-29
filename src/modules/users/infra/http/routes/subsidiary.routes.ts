@@ -7,7 +7,6 @@ import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenti
 const subsidiaryRouter = Router();
 const subsidiaryController = new SubsidiaryController();
 
-subsidiaryRouter.use(ensuredAuthenticated);
 
 subsidiaryRouter.get('/', subsidiaryController.index);
 
@@ -20,6 +19,8 @@ subsidiaryRouter.post('/', celebrate({
     country: Joi.string().required(),
   }
 }), subsidiaryController.create);
+
+subsidiaryRouter.use(ensuredAuthenticated);
 
 subsidiaryRouter.get('/:id', celebrate({
   [Segments.PARAMS]: {

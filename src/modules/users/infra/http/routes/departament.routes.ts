@@ -7,8 +7,6 @@ import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenti
 const departamentRouter = Router();
 const departamentController = new DepartamentController();
 
-departamentRouter.use(ensuredAuthenticated);
-
 departamentRouter.get('/', departamentController.index);
 
 departamentRouter.post('/', celebrate({
@@ -19,6 +17,8 @@ departamentRouter.post('/', celebrate({
     subsidiary: Joi.string().uuid().required(),
   }
 }), departamentController.create);
+
+departamentRouter.use(ensuredAuthenticated);
 
 departamentRouter.get('/:id', celebrate({
   [Segments.PARAMS]: {
