@@ -44,7 +44,7 @@ class CreateUserService {
       throw new AppError('error when creating the user, check your data');
     }
 
-    return user || undefined;
+    return user;
   }
 }
 

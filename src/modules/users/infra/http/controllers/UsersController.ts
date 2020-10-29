@@ -30,19 +30,19 @@ class UsersController {
       office,
     } = request.body;
 
-    const departamentsRepository = new DepartamentsRepository();
-    const checkDepartamentExists = await departamentsRepository.findById(
-      departament,
-    );
-    if (!checkDepartamentExists) {
-      throw new AppError('Departament not exists.');
-    }
+    // const departamentsRepository = new DepartamentsRepository();
+    // const checkDepartamentExists = await departamentsRepository.findById(
+    //   departament,
+    // );
+    // if (!checkDepartamentExists) {
+    //   throw new AppError('Departament not exists.');
+    // }
 
-    const officesRepository = new OfficesRepository();
-    const checkOfficeExists = await officesRepository.findById(office);
-    if (!checkOfficeExists) {
-      throw new AppError('Office not exists.');
-    }
+    // const officesRepository = new OfficesRepository();
+    // const checkOfficeExists = await officesRepository.findById(office);
+    // if (!checkOfficeExists) {
+    //   throw new AppError('Office not exists.');
+    // }
 
     const usersRepository = new UsersRepository();
     const createUser = new CreateUserService(usersRepository);
