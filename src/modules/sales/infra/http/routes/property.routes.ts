@@ -10,7 +10,9 @@ const propertyController = new PropertyController();
 
 propertyRoutes.get('/', propertyController.index);
 
-propertyRoutes.post('/', ensuredAthenticated, celebrate({
+propertyRoutes.use(ensuredAthenticated);
+
+propertyRoutes.post('/', celebrate({
   [Segments.BODY]: {
     name: Joi.string().required(),
   }

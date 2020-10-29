@@ -12,7 +12,9 @@ paymentTypeRoutes.get('/new', paymentTypeController.listNew);
 
 paymentTypeRoutes.get('/used', paymentTypeController.listUsed);
 
-paymentTypeRoutes.post('/', ensuredAthenticated, celebrate({
+paymentTypeRoutes.use(ensuredAthenticated);
+
+paymentTypeRoutes.post('/', celebrate({
   [Segments.BODY]: {
     type: Joi.string().valid('NOVO', 'USADO').required(),
     name: Joi.string().required(),

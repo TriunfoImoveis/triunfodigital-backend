@@ -10,7 +10,9 @@ const realtyController = new RealtyController();
 
 realtyRoutes.get('/', realtyController.index);
 
-realtyRoutes.get('/:id', ensuredAthenticated, celebrate({
+realtyRoutes.use(ensuredAthenticated);
+
+realtyRoutes.get('/:id', celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),
   }

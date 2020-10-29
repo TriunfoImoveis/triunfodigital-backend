@@ -8,6 +8,7 @@ const officeRouter = Router();
 const officeController = new OfficeController();
 
 officeRouter.get('/', officeController.index);
+
 officeRouter.use(ensuredAuthenticated);
 
 officeRouter.post(

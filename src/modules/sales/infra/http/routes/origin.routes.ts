@@ -10,7 +10,9 @@ const originController = new OriginController();
 
 originRoutes.get('/', originController.index);
 
-originRoutes.post('/', ensuredAthenticated, celebrate({
+originRoutes.use(ensuredAthenticated);
+
+originRoutes.post('/', celebrate({
   [Segments.BODY]: {
     name: Joi.string().required(),
   }

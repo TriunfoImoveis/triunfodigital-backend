@@ -10,8 +10,6 @@ const usersRouter = Router();
 const usersController = new UsersController();
 const upload = multer(uploadConfig.multer);
 
-usersRouter.use(ensuredAuthenticated);
-
 usersRouter.get('/', usersController.index);
 
 usersRouter.post(
@@ -31,6 +29,8 @@ usersRouter.post(
   }),
   usersController.create,
 );
+
+usersRouter.use(ensuredAuthenticated);
 
 usersRouter.get(
   '/:id',
