@@ -1,13 +1,14 @@
 import Departament from "@modules/users/infra/typeorm/entities/Departament";
 import ICreateDepartamentDTO from '@modules/users/dtos/ICreateDepartamentDTO';
 import IUpdateDepartamentDTO from "@modules/users/dtos/IUpdateDepartamentDTO";
+import Subsidiary from "../infra/typeorm/entities/Subsidiary";
 
 export default interface IDepartamentRepository {
   findByName(name: string): Promise<Departament | undefined>;
   findByNameAndSubsidiary(
     name: string,
-    subsidiary: string
-  ): Promise<Departament[]>;
+    subsidiary: Subsidiary,
+  ): Promise<Departament | undefined>;
   findById(id: string): Promise<Departament | undefined>;
   findDepartamentsActive(): Promise<Departament[] | undefined>;
   create(data: ICreateDepartamentDTO): Promise<Departament | undefined>;

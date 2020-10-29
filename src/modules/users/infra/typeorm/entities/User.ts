@@ -6,13 +6,16 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  ManyToMany,
 } from 'typeorm';
 
 import { Exclude, Expose } from 'class-transformer';
-import uploadConfig from '@config/upload';
+import uploadConfig from '../../../../../config/upload';
 
 import Departament from './Departament';
 import Office from './Office';
+import Subsidiary from './Subsidiary';
+import Sale from '../../../../sales/infra/typeorm/entities/Sale';
 
 @Entity('users')
 class User {
@@ -44,13 +47,20 @@ class User {
   @Column({ type: 'boolean', default: true })
   active: boolean;
 
-  @ManyToOne(type => Departament, users => User, { eager: true })
+  @ManyToOne(type => Departament, users => User)
   @JoinColumn({ name: 'departament_id' })
   departament: Departament;
 
-  @ManyToOne(type => Office, users => User, { eager: true })
+  @ManyToOne(type => Subsidiary, users => User, { nullable: true })
+  @JoinColumn({ name: 'subsidiary_id' })
+  subsidiary: Subsidiary;
+
+  @ManyToOne(type => Office, users => User)
   @JoinColumn({ name: 'office_id' })
   office: Office;
+
+  @ManyToMany(type => Sale)
+  sales: Sale[];
 
   @CreateDateColumn()
   created_at: Date;

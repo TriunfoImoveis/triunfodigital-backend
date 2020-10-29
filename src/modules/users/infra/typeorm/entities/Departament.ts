@@ -26,7 +26,7 @@ class Departament {
   @OneToMany(type => User, departament => Departament)
   users: User[];
 
-  @ManyToOne(type => Subsidiary, departaments => Departament, {eager: true})
+  @ManyToOne(type => Subsidiary, departaments => Departament)
   @JoinColumn({name: 'subsidiary_id'})
   subsidiary: Subsidiary;
 

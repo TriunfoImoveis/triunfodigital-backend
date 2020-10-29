@@ -3,7 +3,6 @@ import { Request,Response } from "express";
 import AppError from '@shared/errors/AppError';
 import DepartamentsRepository from '@modules/users/infra/typeorm/repositories/DepartamentsRepository';
 import CreateDepartamentService from "@modules/users/services/CreateDepartamentService";
-import SubsidiaryRepository from "@modules/users/infra/typeorm/repositories/SubsidiaryRepository";
 import UpdateDepartamentService from "@modules/users/services/UpdateDepartamentService";
 
 class DepartamentController {
@@ -35,8 +34,7 @@ class DepartamentController {
     } = request.body;
 
     const departamentsRepository = new DepartamentsRepository();
-    const subsidiaryRepository = new SubsidiaryRepository();
-    const createDepartament = new CreateDepartamentService(departamentsRepository, subsidiaryRepository);
+    const createDepartament = new CreateDepartamentService(departamentsRepository);
 
     const newDepartament = await createDepartament.execute({
       name,

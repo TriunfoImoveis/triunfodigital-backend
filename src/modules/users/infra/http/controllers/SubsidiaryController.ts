@@ -25,12 +25,24 @@ class SubsidiaryController {
   }
 
   async create(request: Request, response: Response): Promise<Response> {
-    const { name, goal } = request.body;
+    const {
+      name,
+      goal,
+      city,
+      state,
+      country,
+    } = request.body;
 
     const subsidiaryRepository = new SubsidiaryRepository();
     const createSubsidiary = new CreateSubsidiaryService(subsidiaryRepository);
 
-    const subsidiary = await createSubsidiary.execute({ name, goal });
+    const subsidiary = await createSubsidiary.execute({
+      name,
+      goal,
+      city,
+      state,
+      country,
+    });
 
     return response.json(subsidiary);
   }
