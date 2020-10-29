@@ -17,6 +17,7 @@ class CreateUserService {
     admission_date,
     goal,
     departament,
+    subsidiary,
     office,
   }: ICreateUsersDTO): Promise<User> {
     const checkEmailExist = await this.usersRepository.findByEmail(email);
@@ -35,6 +36,7 @@ class CreateUserService {
       phone,
       admission_date,
       departament,
+      subsidiary,
       office,
     });
 

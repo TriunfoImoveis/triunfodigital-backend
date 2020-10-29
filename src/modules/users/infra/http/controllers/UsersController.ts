@@ -26,6 +26,7 @@ class UsersController {
       admission_date,
       goal,
       departament,
+      subsidiary,
       office,
     } = request.body;
 
@@ -54,6 +55,7 @@ class UsersController {
       admission_date,
       goal,
       departament,
+      subsidiary,
       office,
     });
 
