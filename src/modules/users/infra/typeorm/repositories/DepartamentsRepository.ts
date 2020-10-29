@@ -1,9 +1,11 @@
 import { getRepository, Repository } from "typeorm";
 
+import AppError from "@shared/errors/AppError";
 import IDepartamentRepository from "@modules/users/repositories/IDepartamentRepository";
 import Departament from "@modules/users/infra/typeorm/entities/Departament";
 import ICreateDepartamentDTO from "@modules/users/dtos/ICreateDepartamentDTO";
 import IUpdateDepartamentDTO from "@modules/users/dtos/IUpdateDepartamentDTO";
+import Subsidiary from "@modules/users/infra/typeorm/entities/Subsidiary";
 
 class DepartamentsRepository implements IDepartamentRepository {
   private ormRepository: Repository<Departament>;
@@ -22,20 +24,21 @@ class DepartamentsRepository implements IDepartamentRepository {
   }
 
   async findByNameAndSubsidiary(
-    name: string, subsidiary: string
-  ): Promise<Departament[]> {
-    const departament = await this.ormRepository.find({
+    name: string, subsidiary: Subsidiary
+  ): Promise<Departament | undefined> {
+    const departament = await this.ormRepository.findOne({
       where: {
         name: name,
         subsidiary: subsidiary
       }
     });
-
     return departament;
   }
 
   async findById(id: string): Promise<Departament | undefined> {
-    const departament = await this.ormRepository.findOne(id);
+    const departament = await this.ormRepository.findOne(id, {
+      relations: ['subsidiary']
+    });
     return departament;
   }
 
@@ -49,10 +52,14 @@ class DepartamentsRepository implements IDepartamentRepository {
   }
 
   async create(data: ICreateDepartamentDTO): Promise<Departament | undefined> {
-    const departament = this.ormRepository.create(data);
-    const newDepartament = await this.ormRepository.save(departament);
+    try {
+      const departament = this.ormRepository.create(data);
+      const newDepartament = await this.ormRepository.save(departament);
 
-    return newDepartament;
+      return newDepartament;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async update(id: string, data: IUpdateDepartamentDTO): Promise<Departament | undefined> {

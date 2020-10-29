@@ -15,13 +15,26 @@ class SaleRepository implements ISaleRepository {
 
 
   async findAll(): Promise<Sale[]> {
-    const sales = this.ormRepository.find();
+    const sales = await this.ormRepository.find();
     return sales;
   }
 
 
   async findById(id: string): Promise<Sale | undefined> {
-    const sale = this.ormRepository.findOne(id);
+    const sale = await this.ormRepository.findOne(id, {
+      relations: [
+        'origin',
+        'payment_type',
+        'realty',
+        'builder',
+        'client_buyer',
+        'client_seller',
+        'user_director',
+        'user_coordinator',
+        'sale_has_captivators',
+        'sale_has_sellers',
+      ]
+    });
     return sale;
   }
 

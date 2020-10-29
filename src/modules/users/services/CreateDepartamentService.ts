@@ -2,12 +2,10 @@ import AppError from '@shared/errors/AppError';
 import Departament from '@modules/users/infra/typeorm/entities/Departament';
 import IDepartamentRepository from '@modules/users/repositories/IDepartamentRepository';
 import ICreateDepartamentDTO from '@modules/users/dtos/ICreateDepartamentDTO';
-import ISubsidiaryRepository from '@modules/users/repositories/ISubsidiaryRepository';
 
 class CreateDepartamentService {
   constructor(
-    private departamentsRepository: IDepartamentRepository,
-    private subsidiaryRepository: ISubsidiaryRepository
+    private departamentsRepository: IDepartamentRepository
   ){}
 
   public async execute({
@@ -16,15 +14,10 @@ class CreateDepartamentService {
     goal,
     subsidiary,
   }: ICreateDepartamentDTO): Promise<Departament | undefined> {
-    const checkDepartamentExist = await this.departamentsRepository.findByNameAndSubsidiary(name, subsidiary.id);
+    const checkDepartamentExist = await this.departamentsRepository.findByNameAndSubsidiary(name, subsidiary);
 
-    if (checkDepartamentExist.length !== 0) {
+    if (checkDepartamentExist) {
       throw new AppError('Departament already exist in this Subsidiary.');
-    }
-
-    const checkSubsidiaryExist = await this.subsidiaryRepository.findById(subsidiary.id);
-    if (!checkSubsidiaryExist) {
-      throw new AppError('Subsidiary not exist.');
     }
 
     let goalDepartament = goal;

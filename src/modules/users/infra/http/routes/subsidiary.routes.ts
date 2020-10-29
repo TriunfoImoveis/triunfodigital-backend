@@ -15,8 +15,11 @@ subsidiaryRouter.post('/', celebrate({
   [Segments.BODY]: {
     name: Joi.string().required(),
     goal: Joi.number().required(),
+    city: Joi.string().required(),
+    state: Joi.string().required(),
+    country: Joi.string().required(),
   }
-}),subsidiaryController.create);
+}), subsidiaryController.create);
 
 subsidiaryRouter.get('/:id', celebrate({
   [Segments.PARAMS]: {
@@ -31,6 +34,9 @@ subsidiaryRouter.put('/:id', celebrate({
   [Segments.BODY]: {
     name: Joi.string(),
     goal: Joi.number(),
+    city: Joi.string(),
+    state: Joi.string(),
+    country: Joi.string(),
   }
 }), subsidiaryController.update);
 

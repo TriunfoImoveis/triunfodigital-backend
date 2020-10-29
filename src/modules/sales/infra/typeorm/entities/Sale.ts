@@ -58,19 +58,19 @@ class Sale {
   @Column({ type: 'enum', enum: Status, default: Status.PE })
   status: Status;
 
-  @ManyToOne(type => OriginSale, sales => Sale, {nullable: false, eager: true})
+  @ManyToOne(type => OriginSale, sales => Sale, {nullable: false})
   @JoinColumn({ name: 'origin_id' })
   origin: OriginSale;
 
-  @ManyToOne(type => PaymentType, {nullable: false, eager: true})
+  @ManyToOne(type => PaymentType, {nullable: false})
   @JoinColumn({ name: 'payment_type' })
   payment_type: PaymentType;
 
-  @OneToOne(type => Realty, sale => Sale, {nullable: false, eager: true})
+  @OneToOne(type => Realty, sale => Sale, {nullable: false})
   @JoinColumn({ name: 'realty_id' })
   realty: Realty;
 
-  @ManyToOne(type => Builder, sales => Sale, {nullable: true, eager: true})
+  @ManyToOne(type => Builder, sales => Sale, {nullable: true})
   @JoinColumn({ name: 'builder_id' })
   builder: Builder;
 
@@ -95,7 +95,17 @@ class Sale {
   sale_has_captivators: User[];
 
   @ManyToMany(type => User)
-  @JoinTable({ name: 'sale_has_sellers' })
+  @JoinTable({
+    name: 'sale_has_sellers',
+    joinColumn: {
+      name: "sale_id",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+        name: "user_id",
+        referencedColumnName: "id"
+    }
+  })
   sale_has_sellers: User[];
 }
 

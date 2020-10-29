@@ -13,6 +13,7 @@ import originRoutes from '@modules/sales/infra/http/routes/origin.routes';
 import realtyRoutes from '@modules/sales/infra/http/routes/realty.routes';
 import saleRoutes from '@modules/sales/infra/http/routes/sale.routes';
 import paymentTypeRoutes from '@modules/sales/infra/http/routes/paymentType.routes';
+import rankingRouter from '@modules/users/infra/http/routes/ranking.routes';
 
 const routes = Router();
 
@@ -22,6 +23,7 @@ routes.use('/sessions', sessionRouter);
 routes.use('/office', officeRouter);
 routes.use('/departament', departamentRouter);
 routes.use('/subsidiary', subsidiaryRouter);
+routes.use('/ranking', rankingRouter);
 
 // Module Sales
 routes.use('/client', clientRouter);
