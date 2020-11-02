@@ -94,7 +94,7 @@ class Sale {
   @JoinTable({ name: 'sale_has_captivators' })
   sale_has_captivators: User[];
 
-  @ManyToMany(type => User)
+  @ManyToMany(type => User, sale_has_seller => sale_has_seller.sales)
   @JoinTable({
     name: 'sale_has_sellers',
     joinColumn: {

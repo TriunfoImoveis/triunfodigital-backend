@@ -7,4 +7,6 @@ export default interface ISaleRepository {
   findById(id: string): Promise<Sale | undefined>;
   createSaleNew(data: ICreateSaleNewDTO): Promise<Sale | undefined>;
   createSaleUsed(data: ICreateSaleUsedDTO): Promise<Sale | undefined>;
+
+  salesForUser(id: string): Promise<Sale[]>;
 }

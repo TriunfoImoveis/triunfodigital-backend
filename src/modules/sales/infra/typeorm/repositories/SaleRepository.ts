@@ -120,6 +120,29 @@ class SaleRepository implements ISaleRepository {
         await queryRunner.release();
     }
   }
+
+
+  async salesForUser(id: string): Promise<Sale[]> {
+    try {
+      const sales = await this.ormRepository.createQueryBuilder("sale")
+        .select(["sale.id", "sale.realty_ammount"])
+        .innerJoinAndSelect(
+          "sale_has_sellers", "sellers",
+          "sellers.sale_id = sale.id"
+        )
+        .innerJoinAndSelect(
+          "users", "user",
+          "sellers.user_id = user.id"
+        )
+        .where("user.id = :id_user", { id_user: id })
+        .andWhere("sale.status = :status", { status: "PENDENTE"})
+        .getMany();
+
+      return sales;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
 }
 
 export default SaleRepository;

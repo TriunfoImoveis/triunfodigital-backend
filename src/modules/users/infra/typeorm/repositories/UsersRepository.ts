@@ -72,29 +72,38 @@ class UsersRepository implements IUserRepository {
   }
 
   async findForCity(data: IRequestRankingDTO): Promise<User[]> {
-    const { city } = data;
-    const users = await this.ormRepository.createQueryBuilder()
-      .select("user.id").from(User, "user")
-      .where(
-        "user.office_id = :office",
-        { office: "f4903e1b-1c54-4000-a58a-a6b26a522c0e" })
-      .andWhere(qb => {
-        const subQuery = qb.subQuery()
-          .select("subsidiary.id").from(Subsidiary, "subsidiary")
-          .where("subsidiary.city = :city", { city: city })
-          .getQuery();
-        return "user.subsidiary_id IN " + subQuery;
-      }).getMany();
+    try {
+      const { city } = data;
+      const users = await this.ormRepository.createQueryBuilder("user")
+        .select(["user.id", "user.name", "user.avatar"])
+        .where(
+          "user.office_id = :office",
+          { office: "f4903e1b-1c54-4000-a58a-a6b26a522c0e" })
+        .andWhere(qb => {
+          const subQuery = qb.subQuery()
+            .select("subsidiary.id").from(Subsidiary, "subsidiary")
+            .where("subsidiary.city = :city", { city: city })
+            .getQuery();
+          return "user.subsidiary_id IN " + subQuery;
+        }).getMany();
 
-    return users;
+        return users;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
-  async ranking(id: string): Promise<void> {
-    const quantSales = await this.ormRepository.findOne({
-      relations: ['sales']
-    });
+  async quantitySellers(id: string): Promise<number> {
 
-    console.log(quantSales);
+    const quantitySellers = await this.ormRepository.createQueryBuilder("user")
+      .select("user.id")
+      .innerJoinAndSelect(
+        "user.sales", "sales",
+        "sales_user.sale_id = :sale", { sale: id }
+      )
+      .getCount();
+
+    return quantitySellers;
   }
 }
 

@@ -59,7 +59,7 @@ class User {
   @JoinColumn({ name: 'office_id' })
   office: Office;
 
-  @ManyToMany(type => Sale)
+  @ManyToMany(type => Sale, sale => sale.sale_has_sellers)
   sales: Sale[];
 
   @CreateDateColumn()

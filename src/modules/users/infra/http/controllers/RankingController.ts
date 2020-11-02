@@ -1,7 +1,9 @@
-import RankingService from '@modules/users/services/RankingService';
 import { Request, Response } from 'express';
-import UsersRepository from '../../typeorm/repositories/UsersRepository';
+
 import AppError from '@shared/errors/AppError';
+import RankingService from '@modules/users/services/RankingService';
+import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
+import SaleRepository from '@modules/sales/infra/typeorm/repositories/SaleRepository';
 
 
 class RankingController {
@@ -13,7 +15,11 @@ class RankingController {
     }
 
     const usersRepository = new UsersRepository;
-    const rankingService = new RankingService(usersRepository);
+    const salesRepository = new SaleRepository;
+    const rankingService = new RankingService(
+      usersRepository,
+      salesRepository
+    );
 
     const ranking = await rankingService.execute({
       city,
