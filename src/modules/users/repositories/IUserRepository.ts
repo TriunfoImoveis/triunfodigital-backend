@@ -13,5 +13,5 @@ export default interface IUserRepository {
   update(id: string, data: IUpdateUserDTO): Promise<User | undefined>;
   updateAvatar(data: IUpdateUserDTO): Promise<User>;
 
-  ranking(id: string): Promise<void>;
+  quantitySellers(id: string): Promise<number>;
 }

@@ -1,7 +1,7 @@
 export default interface IResponseRankingDTO {
   id: string;
-  name: string;
   avatar: string;
+  name: string;
+  quantity_sale: number;
   vgv: number;
-  quantSale: number;
 }
