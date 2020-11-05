@@ -122,7 +122,7 @@ class SaleRepository implements ISaleRepository {
   }
 
 
-  async salesForUser(id: string): Promise<Sale[]> {
+  async salesForUserAndYear(id: string, year: number): Promise<Sale[]> {
     try {
       const sales = await this.ormRepository.createQueryBuilder("sale")
         .select(["sale.id", "sale.realty_ammount"])
@@ -139,6 +139,32 @@ class SaleRepository implements ISaleRepository {
         .getMany();
 
       return sales;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async salesForUserAndMonthAndYear(
+    id: string, month: number, year: number
+  ): Promise<void> {
+    console.log(year);
+    try {
+      const sales = await this.ormRepository.createQueryBuilder("sale")
+        .select(["sale.id", "sale.realty_ammount"])
+        .innerJoinAndSelect(
+          "sale_has_sellers", "sellers",
+          "sellers.sale_id = sale.id"
+        )
+        .innerJoinAndSelect(
+          "users", "user",
+          "sellers.user_id = user.id"
+        )
+        .where("user.id = :id_user", { id_user: id })
+        .andWhere("extract(year from sale.sale_date) = :year", { year: year })
+        .andWhere("sale.status = :status", { status: "PENDENTE"})
+        .getMany();
+      console.log(sales);
+      // return sales;
     } catch (err) {
       throw new AppError(err.detail);
     }

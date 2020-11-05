@@ -4,4 +4,6 @@ export default interface ICreateBuilderDTO {
   email: string;
   phone: string;
   responsible: string;
+  state: string;
+  city: string;
 }

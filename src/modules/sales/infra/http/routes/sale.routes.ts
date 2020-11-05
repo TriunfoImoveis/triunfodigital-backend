@@ -36,6 +36,7 @@ saleRoutes.post('/new', celebrate({
       cpf: Joi.string().pattern(/^[0-9]{11,11}$/).required(),
       email: Joi.string().email().required(),
       phone: Joi.string().pattern(/^[0-9]{10,11}$/).required(),
+      whatsapp: Joi.string().pattern(/^[0-9]{10,11}$/),
       date_birth: Joi.date().required(),
       occupation: Joi.string().required(),
       civil_status: Joi.string().valid(
@@ -74,6 +75,7 @@ saleRoutes.post('/used', celebrate({
       cpf: Joi.string().pattern(/^[0-9]{11,11}$/).required(),
       email: Joi.string().email().required(),
       phone: Joi.string().pattern(/^[0-9]{10,11}$/).required(),
+      whatsapp: Joi.string().pattern(/^[0-9]{10,11}$/),
       date_birth: Joi.date().required(),
       occupation: Joi.string().required(),
       civil_status: Joi.string().valid(
@@ -87,6 +89,7 @@ saleRoutes.post('/used', celebrate({
       cpf: Joi.string().pattern(/^[0-9]{11,11}$/).required(),
       email: Joi.string().email().required(),
       phone: Joi.string().pattern(/^[0-9]{10,11}$/).required(),
+      whatsapp: Joi.string().pattern(/^[0-9]{10,11}$/),
       date_birth: Joi.date().required(),
       occupation: Joi.string().required(),
       civil_status: Joi.string().valid(

@@ -4,4 +4,6 @@ export default interface IUpdateBuilderDTO {
   email?: string;
   phone?: string;
   responsible?: string;
+  state?: string;
+  city?: string;
 }

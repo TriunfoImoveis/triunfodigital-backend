@@ -5,7 +5,6 @@ import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
 import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 import User from '@modules/users/infra/typeorm/entities/User';
-import IRequestRankingDTO from '@modules/users/dtos/IRequestRankingDTO';
 import Subsidiary from '@modules/users/infra/typeorm/entities/Subsidiary';
 
 class UsersRepository implements IUserRepository {
@@ -71,9 +70,8 @@ class UsersRepository implements IUserRepository {
     return user;
   }
 
-  async findForCity(data: IRequestRankingDTO): Promise<User[]> {
+  async findForCity(city: string): Promise<User[]> {
     try {
-      const { city } = data;
       const users = await this.ormRepository.createQueryBuilder("user")
         .select(["user.id", "user.name", "user.avatar"])
         .where(

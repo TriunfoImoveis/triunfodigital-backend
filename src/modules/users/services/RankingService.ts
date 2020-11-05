@@ -10,19 +10,25 @@ class RankingService {
     private salesRepository: ISaleRepository,
   ) {}
 
-  public async execute({ city }: IRequestRankingDTO): Promise<IResponseRankingDTO[]> {
+  public async execute({
+    city,
+    month,
+    year,
+  }: IRequestRankingDTO): Promise<IResponseRankingDTO[]> {
 
-    const usersForCity = await this.usersRepository.findForCity({
-      city,
-    });
+    const usersForCity = await this.usersRepository.findForCity(city);
 
-    var ranking: IResponseRankingDTO[];
+    let ranking: IResponseRankingDTO[];
 
     ranking = await Promise.all(
       usersForCity.map(async (user) => {
-        var vgv = 0;
+        let vgv = 0;
 
-        const sales = await this.salesRepository.salesForUser(user.id);
+        if (month) {
+          var s = await this.salesRepository.salesForUserAndMonthAndYear(user.id, month, year);
+        }
+        const sales = await this.salesRepository.salesForUserAndYear(user.id, year);
+
         await Promise.all(
           sales.map(async (sale) => {
 

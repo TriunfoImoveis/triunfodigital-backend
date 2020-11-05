@@ -8,5 +8,10 @@ export default interface ISaleRepository {
   createSaleNew(data: ICreateSaleNewDTO): Promise<Sale | undefined>;
   createSaleUsed(data: ICreateSaleUsedDTO): Promise<Sale | undefined>;
 
-  salesForUser(id: string): Promise<Sale[]>;
+  salesForUserAndYear(id: string, year: number): Promise<Sale[]>;
+  salesForUserAndMonthAndYear(
+    id: string,
+    month: number,
+    year: number,
+  ): Promise<void>;
 }

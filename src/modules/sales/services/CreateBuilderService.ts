@@ -12,6 +12,8 @@ class CreateBuilderService {
     email,
     phone,
     responsible,
+    state,
+    city,
   }: ICreateBuilderDTO): Promise<Builder> {
     const checkBuilderExists = await this.buildersRespository.findByCNPJ(cnpj);
 
@@ -25,6 +27,8 @@ class CreateBuilderService {
       email,
       phone,
       responsible,
+      state,
+      city,
     });
 
     if (!builder) {

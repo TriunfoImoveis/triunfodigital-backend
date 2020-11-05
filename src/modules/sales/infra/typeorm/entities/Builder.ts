@@ -29,6 +29,12 @@ class Builder {
   @Column({ type: 'varchar', length: 150 })
   responsible: string;
 
+  @Column({ type: 'varchar', length: 2, nullable: true })
+  state: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  city: string;
+
   @OneToMany(type => Sale, builder => Builder)
   sales: Sale[];
 

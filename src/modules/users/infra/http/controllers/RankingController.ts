@@ -8,10 +8,14 @@ import SaleRepository from '@modules/sales/infra/typeorm/repositories/SaleReposi
 
 class RankingController {
   async index(request: Request, response: Response): Promise<Response> {
-    const { city } = request.query;
+    const {
+      city,
+      month,
+      year,
+    } = request.query;
 
-    if (typeof city !== 'string')  {
-      throw new AppError('City not is valid string.');
+    if (typeof city !== "string") {
+      throw new AppError("City not is valid string.");
     }
 
     const usersRepository = new UsersRepository;
@@ -23,6 +27,8 @@ class RankingController {
 
     const ranking = await rankingService.execute({
       city,
+      month: Number(month),
+      year: Number(year),
     });
 
     return response.json(ranking);

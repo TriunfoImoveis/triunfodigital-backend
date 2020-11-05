@@ -16,6 +16,7 @@ export enum CivilStatus {
 export enum Gender {
   F = 'FEMININO',
   M = 'MASCULINO',
+  O = 'OUTRO',
 }
 
 @Entity('clients')
@@ -38,6 +39,9 @@ class Client {
 
   @Column({ type: 'varchar', length: 11 })
   phone: string;
+
+  @Column({ type: 'varchar', length: 11, nullable: true })
+  whatsapp: string;
 
   @Column({ type: 'varchar', length: 150 })
   occupation: string;
