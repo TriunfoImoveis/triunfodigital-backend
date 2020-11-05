@@ -23,6 +23,8 @@ class BuilderController {
       email,
       phone,
       responsible,
+      state,
+      city,
     } = request.body;
 
     const buildersRepository = new BuildersRespository();
@@ -34,6 +36,8 @@ class BuilderController {
       email,
       phone,
       responsible,
+      state,
+      city,
     });
 
     return response.json(newBuilder);

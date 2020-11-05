@@ -18,6 +18,8 @@ builderRouter.post('/', celebrate({
     email: Joi.string().email().required(),
     phone: Joi.string().pattern(/^[0-9]{10,11}$/).required(),
     responsible: Joi.string().required(),
+    state: Joi.string().length(2).required(),
+    city: Joi.string().required(),
   },
 }), builderController.create);
 
@@ -37,6 +39,8 @@ builderRouter.put('/:id', celebrate({
     email: Joi.string().email(),
     phone: Joi.string().pattern(/^[0-9]{11,11}$/),
     responsible: Joi.string(),
+    state: Joi.string().length(2),
+    city: Joi.string(),
   }
 }), builderController.update);
 

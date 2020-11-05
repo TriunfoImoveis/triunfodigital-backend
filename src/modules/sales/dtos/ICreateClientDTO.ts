@@ -6,6 +6,7 @@ export default interface ICreateClientDTO {
   date_birth: Date;
   email: string;
   phone: string;
+  whatsapp?: string;
   occupation: string;
   civil_status: CivilStatus;
   number_children: number;
