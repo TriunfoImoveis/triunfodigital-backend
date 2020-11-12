@@ -13,5 +13,5 @@ export default interface ISaleRepository {
     id: string,
     month: number,
     year: number,
-  ): Promise<void>;
+  ): Promise<Sale[]>;
 }

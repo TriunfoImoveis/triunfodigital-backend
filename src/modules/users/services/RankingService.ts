@@ -25,9 +25,10 @@ class RankingService {
         let vgv = 0;
 
         if (month) {
-          var s = await this.salesRepository.salesForUserAndMonthAndYear(user.id, month, year);
+          var sales = await this.salesRepository.salesForUserAndMonthAndYear(user.id, month, year);
+        } else {
+          var sales = await this.salesRepository.salesForUserAndYear(user.id, year);
         }
-        const sales = await this.salesRepository.salesForUserAndYear(user.id, year);
 
         await Promise.all(
           sales.map(async (sale) => {
