@@ -15,59 +15,77 @@ class UsersRepository implements IUserRepository {
   }
 
   async findUsersActive(): Promise<User[] | undefined> {
-    const users = await this.ormRepository.find({
-      where: {
-        active: true,
-      },
-    });
-
-    return users;
+    try {
+      const users = await this.ormRepository.find({
+        where: {
+          active: true,
+        },
+      });
+      return users;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findById(id: string): Promise<User | undefined> {
-    const user = await this.ormRepository.findOne(id, {
-      relations: [
-        'office',
-        'departament',
-        'subsidiary',
-      ],
-    });
+    try {
+      const user = await this.ormRepository.findOne(id, {
+        relations: [
+          'office',
+          'departament',
+          'subsidiary',
+        ],
+      });
 
-    return user;
+      return user;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
-    const user = await this.ormRepository.findOne({
-      where: { email },
-      relations: ['office']
-    });
+    try {
+      const user = await this.ormRepository.findOne({
+        where: { email },
+        relations: ['office']
+      });
 
-    return user;
+      return user;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async create(data: ICreateUsersDTO): Promise<User | undefined> {
     try {
-
       const user = this.ormRepository.create(data);
       const newUser = await this.ormRepository.save(user);
-      return newUser;
 
+      return newUser;
     } catch (err) {
       throw new AppError(err);
     }
   }
 
   async update(id: string, body: IUpdateUserDTO): Promise<User | undefined> {
-    await this.ormRepository.update(id, body);
-    const userUpdated = await this.findById(id);
+    try {
+      await this.ormRepository.update(id, body);
+      const userUpdated = await this.findById(id);
 
-    return userUpdated;
+      return userUpdated;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async updateAvatar(data: IUpdateUserDTO): Promise<User> {
-    const user = await this.ormRepository.save(data);
+    try {
+      const user = await this.ormRepository.save(data);
 
-    return user;
+      return user;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findForCity(city: string): Promise<User[]> {
@@ -92,16 +110,19 @@ class UsersRepository implements IUserRepository {
   }
 
   async quantitySellers(id: string): Promise<number> {
+    try {
+      const quantitySellers = await this.ormRepository.createQueryBuilder("user")
+        .select("user.id")
+        .innerJoinAndSelect(
+          "user.sales", "sales",
+          "sales_user.sale_id = :sale", { sale: id }
+        )
+        .getCount();
 
-    const quantitySellers = await this.ormRepository.createQueryBuilder("user")
-      .select("user.id")
-      .innerJoinAndSelect(
-        "user.sales", "sales",
-        "sales_user.sale_id = :sale", { sale: id }
-      )
-      .getCount();
-
-    return quantitySellers;
+      return quantitySellers;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 }
 

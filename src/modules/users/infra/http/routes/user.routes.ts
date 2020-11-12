@@ -10,7 +10,16 @@ const usersRouter = Router();
 const usersController = new UsersController();
 const upload = multer(uploadConfig.multer);
 
-usersRouter.get('/', usersController.index);
+usersRouter.get(
+  '/',
+  celebrate({
+    [Segments.QUERY]: {
+      city: Joi.string(),
+      office: Joi.string(),
+    }
+  }),
+  usersController.index
+);
 
 usersRouter.post(
   '/',
