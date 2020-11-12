@@ -135,7 +135,14 @@ class SaleRepository implements ISaleRepository {
           "sellers.user_id = user.id"
         )
         .where("user.id = :id_user", { id_user: id })
-        .andWhere("sale.status = :status", { status: "PENDENTE"})
+        .andWhere(
+          "extract(year from sale.sale_date) = :year",
+          { year: year }
+        )
+        .andWhere(
+          "sale.status IN (:...status)",
+          { status: ["EM PARTE", "PAGO TOTAL"] }
+        )
         .getMany();
 
       return sales;
@@ -146,8 +153,7 @@ class SaleRepository implements ISaleRepository {
 
   async salesForUserAndMonthAndYear(
     id: string, month: number, year: number
-  ): Promise<void> {
-    console.log(year);
+  ): Promise<Sale[]> {
     try {
       const sales = await this.ormRepository.createQueryBuilder("sale")
         .select(["sale.id", "sale.realty_ammount"])
@@ -160,11 +166,21 @@ class SaleRepository implements ISaleRepository {
           "sellers.user_id = user.id"
         )
         .where("user.id = :id_user", { id_user: id })
-        .andWhere("extract(year from sale.sale_date) = :year", { year: year })
-        .andWhere("sale.status = :status", { status: "PENDENTE"})
+        .andWhere(
+          "extract(year from sale.sale_date) = :year",
+          { year: year }
+        )
+        .andWhere(
+          "extract(month from sale.sale_date) = :month",
+          { month: month }
+        )
+        .andWhere(
+          "sale.status IN (:...status)",
+          { status: ["EM PARTE", "PAGO TOTAL"] }
+        )
         .getMany();
-      console.log(sales);
-      // return sales;
+
+      return sales;
     } catch (err) {
       throw new AppError(err.detail);
     }
