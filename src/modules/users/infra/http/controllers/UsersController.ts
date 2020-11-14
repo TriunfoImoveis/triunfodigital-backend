@@ -12,9 +12,23 @@ import ListUserService from '@modules/users/services/ListUserService';
 class UsersController {
   async index(request: Request, response: Response): Promise<Response> {
     const { city, office } = request.query;
+
+    if ((typeof city !== "string") && (typeof city !== "undefined")) {
+      throw new AppError('City not is validate string.');
+    }
+
+    if ((typeof office !== "string") && (typeof office !== "undefined")) {
+      throw new AppError('Office not is validate string.');
+    }
+
     const usersRepository = new UsersRepository();
-    const listUserService = new ListUserService();
-    const usersList = await usersRepository.findUsersActive();
+    const listUserService = new ListUserService(usersRepository);
+
+    const usersList = await listUserService.execute({
+      city,
+      office,
+    });
+
     return response.json(classToClass(usersList));
   }
 

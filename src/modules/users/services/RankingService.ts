@@ -15,8 +15,8 @@ class RankingService {
     month,
     year,
   }: IRequestRankingDTO): Promise<IResponseRankingDTO[]> {
-
-    const usersForCity = await this.usersRepository.findForCity(city);
+    const office = "Corretor";
+    const usersForCity = await this.usersRepository.findUserForCityAndOffice(city, office);
 
     let ranking: IResponseRankingDTO[];
 
