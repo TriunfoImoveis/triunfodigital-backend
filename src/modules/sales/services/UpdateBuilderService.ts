@@ -10,23 +10,23 @@ interface IRequestDTO {
 }
 
 class UpdateBuilderService {
- constructor(private buildersRepository: IBuilderRepository) {}
+  constructor(private buildersRepository: IBuilderRepository) {}
 
- public async execute({ id, data }: IRequestDTO): Promise<Builder> {
-  const checkBuilderExists = await this.buildersRepository.findById(id);
+  public async execute({ id, data }: IRequestDTO): Promise<Builder> {
+    const checkBuilderExists = await this.buildersRepository.findById(id);
 
-  if (!checkBuilderExists) {
-    throw new AppError('Builder not exists.');
+    if (!checkBuilderExists) {
+      throw new AppError('Builder not exists.');
+    }
+
+    const builderUpdated = await this.buildersRepository.update(id, data);
+
+    if (!builderUpdated) {
+      throw new AppError('Error when updating the builder, check your data');
+    }
+
+    return builderUpdated;
   }
-
-  const builderUpdated = await this.buildersRepository.update(id, data);
-
-  if (!builderUpdated) {
-    throw new AppError('Error when updating the builder, check your data');
-  }
-
-  return builderUpdated;
- }
 }
 
 export default UpdateBuilderService;
