@@ -2,6 +2,7 @@ import AppError from '@shared/errors/AppError';
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
+import CompanyRepository from '@modules/sales/infra/typeorm/repositories/CompanyRepository';
 
 class CreateSaleNewService {
   constructor(private saleRepository: ISaleRepository) {}
@@ -11,6 +12,7 @@ class CreateSaleNewService {
     sale_date,
     realty_ammount,
     percentage_sale,
+    company,
     percentage_company,
     commission,
     bonus,
@@ -24,11 +26,18 @@ class CreateSaleNewService {
     users_sellers,
   }: ICreateSaleNewDTO): Promise<Sale> {
 
+    if (company) {
+      const companyRepository = new CompanyRepository();
+      const percentage = await companyRepository.findOne(company.id);
+      percentage_company = percentage?.percentage;
+    }
+
     const sale = await this.saleRepository.createSaleNew({
       sale_type,
       sale_date,
       realty_ammount,
       percentage_sale,
+      company,
       percentage_company,
       commission,
       bonus,

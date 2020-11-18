@@ -2,6 +2,7 @@ import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import AppError from "@shared/errors/AppError";
 import Sale from "@modules/sales/infra/typeorm/entities/Sale";
+import CompanyRepository from "@modules/sales/infra/typeorm/repositories/CompanyRepository";
 
 class CreateSaleUsedService {
   constructor(private saleRepository: ISaleRepository) {}
@@ -11,6 +12,7 @@ class CreateSaleUsedService {
     sale_date,
     realty_ammount,
     percentage_sale,
+    company,
     percentage_company,
     commission,
     bonus,
@@ -25,11 +27,18 @@ class CreateSaleUsedService {
     users_sellers,
   }: ICreateSaleUsedDTO): Promise<Sale> {
 
+    if (company) {
+      const companyRepository = new CompanyRepository();
+      const percentage = await companyRepository.findOne(company.id);
+      percentage_company = percentage?.percentage;
+    }
+
     const sale = await this.saleRepository.createSaleUsed({
       sale_type,
       sale_date,
       realty_ammount,
       percentage_sale,
+      company,
       percentage_company,
       commission,
       bonus,

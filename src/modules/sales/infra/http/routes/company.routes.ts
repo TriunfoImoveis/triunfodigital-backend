@@ -11,6 +11,12 @@ companyRouter.get('/', companyController.index);
 
 companyRouter.use(ensuredAthenticated);
 
+companyRouter.get('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  }
+}), companyController.show);
+
 companyRouter.post('/', celebrate({
   [Segments.BODY]: {
     name: Joi.string().required(),

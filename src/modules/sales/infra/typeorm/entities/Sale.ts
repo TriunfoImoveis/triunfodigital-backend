@@ -12,6 +12,7 @@ import {
 import User from "../../../../users/infra/typeorm/entities/User";
 import Builder from "./Builder";
 import Client from "./Client";
+import Company from "./Company";
 import OriginSale from "./OriginSale";
 import PaymentType from "./PaymentType";
 import Realty from "./Realty";
@@ -46,14 +47,11 @@ class Sale {
   @Column({ type: 'integer', nullable: false })
   percentage_sale: number;
 
-  @Column({ type: 'integer', nullable: false })
-  percentage_company: number;
-
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false})
   commission: number;
 
-  @Column({ type: 'varchar', length: 50, nullable: true})
-  bonus: string;
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true})
+  bonus: number;
 
   @Column({ type: 'enum', enum: Status, default: Status.PE })
   status: Status;
@@ -61,6 +59,13 @@ class Sale {
   @ManyToOne(type => OriginSale, sales => Sale, {nullable: false})
   @JoinColumn({ name: 'origin_id' })
   origin: OriginSale;
+
+  @ManyToOne(type => Company, {nullable: true})
+  @JoinColumn({ name: 'company_id' })
+  company: Company;
+
+  @Column({type: 'integer', nullable: true})
+  percentage_company: number;
 
   @ManyToOne(type => PaymentType, {nullable: false})
   @JoinColumn({ name: 'payment_type' })

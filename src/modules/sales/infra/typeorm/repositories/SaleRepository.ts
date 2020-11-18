@@ -24,6 +24,7 @@ class SaleRepository implements ISaleRepository {
     const sale = await this.ormRepository.findOne(id, {
       relations: [
         'origin',
+        'company',
         'payment_type',
         'realty',
         'builder',

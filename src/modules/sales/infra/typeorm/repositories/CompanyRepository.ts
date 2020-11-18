@@ -18,7 +18,8 @@ class CompanyRepository implements ICompanyRepository {
   async findAll(): Promise<Company[]> {
     try {
       const companies = await this.ormRepository.find({
-        where: {active: true}
+        where: {active: true},
+        order: {name: "ASC"}
       });
 
       return companies;

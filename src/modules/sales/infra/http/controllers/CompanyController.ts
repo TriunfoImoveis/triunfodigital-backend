@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+import AppError from '@shared/errors/AppError';
 import CompanyRepository from '@modules/sales/infra/typeorm/repositories/CompanyRepository';
 import CreateCompanyService from '@modules/sales/services/CreateCompanyService';
 import UpdateCompanyService from '@modules/sales/services/UpdateCompanyService';
@@ -12,6 +13,17 @@ class CompanyController {
     const companies = await companyRepository.findAll();
 
     return response.json(companies);
+  }
+
+  async show(request: Request, response: Response): Promise<Response> {
+    const companyRepository = new CompanyRepository();
+    const company = await companyRepository.findOne(request.params.id);
+
+    if (!company) {
+      throw new AppError('Company not exists.');
+    }
+
+    return response.json(company);
   }
 
   async create(request: Request, response: Response): Promise<Response> {
