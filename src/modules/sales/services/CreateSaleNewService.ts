@@ -29,7 +29,9 @@ class CreateSaleNewService {
     if (company) {
       const companyRepository = new CompanyRepository();
       const percentage = await companyRepository.findOne(company.id);
-      percentage_company = percentage?.percentage;
+      if (percentage) {
+        percentage_company = percentage.percentage;
+      }
     }
 
     const sale = await this.saleRepository.createSaleNew({
