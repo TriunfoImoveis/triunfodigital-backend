@@ -1,18 +1,18 @@
 import { Request, Response } from "express";
 
+import AppError from "@shared/errors/AppError";
 import PaymentTypeRepository from "@modules/sales/infra/typeorm/repositories/PaymentTypeRepository";
 
 class PaymentTypeController {
-  async listNew(request: Request, response: Response): Promise<Response> {
-    const paymentTypeRepository = new PaymentTypeRepository();
-    const payment_types = await paymentTypeRepository.findNew();
+  async index(request: Request, response: Response): Promise<Response> {
+    const { type } = request.query;
 
-    return response.json(payment_types);
-  }
+    if (typeof type !== "string") {
+      throw new AppError('Type not is valid string.');
+    }
 
-  async listUsed(request: Request, response: Response): Promise<Response> {
     const paymentTypeRepository = new PaymentTypeRepository();
-    const payment_types = await paymentTypeRepository.findUsed();
+    const payment_types = await paymentTypeRepository.findNewOrUsed(type);
 
     return response.json(payment_types);
   }

@@ -5,6 +5,7 @@ import Sale from "@modules/sales/infra/typeorm/entities/Sale";
 import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
+import IValidSaleDTO from "@modules/sales/dtos/IValidSaleDTO";
 
 class SaleRepository implements ISaleRepository {
   private ormRepository: Repository<Sale>;
@@ -185,6 +186,13 @@ class SaleRepository implements ISaleRepository {
     } catch (err) {
       throw new AppError(err.detail);
     }
+  }
+
+  async validSale(id: string, data: IValidSaleDTO): Promise<Sale | undefined> {
+    await this.ormRepository.update(id, data);
+    const saleValidated = await this.ormRepository.findOne(id);
+
+    return saleValidated;
   }
 }
 

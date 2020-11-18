@@ -9,6 +9,7 @@ import CreateClientService from '@modules/sales/services/CreateClientService';
 import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
 import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService';
 import { SaleType } from '@modules/sales/infra/typeorm/entities/Sale';
+import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
 
 class SaleController {
 
@@ -185,6 +186,18 @@ class SaleController {
     });
 
     return response.json(sale);
+  }
+
+  async validSale(request:Request, response: Response): Promise<Response> {
+    const saleRepository = new SaleRepository();
+    const validSaleService = new ValidSaleService(saleRepository);
+
+    const saleValidated = await validSaleService.execute({
+      id: request.params.id,
+      data: request.body,
+    });
+
+    return response.json(saleValidated);
   }
 }
 
