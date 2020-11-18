@@ -17,9 +17,9 @@ saleRoutes.post('/new', celebrate({
     sale_date: Joi.date().required(),
     realty_ammount: Joi.number().required(),
     percentage_sale: Joi.number().required(),
-    percentage_company: Joi.number().required(),
+    company: Joi.string().uuid(),
     commission: Joi.number().required(),
-    bonus: Joi.string(),
+    bonus: Joi.number(),
     origin: Joi.string().uuid().required(),
     payment_type: Joi.string().uuid().required(),
     realty: Joi.object({
@@ -57,9 +57,9 @@ saleRoutes.post('/used', celebrate({
     sale_date: Joi.date().required(),
     realty_ammount: Joi.number().required(),
     percentage_sale: Joi.number().required(),
-    percentage_company: Joi.number().required(),
+    company: Joi.string().uuid(),
     commission: Joi.number().required(),
-    bonus: Joi.string(),
+    bonus: Joi.number(),
     origin: Joi.string().uuid().required(),
     payment_type: Joi.string().uuid().required(),
     realty: Joi.object({
