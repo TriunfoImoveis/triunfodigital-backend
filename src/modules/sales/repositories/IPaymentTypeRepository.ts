@@ -3,8 +3,7 @@ import ICreatePaymentTypeDTO from "@modules/sales/dtos/ICreatePaymentTypeDTO";
 
 
 export default interface IPaymentTypeRepository {
-  findNew(): Promise<PaymentType[]>;
-  findUsed(): Promise<PaymentType[]>;
+  findNewOrUsed(type: string): Promise<PaymentType[]>;
   findById(id: string): Promise<PaymentType | undefined>;
   create(data: ICreatePaymentTypeDTO): Promise<PaymentType | undefined>;
 }

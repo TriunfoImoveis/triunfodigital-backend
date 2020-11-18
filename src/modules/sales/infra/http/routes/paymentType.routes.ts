@@ -8,9 +8,11 @@ import PaymentTypeController from '@modules/sales/infra/http/controllers/Payment
 const paymentTypeRoutes = Router();
 const paymentTypeController = new PaymentTypeController();
 
-paymentTypeRoutes.get('/new', paymentTypeController.listNew);
-
-paymentTypeRoutes.get('/used', paymentTypeController.listUsed);
+paymentTypeRoutes.get('/', celebrate({
+  [Segments.QUERY]: {
+    type: Joi.string().valid('NOVO', 'USADO').required(),
+  }
+}), paymentTypeController.index);
 
 paymentTypeRoutes.use(ensuredAthenticated);
 

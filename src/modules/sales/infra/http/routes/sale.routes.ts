@@ -112,4 +112,15 @@ saleRoutes.get('/:id', celebrate({
   }
 }), saleController.show);
 
+saleRoutes.patch('/valid/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  },
+  [Segments.BODY]: {
+    status: Joi.string().valid(
+      'PENDENTE', 'CAIU', 'EM PARTE', 'PAGO TOTAL'
+    ).required(),
+  }
+}), saleController.validSale);
+
 export default saleRoutes;
