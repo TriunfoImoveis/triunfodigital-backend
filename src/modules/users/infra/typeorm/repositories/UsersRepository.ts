@@ -18,6 +18,16 @@ class UsersRepository implements IUserRepository {
   async findUsersActive(): Promise<User[]> {
     try {
       const users = await this.ormRepository.find({
+        select: [
+          "id",
+          "name",
+          "avatar",
+          "email",
+          "phone",
+          "admission_date",
+          "goal",
+          "active"
+        ],
         where: {
           active: true,
         },
@@ -92,7 +102,16 @@ class UsersRepository implements IUserRepository {
   async findUserForCity(city: string): Promise<User[]> {
     try {
       const users = await this.ormRepository.createQueryBuilder("user")
-        .select()
+        .select([
+          "user.id",
+          "user.name",
+          "user.avatar",
+          "user.email",
+          "user.phone",
+          "user.admission_date",
+          "user.goal",
+          "user.active"
+        ])
         .where(qb => {
           const subQuery = qb.subQuery()
             .select("subsidiary.id").from(Subsidiary, "subsidiary")
@@ -112,7 +131,16 @@ class UsersRepository implements IUserRepository {
   ): Promise<User[]> {
     try {
       const users = await this.ormRepository.createQueryBuilder("user")
-        .select()
+        .select([
+          "user.id",
+          "user.name",
+          "user.avatar",
+          "user.email",
+          "user.phone",
+          "user.admission_date",
+          "user.goal",
+          "user.active"
+        ])
         .where(qb => {
           const subQuery = qb.subQuery()
             .select("office.id").from(Office, "office")
