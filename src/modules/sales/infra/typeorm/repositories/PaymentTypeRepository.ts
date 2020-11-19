@@ -13,12 +13,8 @@ class PaymentTypeRepository implements IPaymentTypeRepository {
 
   async findNewOrUsed(type: string): Promise<PaymentType[]> {
     const payment_types = await this.ormRepository.find({
-      where: {
-        type: type
-      },
-      order: {
-        name: "ASC",
-      },
+      where: { type },
+      order: { name: "ASC" },
     });
 
     return payment_types;
