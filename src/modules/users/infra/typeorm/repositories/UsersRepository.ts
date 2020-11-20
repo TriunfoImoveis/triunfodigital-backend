@@ -1,4 +1,4 @@
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Like, Repository } from 'typeorm';
 
 import AppError from "@shared/errors/AppError";
 import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
@@ -15,11 +15,12 @@ class UsersRepository implements IUserRepository {
     this.ormRepository = getRepository(User);
   }
 
-  async findUsersActive(): Promise<User[]> {
+  async findUsersActive(name: string): Promise<User[]> {
     try {
       const users = await this.ormRepository.find({
         where: {
           active: true,
+          name: Like(name+"%")
         },
       });
       return users;
@@ -102,14 +103,16 @@ class UsersRepository implements IUserRepository {
     }
   }
 
-  async findUserForCity(city: string): Promise<User[]> {
+  async findUserForCity(name: string, city: string): Promise<User[]> {
     try {
       const users = await this.ormRepository.createQueryBuilder("user")
         .select()
-        .where(qb => {
+        .where("user.active = true")
+        .andWhere("user.name like :name", { name: name+"%" })
+        .andWhere(qb => {
           const subQuery = qb.subQuery()
             .select("subsidiary.id").from(Subsidiary, "subsidiary")
-            .where("subsidiary.city = :city", { city: city })
+            .where("subsidiary.city = :city", { city })
             .getQuery();
           return "user.subsidiary_id IN " + subQuery;
         }).getMany();
@@ -121,22 +124,26 @@ class UsersRepository implements IUserRepository {
   }
 
   async findUserForCityAndOffice(
-    city: string, office: string
+    name: string,
+    city: string,
+    office: string
   ): Promise<User[]> {
     try {
       const users = await this.ormRepository.createQueryBuilder("user")
         .select()
-        .where(qb => {
+        .where("user.active = true")
+        .andWhere("user.name like :name", { name: name+"%" })
+        .andWhere(qb => {
           const subQuery = qb.subQuery()
             .select("office.id").from(Office, "office")
-            .where("office.name = :office", { office: office })
+            .where("office.name = :office", { office })
             .getQuery();
           return "user.office_id IN " + subQuery;
         })
         .andWhere(qb => {
           const subQuery = qb.subQuery()
             .select("subsidiary.id").from(Subsidiary, "subsidiary")
-            .where("subsidiary.city = :city", { city: city })
+            .where("subsidiary.city = :city", { city })
             .getQuery();
           return "user.subsidiary_id IN " + subQuery;
         }).getMany();

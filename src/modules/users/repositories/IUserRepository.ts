@@ -5,9 +5,13 @@ import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 export default interface IUserRepository {
   findByEmail(email: string): Promise<User | undefined>;
   findById(id: string): Promise<User | undefined>;
-  findUsersActive(): Promise<User[]>;
-  findUserForCity(city: string): Promise<User[]>;
+  findUsersActive(name: string): Promise<User[]>;
+  findUserForCity(
+    name: string,
+    city: string
+  ): Promise<User[]>;
   findUserForCityAndOffice(
+    name: string,
     city: string,
     office: string
   ): Promise<User[]>;
