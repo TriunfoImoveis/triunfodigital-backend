@@ -43,8 +43,8 @@ class RankingService {
         return {
           id: user.id,
           avatar: user.avatar,
+          avatar_url: user.getAvatarUrl(),
           name: user.name,
-          quantity_sale: sales.length,
           vgv: Number(vgv.toFixed(2)),
         };
 
