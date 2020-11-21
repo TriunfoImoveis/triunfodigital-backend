@@ -15,8 +15,8 @@ usersRouter.get(
   celebrate({
     [Segments.QUERY]: {
       name: Joi.string().default(''),
-      city: Joi.string(),
-      office: Joi.string(),
+      city: Joi.string().default('%'),
+      office: Joi.string().default('%'),
     }
   }),
   usersController.index

@@ -13,11 +13,11 @@ class UsersController {
   async index(request: Request, response: Response): Promise<Response> {
     const { name, city, office } = request.query;
 
-    if ((typeof name !== "string")) {
+    if (typeof name !== "string") {
       throw new AppError('Name not is validate string.');
-    } else if ((typeof city !== "string") && (typeof city !== "undefined")) {
+    } else if (typeof city !== "string") {
       throw new AppError('City not is validate string.');
-    } else if ((typeof office !== "string") && (typeof office !== "undefined")) {
+    } else if (typeof office !== "string") {
       throw new AppError('Office not is validate string.');
     }
 
