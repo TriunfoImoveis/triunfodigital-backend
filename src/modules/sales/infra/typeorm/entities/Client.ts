@@ -40,7 +40,7 @@ class Client {
   @Column({ type: 'varchar', length: 11 })
   phone: string;
 
-  @Column({ type: 'varchar', length: 11, nullable: true })
+  @Column({ type: 'varchar', length: 14, nullable: true })
   whatsapp: string;
 
   @Column({ type: 'varchar', length: 150 })

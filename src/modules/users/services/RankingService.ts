@@ -1,8 +1,13 @@
 import IUserRepository from "@modules/users/repositories/IUserRepository";
-import IRequestRankingDTO from "@modules/users/dtos/IRequestRankingDTO";
 import IResponseRankingDTO from "@modules/users/dtos/IResponseRankingDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 
+
+interface IRequestRankingDTO {
+  city: string;
+  month?: number;
+  year: number;
+}
 
 class RankingService {
   constructor(
@@ -15,8 +20,8 @@ class RankingService {
     month,
     year,
   }: IRequestRankingDTO): Promise<IResponseRankingDTO[]> {
-    const office = "Corretor";
-    const usersForCity = await this.usersRepository.findUserForCityAndOffice(city, office);
+    const data = {city, name: "", office: "Corretor"};
+    const usersForCity = await this.usersRepository.findUsers(data);
 
     let ranking: IResponseRankingDTO[];
 
@@ -43,8 +48,8 @@ class RankingService {
         return {
           id: user.id,
           avatar: user.avatar,
+          avatar_url: user.getAvatarUrl(),
           name: user.name,
-          quantity_sale: sales.length,
           vgv: Number(vgv.toFixed(2)),
         };
 

@@ -1,4 +1,4 @@
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Like, Repository } from 'typeorm';
 
 import AppError from "@shared/errors/AppError";
 import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
@@ -7,6 +7,7 @@ import IUserRepository from '@modules/users/repositories/IUserRepository';
 import User from '@modules/users/infra/typeorm/entities/User';
 import Subsidiary from '@modules/users/infra/typeorm/entities/Subsidiary';
 import Office from '@modules/users/infra/typeorm/entities/Office';
+import IRequestUserDTO from '@modules/users/dtos/IRequestUserDTO';
 
 class UsersRepository implements IUserRepository {
   private ormRepository: Repository<User>;
@@ -15,28 +16,19 @@ class UsersRepository implements IUserRepository {
     this.ormRepository = getRepository(User);
   }
 
-  async findUsersActive(): Promise<User[]> {
-    try {
-      const users = await this.ormRepository.find({
-        select: [
-          "id",
-          "name",
-          "avatar",
-          "email",
-          "phone",
-          "admission_date",
-          "goal",
-          "active"
-        ],
-        where: {
-          active: true,
-        },
-      });
-      return users;
-    } catch (err) {
-      throw new AppError(err.detail);
-    }
-  }
+  // async findUsersActive(name: string): Promise<User[]> {
+  //   try {
+  //     const users = await this.ormRepository.find({
+  //       where: {
+  //         active: true,
+  //         name: Like(name+"%")
+  //       },
+  //     });
+  //     return users;
+  //   } catch (err) {
+  //     throw new AppError(err.detail);
+  //   }
+  // }
 
   async findById(id: string): Promise<User | undefined> {
     try {
@@ -57,8 +49,21 @@ class UsersRepository implements IUserRepository {
   async findByEmail(email: string): Promise<User | undefined> {
     try {
       const user = await this.ormRepository.findOne({
+        select: [
+          "id",
+          "name",
+          "avatar",
+          "email",
+          "phone",
+          "admission_date",
+          "goal",
+          "password",
+        ],
         where: { email },
-        relations: ['office']
+        relations: [
+          "office",
+          "subsidiary",
+        ]
       });
 
       return user;
@@ -99,62 +104,52 @@ class UsersRepository implements IUserRepository {
     }
   }
 
-  async findUserForCity(city: string): Promise<User[]> {
+  // async findUserForCity(name: string, city: string): Promise<User[]> {
+  //   try {
+  //     const users = await this.ormRepository.createQueryBuilder("user")
+  //       .select()
+  //       .where("user.active = true")
+  //       .andWhere("user.name like :name", { name: name+"%" })
+  //       .andWhere(qb => {
+  //         const subQuery = qb.subQuery()
+  //           .select("subsidiary.id").from(Subsidiary, "subsidiary")
+  //           .where("subsidiary.city = :city", { city })
+  //           .getQuery();
+  //         return "user.subsidiary_id IN " + subQuery;
+  //       }).getMany();
+
+  //       return users;
+  //   } catch (err) {
+  //     throw new AppError(err.detail);
+  //   }
+  // }
+
+  async findUsers({
+    name,
+    city,
+    office,
+  }: IRequestUserDTO): Promise<User[]> {
     try {
       const users = await this.ormRepository.createQueryBuilder("user")
-        .select([
-          "user.id",
-          "user.name",
-          "user.avatar",
-          "user.email",
-          "user.phone",
-          "user.admission_date",
-          "user.goal",
-          "user.active"
-        ])
-        .where(qb => {
-          const subQuery = qb.subQuery()
-            .select("subsidiary.id").from(Subsidiary, "subsidiary")
-            .where("subsidiary.city = :city", { city: city })
-            .getQuery();
-          return "user.subsidiary_id IN " + subQuery;
-        }).getMany();
-
-        return users;
-    } catch (err) {
-      throw new AppError(err.detail);
-    }
-  }
-
-  async findUserForCityAndOffice(
-    city: string, office: string
-  ): Promise<User[]> {
-    try {
-      const users = await this.ormRepository.createQueryBuilder("user")
-        .select([
-          "user.id",
-          "user.name",
-          "user.avatar",
-          "user.email",
-          "user.phone",
-          "user.admission_date",
-          "user.goal",
-          "user.active"
-        ])
-        .where(qb => {
+        .select()
+        .where("user.active = true")
+        .andWhere("user.name like :name", { name: name+"%" })
+        .andWhere(qb => {
           const subQuery = qb.subQuery()
             .select("office.id").from(Office, "office")
-            .where("office.name = :office", { office: office })
+            .where("office.name like :office", { office })
             .getQuery();
           return "user.office_id IN " + subQuery;
         })
         .andWhere(qb => {
           const subQuery = qb.subQuery()
             .select("subsidiary.id").from(Subsidiary, "subsidiary")
-            .where("subsidiary.city = :city", { city: city })
+            .where("subsidiary.city like :city", { city })
             .getQuery();
           return "user.subsidiary_id IN " + subQuery;
-        }).getMany();
+        })
+        .orderBy("user.name", "ASC")
+        .getMany();
 
         return users;
     } catch (err) {

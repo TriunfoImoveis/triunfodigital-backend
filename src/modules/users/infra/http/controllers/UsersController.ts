@@ -11,13 +11,13 @@ import ListUserService from '@modules/users/services/ListUserService';
 
 class UsersController {
   async index(request: Request, response: Response): Promise<Response> {
-    const { city, office } = request.query;
+    const { name, city, office } = request.query;
 
-    if ((typeof city !== "string") && (typeof city !== "undefined")) {
+    if (typeof name !== "string") {
+      throw new AppError('Name not is validate string.');
+    } else if (typeof city !== "string") {
       throw new AppError('City not is validate string.');
-    }
-
-    if ((typeof office !== "string") && (typeof office !== "undefined")) {
+    } else if (typeof office !== "string") {
       throw new AppError('Office not is validate string.');
     }
 
@@ -25,6 +25,7 @@ class UsersController {
     const listUserService = new ListUserService(usersRepository);
 
     const usersList = await listUserService.execute({
+      name,
       city,
       office,
     });
