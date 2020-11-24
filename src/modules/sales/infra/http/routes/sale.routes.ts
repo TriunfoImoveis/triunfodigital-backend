@@ -10,10 +10,10 @@ const saleController = new SaleController();
 
 saleRoutes.get('/', celebrate({
   [Segments.QUERY]: {
-    city: Joi.string().required(),
+    city: Joi.string(),
     status: Joi.string().valid(
       'PENDENTE', 'CAIU', 'EM PARTE', 'PAGO TOTAL'
-    ).required(),
+    ),
   }
 }), saleController.index);
 
