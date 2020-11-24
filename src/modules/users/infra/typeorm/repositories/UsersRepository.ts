@@ -104,25 +104,32 @@ class UsersRepository implements IUserRepository {
     }
   }
 
-  // async findUserForCity(name: string, city: string): Promise<User[]> {
-  //   try {
-  //     const users = await this.ormRepository.createQueryBuilder("user")
-  //       .select()
-  //       .where("user.active = true")
-  //       .andWhere("user.name like :name", { name: name+"%" })
-  //       .andWhere(qb => {
-  //         const subQuery = qb.subQuery()
-  //           .select("subsidiary.id").from(Subsidiary, "subsidiary")
-  //           .where("subsidiary.city = :city", { city })
-  //           .getQuery();
-  //         return "user.subsidiary_id IN " + subQuery;
-  //       }).getMany();
+  async findUserForCity(city: string): Promise<User[]> {
+    try {
+      const users = await this.ormRepository.createQueryBuilder("user")
+        .select()
+        .where("user.active = true")
+        .andWhere(qb => {
+          const subQuery = qb.subQuery()
+            .select("subsidiary.id").from(Subsidiary, "subsidiary")
+            .where("subsidiary.city = :city", { city })
+            .getQuery();
+          return "user.subsidiary_id IN " + subQuery;
+        })
+        .andWhere(qb => {
+          const subQuery = qb.subQuery()
+            .select("office.id").from(Office, "office")
+            .where("office.name = 'Corretor'")
+            .getQuery();
+          return "user.office_id IN " + subQuery;
+        })
+        .getMany();
 
-  //       return users;
-  //   } catch (err) {
-  //     throw new AppError(err.detail);
-  //   }
-  // }
+        return users;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
 
   async findUsers({
     name,

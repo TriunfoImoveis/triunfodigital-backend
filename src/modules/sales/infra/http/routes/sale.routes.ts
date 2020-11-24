@@ -8,7 +8,14 @@ import SaleController from '@modules/sales/infra/http/controllers/SaleController
 const saleRoutes = Router();
 const saleController = new SaleController();
 
-saleRoutes.get('/', saleController.index);
+saleRoutes.get('/', celebrate({
+  [Segments.QUERY]: {
+    city: Joi.string().required(),
+    status: Joi.string().valid(
+      'PENDENTE', 'CAIU', 'EM PARTE', 'PAGO TOTAL'
+    ).required(),
+  }
+}), saleController.index);
 
 saleRoutes.use(ensuredAthenticated);
 
