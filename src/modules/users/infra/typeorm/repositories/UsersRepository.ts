@@ -123,6 +123,7 @@ class UsersRepository implements IUserRepository {
             .getQuery();
           return "user.office_id IN " + subQuery;
         })
+        .orderBy("user.name", "ASC")
         .getMany();
 
         return users;
