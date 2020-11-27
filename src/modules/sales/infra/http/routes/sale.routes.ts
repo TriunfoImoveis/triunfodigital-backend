@@ -8,16 +8,17 @@ import SaleController from '@modules/sales/infra/http/controllers/SaleController
 const saleRoutes = Router();
 const saleController = new SaleController();
 
+saleRoutes.use(ensuredAthenticated);
+
 saleRoutes.get('/', celebrate({
   [Segments.QUERY]: {
-    city: Joi.string(),
+    name: Joi.string().default(''),
+    city: Joi.string().required(),
     status: Joi.string().valid(
       'PENDENTE', 'CAIU', 'EM PARTE', 'PAGO TOTAL'
-    ),
+    ).required(),
   }
 }), saleController.index);
-
-saleRoutes.use(ensuredAthenticated);
 
 saleRoutes.post('/new', celebrate({
   [Segments.BODY]: {

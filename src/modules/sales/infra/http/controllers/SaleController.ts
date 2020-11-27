@@ -8,14 +8,24 @@ import ClientsRepository from '@modules/sales/infra/typeorm/repositories/Clients
 import CreateClientService from '@modules/sales/services/CreateClientService';
 import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
 import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService';
-import { SaleType } from '@modules/sales/infra/typeorm/entities/Sale';
+import { SaleType, Status } from '@modules/sales/infra/typeorm/entities/Sale';
 import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
 
 class SaleController {
 
   async index(request: Request, response: Response): Promise<Response> {
+    const {name, city, status} = request.query;
+
+    if (typeof name != "string") {
+      throw new AppError("Name not is valid string");
+    } else if (typeof city != "string") {
+      throw new AppError("city not is valid string");
+    }if (typeof status != "string") {
+      throw new AppError("Name not is valid string");
+    }
+
     const saleRepository = new SaleRepository();
-    const sales = await saleRepository.findAll();
+    const sales = await saleRepository.findAll({name, city, status});
     return response.json(sales);
   }
 

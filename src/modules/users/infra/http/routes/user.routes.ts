@@ -22,6 +22,8 @@ usersRouter.get(
   usersController.index
 );
 
+usersRouter.use(ensuredAuthenticated);
+
 usersRouter.post(
   '/',
   celebrate({
@@ -40,8 +42,6 @@ usersRouter.post(
   }),
   usersController.create,
 );
-
-usersRouter.use(ensuredAuthenticated);
 
 usersRouter.get(
   '/:id',

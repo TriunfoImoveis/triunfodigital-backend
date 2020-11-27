@@ -2,9 +2,10 @@ import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import Sale from "@modules/sales/infra/typeorm/entities/Sale";
 import IValidSaleDTO from "@modules/sales/dtos/IValidSaleDTO";
+import IRequestSaleDTO from "@modules/sales/dtos/IRequestSaleDTO";
 
 export default interface ISaleRepository {
-  findAll(): Promise<Sale[]>;
+  findAll(data: IRequestSaleDTO): Promise<Sale[]>;
   findById(id: string): Promise<Sale | undefined>;
 
   createSaleNew(data: ICreateSaleNewDTO): Promise<Sale | undefined>;

@@ -6,6 +6,7 @@ import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IValidSaleDTO from "@modules/sales/dtos/IValidSaleDTO";
+import IRequestSaleDTO from "@modules/sales/dtos/IRequestSaleDTO";
 
 class SaleRepository implements ISaleRepository {
   private ormRepository: Repository<Sale>;
@@ -15,8 +16,29 @@ class SaleRepository implements ISaleRepository {
   }
 
 
-  async findAll(): Promise<Sale[]> {
-    const sales = await this.ormRepository.find();
+  async findAll(data: IRequestSaleDTO): Promise<Sale[]> {
+    const {name, city, status} = data;
+
+    const sales = await this.ormRepository.createQueryBuilder("sale")
+    .select()
+    .leftJoinAndSelect("sale.origin", "origin")
+    .leftJoinAndSelect("sale.company", "company")
+    .leftJoinAndSelect("sale.payment_type", "payment")
+    .leftJoinAndSelect("sale.realty", "realty")
+    .leftJoinAndSelect("sale.builder", "builder")
+    .leftJoinAndSelect("sale.client_buyer", "client_buyer")
+    .leftJoinAndSelect("sale.client_seller", "client_seller")
+    .leftJoinAndSelect("sale.user_director", "director")
+    .leftJoinAndSelect("sale.user_coordinator", "coordinator")
+    .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
+    .leftJoinAndSelect("sale.sale_has_sellers", "sellers")
+    .innerJoinAndSelect(
+      "sellers.subsidiary", "subsidiary", "subsidiary.city = :city", { city }
+    )
+    .where("status = :status", { status })
+    .andWhere("sellers.name like :name", { name: name+"%" })
+    .getMany();
+
     return sales;
   }
 
