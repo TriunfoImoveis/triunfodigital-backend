@@ -10,6 +10,8 @@ const subsidiaryController = new SubsidiaryController();
 
 subsidiaryRouter.get('/', subsidiaryController.index);
 
+subsidiaryRouter.use(ensuredAuthenticated);
+
 subsidiaryRouter.post('/', celebrate({
   [Segments.BODY]: {
     name: Joi.string().required(),
@@ -19,8 +21,6 @@ subsidiaryRouter.post('/', celebrate({
     country: Joi.string().required(),
   }
 }), subsidiaryController.create);
-
-subsidiaryRouter.use(ensuredAuthenticated);
 
 subsidiaryRouter.get('/:id', celebrate({
   [Segments.PARAMS]: {

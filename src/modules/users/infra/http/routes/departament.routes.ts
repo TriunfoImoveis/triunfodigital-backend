@@ -9,6 +9,8 @@ const departamentController = new DepartamentController();
 
 departamentRouter.get('/', departamentController.index);
 
+departamentRouter.use(ensuredAuthenticated);
+
 departamentRouter.post('/', celebrate({
   [Segments.BODY]: {
     name: Joi.string().required(),
@@ -17,8 +19,6 @@ departamentRouter.post('/', celebrate({
     subsidiary: Joi.string().uuid().required(),
   }
 }), departamentController.create);
-
-departamentRouter.use(ensuredAuthenticated);
 
 departamentRouter.get('/:id', celebrate({
   [Segments.PARAMS]: {
