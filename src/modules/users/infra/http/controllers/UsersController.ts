@@ -76,11 +76,16 @@ class UsersController {
   }
 
   async update(request: Request, response: Response): Promise<Response> {
-    const { id } = request.params;
+    const {old_password} = request.body;
+
+    delete request.body.old_password;
+    delete request.body.password_confirmation;
+
     const usersRepository = new UsersRepository();
     const updateUser = new UpdateUserService(usersRepository);
     const updatedUser = await updateUser.execute({
-      user_id: id,
+      id: request.params.id,
+      old_password: old_password,
       body: request.body,
     });
 
