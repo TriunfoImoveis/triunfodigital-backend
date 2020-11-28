@@ -22,8 +22,11 @@ usersRouter.get(
   usersController.index
 );
 
+usersRouter.use(ensuredAuthenticated);
+
 usersRouter.post(
   '/',
+  // upload.single('avatar'),
   celebrate({
     [Segments.BODY]: {
       name: Joi.string().required(),
@@ -40,8 +43,6 @@ usersRouter.post(
   }),
   usersController.create,
 );
-
-usersRouter.use(ensuredAuthenticated);
 
 usersRouter.get(
   '/:id',
@@ -62,6 +63,7 @@ usersRouter.put(
     [Segments.BODY]: {
       name: Joi.string(),
       email: Joi.string().email(),
+      old_password: Joi.string(),
       password: Joi.string(),
       password_confirmation: Joi.string().valid(Joi.ref('password')),
       phone: Joi.string(),

@@ -4,7 +4,6 @@ import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/User';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
-import { classToClass } from 'class-transformer';
 
 class CreateUserService {
   constructor(private usersRepository: IUserRepository) {}
