@@ -87,16 +87,36 @@ class Sale {
   @JoinColumn({ name: 'client_seller' })
   client_seller: Client;
 
-  @ManyToOne(type => User, {nullable: false})
-  @JoinColumn({ name: 'user_director' })
-  user_director: User;
+  @ManyToMany(type => User)
+  @JoinTable({
+    name: 'sale_has_directors',
+    joinColumn: {
+      name: "sale_id",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+        name: "user_id",
+        referencedColumnName: "id"
+    }
+  })
+  users_directors: User[];
 
   @ManyToOne(type => User, {nullable: true})
   @JoinColumn({ name: 'user_coordinator' })
   user_coordinator: User;
 
   @ManyToMany(type => User)
-  @JoinTable({ name: 'sale_has_captivators' })
+  @JoinTable({
+    name: 'sale_has_captivators',
+    joinColumn: {
+      name: "sale_id",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+        name: "user_id",
+        referencedColumnName: "id"
+    }
+  })
   sale_has_captivators: User[];
 
   @ManyToMany(type => User, sale_has_seller => sale_has_seller.sales)

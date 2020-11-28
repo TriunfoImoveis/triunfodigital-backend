@@ -21,7 +21,7 @@ export default interface ICreateSaleNewDTO {
   realty: Realty;
   builder: Builder;
   client_buyer: Client;
-  user_director: User;
   user_coordinator?: User;
+  users_directors: User[];
   users_sellers: User[];
 }

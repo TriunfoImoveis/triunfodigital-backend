@@ -53,8 +53,8 @@ class SaleRepository implements ISaleRepository {
         'builder',
         'client_buyer',
         'client_seller',
-        'user_director',
         'user_coordinator',
+        'sale_has_directors',
         'sale_has_captivators',
         'sale_has_sellers',
       ]
@@ -70,6 +70,7 @@ class SaleRepository implements ISaleRepository {
     const {
       realty,
       client_buyer,
+      users_directors,
       users_sellers,
     } = data;
 
@@ -84,6 +85,7 @@ class SaleRepository implements ISaleRepository {
         data.client_buyer = client_buyerId;
 
         const sale = this.ormRepository.create(data);
+        sale.users_directors = users_directors;
         sale.sale_has_sellers = users_sellers;
         const newSale = await queryRunner.manager.save(sale);
 
@@ -110,6 +112,7 @@ class SaleRepository implements ISaleRepository {
       realty,
       client_buyer,
       client_seller,
+      users_directors,
       users_captivators,
       users_sellers,
     } = data;
@@ -127,6 +130,7 @@ class SaleRepository implements ISaleRepository {
         data.client_seller = client_sellerId;
 
         const sale = this.ormRepository.create(data);
+        sale.users_directors = users_directors;
         sale.sale_has_captivators = users_captivators;
         sale.sale_has_sellers = users_sellers;
         const newSale = await queryRunner.manager.save(sale);

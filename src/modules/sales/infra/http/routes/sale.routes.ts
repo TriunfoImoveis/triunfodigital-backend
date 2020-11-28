@@ -53,8 +53,8 @@ saleRoutes.post('/new', celebrate({
       number_children: Joi.number().integer().min(0).required(),
       gender: Joi.string().valid('MASCULINO', 'FEMININO').required(),
     }).required(),
-    user_director: Joi.string().uuid().required(),
     user_coordinator: Joi.string().uuid(),
+    users_directors: Joi.array().required(),
     users_sellers: Joi.array().required(),
   }
 }), saleController.createSaleNew);
@@ -106,8 +106,8 @@ saleRoutes.post('/used', celebrate({
       number_children: Joi.number().integer().min(0).required(),
       gender: Joi.string().valid('MASCULINO', 'FEMININO').required(),
     }).required(),
-    user_director: Joi.string().uuid().required(),
     user_coordinator: Joi.string().uuid(),
+    users_directors: Joi.array().required(),
     users_captivators: Joi.array().required(),
     users_sellers: Joi.array().required(),
   }
