@@ -1,21 +1,21 @@
 import dotenv from 'dotenv';
-import multer, { StorageEngine } from 'multer';
+import multer, { Options } from 'multer';
 import path from 'path';
 import crypto from 'crypto';
 
 dotenv.config();
 
 const tmpFolder = path.resolve(__dirname, '..', '..', 'tmp');
+const MAX_SIZE_TWO_MEGABYTES = 2 * 1024 * 1024;
 
 interface IUploadConfig {
   driver: 's3' | 'disk';
 
   tmpFolder: string;
   uploadsFolder: string;
+  MAX_SIZE_TWO_MEGABYTES: number;
 
-  multer: {
-    storage: StorageEngine;
-  };
+  multer: Options;
   config: {
     disk: {};
     aws: {
@@ -38,6 +38,18 @@ export default {
         return callback(null, fileName);
       },
     }),
+    limits: {
+      fileSize: MAX_SIZE_TWO_MEGABYTES,
+    },
+    fileFilter: (req, file, cb) => {
+      const allowedMimes = ['image/jpeg', 'image/png'];
+
+      if (allowedMimes.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(new Error('Invalid file type.'));
+      }
+    },
   },
   config: {
     disk: {},

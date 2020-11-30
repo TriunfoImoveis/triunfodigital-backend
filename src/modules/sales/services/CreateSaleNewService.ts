@@ -3,6 +3,7 @@ import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
 import CompanyRepository from '@modules/sales/infra/typeorm/repositories/CompanyRepository';
+import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 
 class CreateSaleNewService {
   constructor(private saleRepository: ISaleRepository) {}
@@ -21,8 +22,8 @@ class CreateSaleNewService {
     realty,
     builder,
     client_buyer,
-    user_director,
     user_coordinator,
+    users_directors,
     users_sellers,
   }: ICreateSaleNewDTO): Promise<Sale> {
 
@@ -48,8 +49,8 @@ class CreateSaleNewService {
       realty,
       builder,
       client_buyer,
-      user_director,
       user_coordinator,
+      users_directors,
       users_sellers,
     });
 

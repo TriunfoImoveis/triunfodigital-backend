@@ -21,9 +21,9 @@ class CreateSaleUsedService {
     realty,
     client_buyer,
     client_seller,
-    user_director,
     user_coordinator,
     users_captivators,
+    users_directors,
     users_sellers,
   }: ICreateSaleUsedDTO): Promise<Sale> {
 
@@ -49,8 +49,8 @@ class CreateSaleUsedService {
       realty,
       client_buyer,
       client_seller,
-      user_director,
       user_coordinator,
+      users_directors,
       users_captivators,
       users_sellers,
     });

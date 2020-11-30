@@ -8,7 +8,7 @@ import ClientsRepository from '@modules/sales/infra/typeorm/repositories/Clients
 import CreateClientService from '@modules/sales/services/CreateClientService';
 import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
 import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService';
-import { SaleType, Status } from '@modules/sales/infra/typeorm/entities/Sale';
+import { SaleType } from '@modules/sales/infra/typeorm/entities/Sale';
 import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
 
 class SaleController {
@@ -55,7 +55,6 @@ class SaleController {
       realty,
       builder,
       client_buyer,
-      user_director,
       user_coordinator,
       users_sellers,
     } = request.body;
@@ -104,7 +103,6 @@ class SaleController {
       realty: realtyId,
       builder,
       client_buyer: client_buyerId,
-      user_director,
       user_coordinator,
       users_sellers,
     });
@@ -126,7 +124,6 @@ class SaleController {
       realty,
       client_buyer,
       client_seller,
-      user_director,
       user_coordinator,
       users_captivators,
       users_sellers,
@@ -189,7 +186,6 @@ class SaleController {
       realty: realtyId,
       client_buyer: client_buyerId,
       client_seller: client_sellerId,
-      user_director,
       user_coordinator,
       users_captivators,
       users_sellers,

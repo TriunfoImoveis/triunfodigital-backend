@@ -20,8 +20,8 @@ export default interface ICreateSaleUsedDTO {
   realty: Realty;
   client_buyer: Client;
   client_seller: Client;
-  user_director: User;
   user_coordinator?: User;
+  users_directors: User[];
   users_captivators: User[];
   users_sellers: User[];
 }
