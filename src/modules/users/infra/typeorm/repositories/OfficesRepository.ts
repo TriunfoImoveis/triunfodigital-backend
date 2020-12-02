@@ -1,5 +1,6 @@
 import { getRepository, Repository } from 'typeorm';
 
+import AppError from '@shared/errors/AppError';
 import ICreateOfficeDTO from '@modules/users/dtos/ICreateOfficeDTO';
 import IUpdateOfficeDTO from '@modules/users/dtos/IUpdateOfficeDTO';
 import IOfficeRepository from '@modules/users/repositories/IOfficeRepository';
@@ -13,41 +14,65 @@ class OfficesRepository implements IOfficeRepository {
   }
 
   async findOfficesActive(): Promise<Office[] | undefined> {
-    const office = await this.ormRepository.find({
-      where: {
-        active: true,
-      },
-    });
-    return office;
+    try {
+      const office = await this.ormRepository.find({
+        where: {
+          active: true,
+        },
+      });
+      return office;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findByName(name: string): Promise<Office | undefined> {
-    const office = await this.ormRepository.findOne({
-      where: {
-        name,
-      },
-    });
-    return office;
+    try {
+      const office = await this.ormRepository.findOne({
+        where: {
+          name,
+        },
+      });
+      return office;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findById(id: string): Promise<Office | undefined> {
-    const office = await this.ormRepository.findOne(id);
-    return office;
+    try {
+      const office = await this.ormRepository.findOne(id);
+      return office;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async create(data: ICreateOfficeDTO): Promise<Office> {
-    const office = this.ormRepository.create(data);
-    const newOffice = await this.ormRepository.save(office);
-    return newOffice;
+    try {
+      const office = this.ormRepository.create(data);
+      const newOffice = await this.ormRepository.save(office);
+      return newOffice;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async update(office: IUpdateOfficeDTO): Promise<Office> {
-    const officeUpdatted = await this.ormRepository.save(office);
-    return officeUpdatted;
+    try {
+      const officeUpdatted = await this.ormRepository.save(office);
+      return officeUpdatted;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async delete(id: string): Promise<void> {
-    await this.ormRepository.delete(id);
+    try {
+      await this.ormRepository.delete(id);
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 }
 

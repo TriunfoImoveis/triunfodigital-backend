@@ -11,12 +11,19 @@ import ListUserService from '@modules/users/services/ListUserService';
 
 class UsersController {
   async index(request: Request, response: Response): Promise<Response> {
-    const { name, city, office } = request.query;
+    const {
+      name,
+      city,
+      departament,
+      office
+    } = request.query;
 
     if (typeof name !== "string") {
       throw new AppError('Name not is validate string.');
     } else if (typeof city !== "string") {
       throw new AppError('City not is validate string.');
+    } else if (typeof departament !== "string") {
+      throw new AppError('Departament not is validate string.');
     } else if (typeof office !== "string") {
       throw new AppError('Office not is validate string.');
     }
@@ -27,6 +34,7 @@ class UsersController {
     const usersList = await listUserService.execute({
       name,
       city,
+      departament,
       office,
     });
 

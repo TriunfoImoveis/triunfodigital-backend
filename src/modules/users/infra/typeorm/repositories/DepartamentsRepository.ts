@@ -15,40 +15,63 @@ class DepartamentsRepository implements IDepartamentRepository {
   }
 
   async findByName(name: string): Promise<Departament | undefined> {
-    const departament = await this.ormRepository.findOne({
-      where: {
-        name,
-      }
-    });
-    return departament;
+    try {
+      const departament = await this.ormRepository.findOne({
+        where: {
+          name,
+        }
+      });
+      return departament;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findByNameAndSubsidiary(
     name: string, subsidiary: Subsidiary
   ): Promise<Departament | undefined> {
-    const departament = await this.ormRepository.findOne({
-      where: {
-        name: name,
-        subsidiary: subsidiary
-      }
-    });
-    return departament;
+    try {
+      const departament = await this.ormRepository.findOne({
+        where: {
+          name: name,
+          subsidiary: subsidiary
+        }
+      });
+      return departament;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findById(id: string): Promise<Departament | undefined> {
-    const departament = await this.ormRepository.findOne(id, {
-      relations: ['subsidiary']
-    });
-    return departament;
+    try {
+      const departament = await this.ormRepository.findOne(id, {
+        relations: ['subsidiary']
+      });
+      return departament;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
-  async findDepartamentsActive(): Promise<Departament[] | undefined> {
-    const departaments = await this.ormRepository.find({
-      where: {
-        active: true,
-      }
-    });
-    return departaments;
+  async findDepartamentsActive(
+    subsidiary: string
+  ): Promise<Departament[] | undefined> {
+    try {
+      const departaments = await this.ormRepository.find({
+        relations: ['subsidiary'],
+        where: {
+          subsidiary: subsidiary,
+          active: true,
+        },
+        order: {
+          name: "ASC",
+        }
+      });
+      return departaments;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async create(data: ICreateDepartamentDTO): Promise<Departament | undefined> {
@@ -63,14 +86,22 @@ class DepartamentsRepository implements IDepartamentRepository {
   }
 
   async update(id: string, data: IUpdateDepartamentDTO): Promise<Departament | undefined> {
-    await this.ormRepository.update(id, data);
-    const departamentUpdated = await this.ormRepository.findOne(id);
+    try {
+      await this.ormRepository.update(id, data);
+      const departamentUpdated = await this.ormRepository.findOne(id);
 
-    return departamentUpdated;
+      return departamentUpdated;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async delete(id: string): Promise<void> {
-    await this.ormRepository.delete(id);
+    try {
+      await this.ormRepository.delete(id);
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 }
 

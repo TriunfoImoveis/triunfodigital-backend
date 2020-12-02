@@ -10,7 +10,7 @@ export default interface IDepartamentRepository {
     subsidiary: Subsidiary,
   ): Promise<Departament | undefined>;
   findById(id: string): Promise<Departament | undefined>;
-  findDepartamentsActive(): Promise<Departament[] | undefined>;
+  findDepartamentsActive(subsidiary: string): Promise<Departament[] | undefined>;
   create(data: ICreateDepartamentDTO): Promise<Departament | undefined>;
   update(id: string, data: IUpdateDepartamentDTO): Promise<Departament | undefined>;
   delete(id: string): Promise<void>;

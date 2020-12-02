@@ -16,6 +16,7 @@ usersRouter.get(
     [Segments.QUERY]: {
       name: Joi.string().default(''),
       city: Joi.string().default('%'),
+      departament: Joi.string().default('%'),
       office: Joi.string().default('%'),
     }
   }),

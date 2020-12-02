@@ -15,42 +15,62 @@ class ClientsRepository implements IClientRepository {
   }
 
   async findById(id: string): Promise<Client | undefined> {
-    const client = await this.ormRepository.findOne(id);
-    return client;
+    try {
+      const client = await this.ormRepository.findOne(id);
+      return client;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findByIdAndActivate(id: string): Promise<Client | undefined> {
-    const client = await this.ormRepository.findOne(
-      id,
-      {
-        where: { active: true }
-      }
-    );
-    return client;
+    try {
+      const client = await this.ormRepository.findOne(
+        id,
+        {
+          where: { active: true }
+        }
+      );
+      return client;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findByName(name: string): Promise<Client | undefined> {
-    const client = await this.ormRepository.findOne({
-      where: { name },
-    });
-    return client;
+    try {
+      const client = await this.ormRepository.findOne({
+        where: { name },
+      });
+      return client;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findByCPF(cpf: string): Promise<Client | undefined> {
-    const client = await this.ormRepository.findOne({
-      where: { cpf },
-    });
-    return client;
+    try {
+      const client = await this.ormRepository.findOne({
+        where: { cpf },
+      });
+      return client;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findClientsActive(): Promise<Client[]> {
-    const clients = await this.ormRepository.find({
-      where: {
-        active: true,
-      }
-    });
+    try {
+      const clients = await this.ormRepository.find({
+        where: {
+          active: true,
+        }
+      });
 
-    return clients;
+      return clients;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async createInstance(data: ICreateClientDTO): Promise<Client | undefined> {
@@ -74,13 +94,21 @@ class ClientsRepository implements IClientRepository {
   }
 
   async deactivate(id: string): Promise<void> {
-    await this.ormRepository.update(id, {active: false});
+    try {
+      await this.ormRepository.update(id, {active: false});
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async activate(id: string): Promise<Client | undefined> {
-    await this.ormRepository.update(id, {active: true});
-    const client = await this.ormRepository.findOne(id);
-    return client;
+    try {
+      await this.ormRepository.update(id, {active: true});
+      const client = await this.ormRepository.findOne(id);
+      return client;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 }
 

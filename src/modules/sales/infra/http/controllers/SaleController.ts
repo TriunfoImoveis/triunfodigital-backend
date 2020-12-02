@@ -56,6 +56,7 @@ class SaleController {
       builder,
       client_buyer,
       user_coordinator,
+      users_directors,
       users_sellers,
     } = request.body;
 
@@ -104,6 +105,7 @@ class SaleController {
       builder,
       client_buyer: client_buyerId,
       user_coordinator,
+      users_directors,
       users_sellers,
     });
 
@@ -125,6 +127,7 @@ class SaleController {
       client_buyer,
       client_seller,
       user_coordinator,
+      users_directors,
       users_captivators,
       users_sellers,
     } = request.body;
@@ -187,6 +190,7 @@ class SaleController {
       client_buyer: client_buyerId,
       client_seller: client_sellerId,
       user_coordinator,
+      users_directors,
       users_captivators,
       users_sellers,
     });

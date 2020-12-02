@@ -17,49 +17,57 @@ class SaleRepository implements ISaleRepository {
 
 
   async findAll(data: IRequestSaleDTO): Promise<Sale[]> {
-    const {name, city, status} = data;
+    try {
+      const {name, city, status} = data;
 
-    const sales = await this.ormRepository.createQueryBuilder("sale")
-    .select()
-    .leftJoinAndSelect("sale.origin", "origin")
-    .leftJoinAndSelect("sale.company", "company")
-    .leftJoinAndSelect("sale.payment_type", "payment")
-    .leftJoinAndSelect("sale.realty", "realty")
-    .leftJoinAndSelect("sale.builder", "builder")
-    .leftJoinAndSelect("sale.client_buyer", "client_buyer")
-    .leftJoinAndSelect("sale.client_seller", "client_seller")
-    .leftJoinAndSelect("sale.users_directors", "directors")
-    .leftJoinAndSelect("sale.user_coordinator", "coordinator")
-    .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
-    .leftJoinAndSelect("sale.sale_has_sellers", "sellers")
-    .innerJoinAndSelect(
-      "sellers.subsidiary", "subsidiary", "subsidiary.city = :city", { city }
-    )
-    .where("status = :status", { status })
-    .andWhere("sellers.name like :name", { name: name+"%" })
-    .getMany();
+      const sales = await this.ormRepository.createQueryBuilder("sale")
+      .select()
+      .leftJoinAndSelect("sale.origin", "origin")
+      .leftJoinAndSelect("sale.company", "company")
+      .leftJoinAndSelect("sale.payment_type", "payment")
+      .leftJoinAndSelect("sale.realty", "realty")
+      .leftJoinAndSelect("sale.builder", "builder")
+      .leftJoinAndSelect("sale.client_buyer", "client_buyer")
+      .leftJoinAndSelect("sale.client_seller", "client_seller")
+      .leftJoinAndSelect("sale.users_directors", "directors")
+      .leftJoinAndSelect("sale.user_coordinator", "coordinator")
+      .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
+      .leftJoinAndSelect("sale.sale_has_sellers", "sellers")
+      .innerJoinAndSelect(
+        "sellers.subsidiary", "subsidiary", "subsidiary.city = :city", { city }
+      )
+      .where("status = :status", { status })
+      .andWhere("sellers.name ILIKE :name", { name: name+"%" })
+      .getMany();
 
-    return sales;
+      return sales;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
 
   async findById(id: string): Promise<Sale | undefined> {
-    const sale = await this.ormRepository.findOne(id, {
-      relations: [
-        'origin',
-        'company',
-        'payment_type',
-        'realty',
-        'builder',
-        'client_buyer',
-        'client_seller',
-        'user_coordinator',
-        'sale_has_directors',
-        'sale_has_captivators',
-        'sale_has_sellers',
-      ]
-    });
-    return sale;
+    try {
+      const sale = await this.ormRepository.findOne(id, {
+        relations: [
+          'origin',
+          'company',
+          'payment_type',
+          'realty',
+          'builder',
+          'client_buyer',
+          'client_seller',
+          'user_coordinator',
+          'sale_has_directors',
+          'sale_has_captivators',
+          'sale_has_sellers',
+        ]
+      });
+      return sale;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
 
@@ -96,7 +104,7 @@ class SaleRepository implements ISaleRepository {
     } catch (err) {
 
         await queryRunner.rollbackTransaction();
-        throw new AppError(err);
+        throw new AppError(err.detail);
 
     } finally {
         await queryRunner.release();
@@ -142,7 +150,7 @@ class SaleRepository implements ISaleRepository {
     } catch (err) {
 
         await queryRunner.rollbackTransaction();
-        throw new AppError(err);
+        throw new AppError(err.detail);
 
     } finally {
         await queryRunner.release();
@@ -215,10 +223,14 @@ class SaleRepository implements ISaleRepository {
   }
 
   async validSale(id: string, data: IValidSaleDTO): Promise<Sale | undefined> {
-    await this.ormRepository.update(id, data);
-    const saleValidated = await this.ormRepository.findOne(id);
+    try {
+      await this.ormRepository.update(id, data);
+      const saleValidated = await this.ormRepository.findOne(id);
 
-    return saleValidated;
+      return saleValidated;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 }
 

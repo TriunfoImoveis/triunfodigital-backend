@@ -1,5 +1,6 @@
 import { getRepository, Repository } from "typeorm";
 
+import AppError from '@shared/errors/AppError';
 import IPropertyRepository from "@modules/sales/repositories/IPropertyRepository";
 import PropertyType from "@modules/sales/infra/typeorm/entities/PropertyType";
 import ICreatePropertyDTO from "@modules/sales/dtos/ICreatePropertyDTO";
@@ -12,26 +13,38 @@ class PropertiesRepository implements IPropertyRepository {
   }
 
   async findAll(): Promise<PropertyType[]> {
-    const properties = await this.ormRepository.find({
-      order: {
-        name: "ASC",
-      },
-    });
+    try {
+      const properties = await this.ormRepository.find({
+        order: {
+          name: "ASC",
+        },
+      });
 
-    return properties;
+      return properties;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findById(id: string): Promise<PropertyType | undefined> {
-    const property = await this.ormRepository.findOne(id);
+    try {
+      const property = await this.ormRepository.findOne(id);
 
-    return property;
+      return property;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async create(data: ICreatePropertyDTO): Promise<PropertyType | undefined> {
-    const property = this.ormRepository.create(data);
-    const newProperty = await this.ormRepository.save(property);
+    try {
+      const property = this.ormRepository.create(data);
+      const newProperty = await this.ormRepository.save(property);
 
-    return newProperty;
+      return newProperty;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 }
 

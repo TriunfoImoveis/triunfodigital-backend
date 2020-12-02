@@ -7,7 +7,11 @@ import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenti
 const departamentRouter = Router();
 const departamentController = new DepartamentController();
 
-departamentRouter.get('/', departamentController.index);
+departamentRouter.get('/', celebrate({
+  [Segments.QUERY]: {
+    subsidiary: Joi.string().required(),
+  }
+}), departamentController.index);
 
 departamentRouter.use(ensuredAuthenticated);
 
