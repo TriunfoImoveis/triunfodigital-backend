@@ -28,7 +28,7 @@ class SaleRepository implements ISaleRepository {
     .leftJoinAndSelect("sale.builder", "builder")
     .leftJoinAndSelect("sale.client_buyer", "client_buyer")
     .leftJoinAndSelect("sale.client_seller", "client_seller")
-    .leftJoinAndSelect("sale.user_director", "director")
+    .leftJoinAndSelect("sale.users_directors", "directors")
     .leftJoinAndSelect("sale.user_coordinator", "coordinator")
     .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
     .leftJoinAndSelect("sale.sale_has_sellers", "sellers")
