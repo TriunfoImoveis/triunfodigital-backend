@@ -10,6 +10,7 @@ import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
 import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService';
 import { SaleType } from '@modules/sales/infra/typeorm/entities/Sale';
 import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
+import { classToClass } from 'class-transformer';
 
 class SaleController {
 
@@ -26,7 +27,7 @@ class SaleController {
 
     const saleRepository = new SaleRepository();
     const sales = await saleRepository.findAll({name, city, status});
-    return response.json(sales);
+    return response.json(classToClass(sales));
   }
 
 

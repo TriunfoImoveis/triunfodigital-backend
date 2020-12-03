@@ -128,7 +128,7 @@ class UsersRepository implements IUserRepository {
         .orderBy("user.name", "ASC")
         .getMany();
 
-        return users;
+      return users;
     } catch (err) {
       throw new AppError(err.detail);
     }

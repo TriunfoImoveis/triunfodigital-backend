@@ -27,6 +27,15 @@ class CreateSaleNewService {
     users_sellers,
   }: ICreateSaleNewDTO): Promise<Sale> {
 
+    const current_date = new Date();
+    if (sale_date > current_date) {
+      throw new AppError("Sale date can't be greater than the current date.");
+    }
+
+
+
+    // throw new AppError("error validate");
+
     if (company) {
       const companyRepository = new CompanyRepository();
       const percentage = await companyRepository.findOne(company.id);

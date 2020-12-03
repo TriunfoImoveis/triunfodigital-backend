@@ -23,8 +23,8 @@ saleRoutes.get('/', celebrate({
 saleRoutes.post('/new', celebrate({
   [Segments.BODY]: {
     sale_date: Joi.date().required(),
-    realty_ammount: Joi.number().required(),
-    percentage_sale: Joi.number().required(),
+    realty_ammount: Joi.number().min(0).required(),
+    percentage_sale: Joi.number().min(0).required(),
     company: Joi.string().uuid(),
     commission: Joi.number().required(),
     bonus: Joi.number(),
