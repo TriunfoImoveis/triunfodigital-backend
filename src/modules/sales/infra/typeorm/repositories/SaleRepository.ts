@@ -59,7 +59,7 @@ class SaleRepository implements ISaleRepository {
           'client_buyer',
           'client_seller',
           'user_coordinator',
-          'sale_has_directors',
+          'users_directors',
           'sale_has_captivators',
           'sale_has_sellers',
         ]
