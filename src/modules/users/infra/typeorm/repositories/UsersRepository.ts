@@ -5,8 +5,6 @@ import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
 import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 import User from '@modules/users/infra/typeorm/entities/User';
-import Subsidiary from '@modules/users/infra/typeorm/entities/Subsidiary';
-import Office from '@modules/users/infra/typeorm/entities/Office';
 import IRequestUserDTO from '@modules/users/dtos/IRequestUserDTO';
 
 class UsersRepository implements IUserRepository {

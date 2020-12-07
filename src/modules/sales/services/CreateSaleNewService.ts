@@ -26,13 +26,16 @@ class CreateSaleNewService {
     users_directors,
     users_sellers,
   }: ICreateSaleNewDTO): Promise<Sale> {
+    var usersRepository = new UsersRepository();
 
-    const current_date = new Date();
-    if (sale_date > current_date) {
-      throw new AppError("Sale date can't be greater than the current date.");
+    if (user_coordinator) {
+      const coordinatorExists = await usersRepository.findById(String(user_coordinator));
+      if (!coordinatorExists) {
+        throw new AppError("User coordinator not exists.");
+      } else if (coordinatorExists.office.name !== "Coordenador") {
+        throw new AppError("User isn't coordinator.");
+      }
     }
-
-
 
     // throw new AppError("error validate");
 
