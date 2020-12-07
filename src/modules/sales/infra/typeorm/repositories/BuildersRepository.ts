@@ -1,5 +1,6 @@
 import { getRepository, Repository } from 'typeorm';
 
+import AppError from '@shared/errors/AppError';
 import ICreateBuilderDTO from '@modules/sales/dtos/ICreateBuilderDTO';
 import IBuilderRepository from '@modules/sales/repositories/IBuilderRepository';
 import Builder from '@modules/sales/infra/typeorm/entities/Builder';
@@ -13,69 +14,105 @@ class BuildersRespository implements IBuilderRepository {
   }
 
   async findBuildersActive(): Promise<Builder[]> {
-    const builders = await this.ormRepository.find({
-      where: {
-        active: true,
-      },
-      order: {
-        name: "ASC",
-      }
-    });
+    try {
+      const builders = await this.ormRepository.find({
+        where: {
+          active: true,
+        },
+        order: {
+          name: "ASC",
+        }
+      });
 
-    return builders;
+      return builders;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findById(id: string): Promise<Builder | undefined> {
-    const builder = await this.ormRepository.findOne(id);
-    return builder;
+    try {
+      const builder = await this.ormRepository.findOne(id);
+      return builder;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findByIdAndActivate(id: string): Promise<Builder | undefined> {
-    const builder = await this.ormRepository.findOne(
-      id,
-      {
-        where: { active: true }
-      }
-    );
-    return builder;
+    try {
+      const builder = await this.ormRepository.findOne(
+        id,
+        {
+          where: { active: true }
+        }
+      );
+      return builder;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findByName(name: string): Promise<Builder | undefined> {
-    const builder = await this.ormRepository.findOne({
-      where: { name },
-    });
-    return builder;
+    try {
+      const builder = await this.ormRepository.findOne({
+        where: { name },
+      });
+      return builder;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findByCNPJ(cnpj: string): Promise<Builder | undefined> {
-    const builder = await this.ormRepository.findOne({
-      where: { cnpj },
-    });
-    return builder;
+    try {
+      const builder = await this.ormRepository.findOne({
+        where: { cnpj },
+      });
+      return builder;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async create(data: ICreateBuilderDTO): Promise<Builder | undefined> {
-    const builder = this.ormRepository.create(data);
-    const newBuilder = await this.ormRepository.save(builder);
+    try {
+      const builder = this.ormRepository.create(data);
+      const newBuilder = await this.ormRepository.save(builder);
 
-    return newBuilder;
+      return newBuilder;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async update(id: string, data: IUpdateBuilderDTO): Promise<Builder | undefined> {
-    await this.ormRepository.update(id, data);
-    const builderUpdated = await this.ormRepository.findOne(id);
+    try {
+      await this.ormRepository.update(id, data);
+      const builderUpdated = await this.ormRepository.findOne(id);
 
-    return builderUpdated;
+      return builderUpdated;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async deactivate(id: string): Promise<void> {
-    await this.ormRepository.update(id, {active: false});
+    try {
+      await this.ormRepository.update(id, {active: false});
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async activate(id: string): Promise<Builder | undefined> {
-    await this.ormRepository.update(id, {active: true});
-    const builder = await this.ormRepository.findOne(id);
-    return builder;
+    try {
+      await this.ormRepository.update(id, {active: true});
+      const builder = await this.ormRepository.findOne(id);
+      return builder;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 }
 

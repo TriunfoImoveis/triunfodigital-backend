@@ -13,13 +13,21 @@ class RealtyRepository implements IRealtyRepository {
   }
 
   async findAll(): Promise<Realty[]> {
-    const realties = await this.ormRepository.find();
-    return realties;
+    try {
+      const realties = await this.ormRepository.find();
+      return realties;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findById(id: string): Promise<Realty | undefined> {
-    const realty = await this.ormRepository.findOne(id);
-    return realty;
+    try {
+      const realty = await this.ormRepository.findOne(id);
+      return realty;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async createInstance(data: ICreateRealtyDTO): Promise<Realty | undefined> {

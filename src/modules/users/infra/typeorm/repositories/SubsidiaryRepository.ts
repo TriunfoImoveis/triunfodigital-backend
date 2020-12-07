@@ -1,5 +1,6 @@
 import { getRepository, Repository } from 'typeorm';
 
+import AppError from '@shared/errors/AppError';
 import ICreateSubsidiaryDTO from '@modules/users/dtos/ICreateSubsidiaryDTO';
 import IUpdateOfficeDTO from '@modules/users/dtos/IUpdateOfficeDTO';
 import ISubsidiaryRepository from '@modules/users/repositories/ISubsidiaryRepository';
@@ -13,47 +14,71 @@ class SubsidiaryRepository implements ISubsidiaryRepository {
   }
 
   async findByName(name: string): Promise<Subsidiary | undefined> {
-    const subsidiary = await this.ormRepository.findOne({
-      where: {
-        name,
-      },
-    });
-    return subsidiary;
+    try {
+      const subsidiary = await this.ormRepository.findOne({
+        where: {
+          name,
+        },
+      });
+      return subsidiary;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findById(id: string): Promise<Subsidiary | undefined> {
-    const subsidiary = await this.ormRepository.findOne(id);
-    return subsidiary;
+    try {
+      const subsidiary = await this.ormRepository.findOne(id);
+      return subsidiary;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findSubsidiarysActive(): Promise<Subsidiary[] | undefined> {
-    const subsidiary = await this.ormRepository.find({
-      where: {
-        active: true,
-      },
-    });
-    return subsidiary;
+    try {
+      const subsidiary = await this.ormRepository.find({
+        where: {
+          active: true,
+        },
+      });
+      return subsidiary;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async create(data: ICreateSubsidiaryDTO): Promise<Subsidiary> {
-    const user = this.ormRepository.create(data);
-    const newUser = await this.ormRepository.save(user);
+    try {
+      const user = this.ormRepository.create(data);
+      const newUser = await this.ormRepository.save(user);
 
-    return newUser;
+      return newUser;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async update(
     id: string,
     subsidiary: IUpdateOfficeDTO,
   ): Promise<Subsidiary | undefined> {
-    await this.ormRepository.update(id, subsidiary);
-    const updatedSubsidiary = await this.ormRepository.findOne(id);
+    try {
+      await this.ormRepository.update(id, subsidiary);
+      const updatedSubsidiary = await this.ormRepository.findOne(id);
 
-    return updatedSubsidiary;
+      return updatedSubsidiary;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async delete(id: string): Promise<void> {
-    await this.ormRepository.delete(id);
+    try {
+      await this.ormRepository.delete(id);
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 }
 

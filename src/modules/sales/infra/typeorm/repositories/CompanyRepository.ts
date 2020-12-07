@@ -72,13 +72,21 @@ class CompanyRepository implements ICompanyRepository {
   }
 
   async deactivate(id: string): Promise<void> {
-    await this.ormRepository.update(id, {active: false});
+    try {
+      await this.ormRepository.update(id, {active: false});
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async activate(id: string): Promise<Company | undefined> {
-    await this.ormRepository.update(id, {active: true});
-    const company = await this.ormRepository.findOne(id);
-    return company;
+    try {
+      await this.ormRepository.update(id, {active: true});
+      const company = await this.ormRepository.findOne(id);
+      return company;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 }
 

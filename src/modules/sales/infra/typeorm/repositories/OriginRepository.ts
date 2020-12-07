@@ -1,5 +1,6 @@
 import { getRepository, Repository } from "typeorm";
 
+import AppError from '@shared/errors/AppError';
 import IOriginRepository from "@modules/sales/repositories/IOriginRepository";
 import OriginSale from "@modules/sales/infra/typeorm/entities/OriginSale";
 import ICreateOriginDTO from "@modules/sales/dtos/ICreateOriginDTO";
@@ -12,26 +13,38 @@ class OriginsRepository implements IOriginRepository {
   }
 
   async findAll(): Promise<OriginSale[]> {
-    const origins = await this.ormRepository.find({
-      order: {
-        name: "ASC",
-      }
-    });
+    try {
+      const origins = await this.ormRepository.find({
+        order: {
+          name: "ASC",
+        }
+      });
 
-    return origins;
+      return origins;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async findById(id: string): Promise<OriginSale | undefined> {
-    const origin = await this.ormRepository.findOne(id);
+    try {
+      const origin = await this.ormRepository.findOne(id);
 
-    return origin;
+      return origin;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async create(data: ICreateOriginDTO): Promise<OriginSale | undefined> {
-    const origin = this.ormRepository.create(data);
-    const newOrigin = await this.ormRepository.save(origin);
+    try {
+      const origin = this.ormRepository.create(data);
+      const newOrigin = await this.ormRepository.save(origin);
 
-    return newOrigin;
+      return newOrigin;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 }
 

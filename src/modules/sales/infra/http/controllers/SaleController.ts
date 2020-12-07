@@ -10,6 +10,7 @@ import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
 import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService';
 import { SaleType } from '@modules/sales/infra/typeorm/entities/Sale';
 import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
+import { classToClass } from 'class-transformer';
 
 class SaleController {
 
@@ -26,7 +27,7 @@ class SaleController {
 
     const saleRepository = new SaleRepository();
     const sales = await saleRepository.findAll({name, city, status});
-    return response.json(sales);
+    return response.json(classToClass(sales));
   }
 
 
@@ -56,6 +57,7 @@ class SaleController {
       builder,
       client_buyer,
       user_coordinator,
+      users_directors,
       users_sellers,
     } = request.body;
 
@@ -104,6 +106,7 @@ class SaleController {
       builder,
       client_buyer: client_buyerId,
       user_coordinator,
+      users_directors,
       users_sellers,
     });
 
@@ -125,6 +128,7 @@ class SaleController {
       client_buyer,
       client_seller,
       user_coordinator,
+      users_directors,
       users_captivators,
       users_sellers,
     } = request.body;
@@ -187,6 +191,7 @@ class SaleController {
       client_buyer: client_buyerId,
       client_seller: client_sellerId,
       user_coordinator,
+      users_directors,
       users_captivators,
       users_sellers,
     });

@@ -7,8 +7,16 @@ import UpdateDepartamentService from "@modules/users/services/UpdateDepartamentS
 
 class DepartamentController {
   async index(request: Request, response: Response): Promise<Response> {
+    const { subsidiary } = request.query;
+
+    if (typeof subsidiary !== "string") {
+      throw new AppError("Subsidiary not is validate string.");
+    }
+
     const departamentsRepository = new DepartamentsRepository();
-    const departamentsList = await departamentsRepository.findDepartamentsActive();
+    const departamentsList = await departamentsRepository.findDepartamentsActive(
+      subsidiary
+    );
 
     return response.json(departamentsList);
   }
