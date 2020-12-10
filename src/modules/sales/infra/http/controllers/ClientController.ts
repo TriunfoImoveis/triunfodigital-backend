@@ -1,18 +1,30 @@
 import { Request, Response } from 'express';
 
+import AppError from '@shared/errors/AppError';
 import ClientsRepository from '@modules/sales/infra/typeorm/repositories/ClientsRepository';
 import ShowClientService from '@modules/sales/services/ShowClientService';
 import CreateClientService from '@modules/sales/services/CreateClientService';
 import UpdateClientService from '@modules/sales/services/UpdateClientService';
 import DeactivateClientService from '@modules/sales/services/DeactivateClientService';
 import ActivateClientService from '@modules/sales/services/ActivateClientService';
+import ListClientService from '@modules/sales/services/ListClientService';
 
 
 class ClientController {
 
   async index(request: Request, response: Response): Promise<Response> {
+    const {cpf} = request.query;
+
+    if ((typeof cpf !== 'string') && (typeof cpf !== 'undefined')){
+      throw new AppError("CPF not is valid string.");
+    }
+
     const clientsRepository = new ClientsRepository();
-    const clients = await clientsRepository.findClientsActive();
+    const listClientService = new ListClientService(clientsRepository);
+
+    const clients = await listClientService.execute({
+      cpf
+    });
 
     return response.json(clients);
   }
