@@ -22,21 +22,21 @@ class SaleRepository implements ISaleRepository {
 
       const sales = await this.ormRepository.createQueryBuilder("sale")
       .select()
-      .leftJoinAndSelect("sale.origin", "origin")
-      .leftJoinAndSelect("sale.company", "company")
-      .leftJoinAndSelect("sale.payment_type", "payment")
-      .leftJoinAndSelect("sale.realty", "realty")
+      .innerJoinAndSelect("sale.origin", "origin")
+      .innerJoinAndSelect("sale.company", "company")
+      .innerJoinAndSelect("sale.payment_type", "payment")
+      .innerJoinAndSelect("sale.realty", "realty")
       .leftJoinAndSelect("sale.builder", "builder")
-      .leftJoinAndSelect("sale.client_buyer", "client_buyer")
+      .innerJoinAndSelect("sale.client_buyer", "client_buyer")
       .leftJoinAndSelect("sale.client_seller", "client_seller")
-      .leftJoinAndSelect("sale.users_directors", "directors")
+      .innerJoinAndSelect("sale.users_directors", "directors")
       .leftJoinAndSelect("sale.user_coordinator", "coordinator")
       .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
-      .leftJoinAndSelect("sale.sale_has_sellers", "sellers")
+      .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
       .innerJoinAndSelect(
         "sellers.subsidiary", "subsidiary", "subsidiary.city = :city", { city }
       )
-      .where("status = :status", { status })
+      .where("sale.status = :status", { status })
       .andWhere("sellers.name ILIKE :name", { name: name+"%" })
       .getMany();
 
