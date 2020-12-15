@@ -23,7 +23,7 @@ class SaleRepository implements ISaleRepository {
       const sales = await this.ormRepository.createQueryBuilder("sale")
       .select()
       .innerJoinAndSelect("sale.origin", "origin")
-      .innerJoinAndSelect("sale.company", "company")
+      .leftJoinAndSelect("sale.company", "company")
       .innerJoinAndSelect("sale.payment_type", "payment")
       .innerJoinAndSelect("sale.realty", "realty")
       .leftJoinAndSelect("sale.builder", "builder")
