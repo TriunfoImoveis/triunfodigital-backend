@@ -64,7 +64,7 @@ class Sale {
   @JoinColumn({ name: 'company_id' })
   company: Company;
 
-  @Column({type: 'integer', nullable: true})
+  @Column({ type: 'decimal', precision: 3, scale: 1, nullable: true })
   percentage_company: number;
 
   @ManyToOne(type => PaymentType, {nullable: false})

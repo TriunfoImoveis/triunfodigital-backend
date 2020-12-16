@@ -125,9 +125,7 @@ saleRoutes.patch('/valid/:id', celebrate({
     id: Joi.string().uuid(),
   },
   [Segments.BODY]: {
-    status: Joi.string().valid(
-      'PENDENTE', 'CAIU', 'EM PARTE', 'PAGO TOTAL'
-    ).required(),
+    installments: Joi.array().length(1).required(),
   }
 }), saleController.validSale);
 

@@ -37,8 +37,6 @@ class CreateSaleNewService {
       }
     }
 
-    // throw new AppError("error validate");
-
     if (company) {
       const companyRepository = new CompanyRepository();
       const percentage = await companyRepository.findOne(company.id);

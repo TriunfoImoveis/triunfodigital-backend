@@ -15,7 +15,7 @@ class Company {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
-  @Column({ type: 'integer' })
+  @Column({ type: 'decimal', precision: 3, scale: 1 })
   percentage: number;
 
   @Column({ type: 'boolean', default: true })

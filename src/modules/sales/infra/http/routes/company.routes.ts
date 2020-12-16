@@ -20,7 +20,7 @@ companyRouter.get('/:id', celebrate({
 companyRouter.post('/', celebrate({
   [Segments.BODY]: {
     name: Joi.string().required(),
-    percentage: Joi.string().required(),
+    percentage: Joi.number().min(0).required(),
   }
 }), companyController.create);
 

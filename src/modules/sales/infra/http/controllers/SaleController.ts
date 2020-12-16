@@ -39,7 +39,7 @@ class SaleController {
       throw new AppError('Sale not exists.');
     }
 
-    return response.json(sale);
+    return response.json(classToClass(sale));
   }
 
 
