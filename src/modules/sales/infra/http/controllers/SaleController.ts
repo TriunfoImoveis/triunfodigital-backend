@@ -11,6 +11,8 @@ import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService
 import { SaleType } from '@modules/sales/infra/typeorm/entities/Sale';
 import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
 import { classToClass } from 'class-transformer';
+import NotValidSaleService from '@modules/sales/services/NotValidSaleServivce';
+import InstallmentRespository from '@modules/sales/infra/typeorm/repositories/InstallmentRepository';
 
 class SaleController {
 
@@ -201,14 +203,28 @@ class SaleController {
 
   async validSale(request:Request, response: Response): Promise<Response> {
     const saleRepository = new SaleRepository();
-    const validSaleService = new ValidSaleService(saleRepository);
-
-    const saleValidated = await validSaleService.execute({
+    const installmentRepository = new InstallmentRespository();
+    const validSaleService = new ValidSaleService(
+      saleRepository, installmentRepository
+    );
+    
+    await validSaleService.execute({
       id: request.params.id,
-      data: request.body,
+      installments: request.body.installments,
     });
 
-    return response.json(saleValidated);
+    return response.status(200).send();
+  }
+
+  async notValidSale(request:Request, response: Response): Promise<Response> {
+    const saleRepository = new SaleRepository();
+    const notValidSaleService = new NotValidSaleService(saleRepository);
+    
+    await notValidSaleService.execute({
+      id: request.params.id,
+    });
+
+    return response.status(200).send();
   }
 }
 

@@ -1,11 +1,10 @@
 import { getRepository, Repository, getConnection } from "typeorm";
 
 import AppError from '@shared/errors/AppError';
-import Sale from "@modules/sales/infra/typeorm/entities/Sale";
+import Sale, { Status } from "@modules/sales/infra/typeorm/entities/Sale";
 import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
-import IValidSaleDTO from "@modules/sales/dtos/IValidSaleDTO";
 import IRequestSaleDTO from "@modules/sales/dtos/IRequestSaleDTO";
 
 class SaleRepository implements ISaleRepository {
@@ -33,6 +32,7 @@ class SaleRepository implements ISaleRepository {
       .leftJoinAndSelect("sale.user_coordinator", "coordinator")
       .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
       .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
+      .leftJoinAndSelect("sale.installments", "installments")
       .innerJoinAndSelect(
         "sellers.subsidiary", "subsidiary", "subsidiary.city = :city", { city }
       )
@@ -62,6 +62,7 @@ class SaleRepository implements ISaleRepository {
           'users_directors',
           'sale_has_captivators',
           'sale_has_sellers',
+          'installments',
         ]
       });
       return sale;
@@ -222,12 +223,9 @@ class SaleRepository implements ISaleRepository {
     }
   }
 
-  async validSale(id: string, data: IValidSaleDTO): Promise<Sale | undefined> {
+  async validSale(id: string, status: Status ): Promise<void> {
     try {
-      await this.ormRepository.update(id, data);
-      const saleValidated = await this.ormRepository.findOne(id);
-
-      return saleValidated;
+      await this.ormRepository.update(id, { status });
     } catch (err) {
       throw new AppError(err.detail);
     }

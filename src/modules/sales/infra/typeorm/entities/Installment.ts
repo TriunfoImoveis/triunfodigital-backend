@@ -1,33 +1,45 @@
-// import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { 
+    Column, 
+    Entity, 
+    ManyToOne, 
+    PrimaryGeneratedColumn,
+    JoinColumn, 
+} from "typeorm";
 
-// export enum Status {
-//     PEN = "PENDENTE",
-//     VEN = "VENCIDO",
-//     PAG = "PAGO",
-// }
+import Sale from "./Sale";
 
-// @Entity('installments')
-// class Installment {
-//     @PrimaryGeneratedColumn('uuid')
-//     id: string;
+export enum Status {
+    PEN = "PENDENTE",
+    VEN = "VENCIDO",
+    PAG = "PAGO",
+}
 
-//     @Column({ type: 'integer'})
-//     installment_number: number;
+@Entity('installments')
+class Installment {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
-//     @Column({ type: 'decimal', precision: 14, scale: 2 })
-//     value: number;
+    @Column({ type: 'integer', nullable: false})
+    installment_number: number;
 
-//     @Column({ type: 'date' })
-//     due_date: Date;
+    @Column({ type: 'decimal', precision: 14, scale: 2,  nullable: false })
+    value: number;
 
-//     @Column({ type: 'enum', enum: Status, default: Status.PEN })
-//     status: Status;
+    @Column({ type: 'date', nullable: false })
+    due_date: Date;
 
-//     @Column({ type: 'decimal', precision: 14, scale: 2 })
-//     amount_paid: number;
+    @Column({ type: 'enum', enum: Status, default: Status.PEN })
+    status: Status;
 
-//     @Column({ type: 'date' })
-//     pay_date: Date;
-// }
+    @Column({ type: 'decimal', precision: 14, scale: 2, nullable: true })
+    amount_paid: number;
 
-// export default Installment;
+    @Column({ type: 'date', nullable: true })
+    pay_date: Date;
+
+    @ManyToOne(type => Sale, sale => sale.installments, {nullable: false})
+    @JoinColumn({ name: 'sale_id' })
+    sale: Sale;
+}
+
+export default Installment;

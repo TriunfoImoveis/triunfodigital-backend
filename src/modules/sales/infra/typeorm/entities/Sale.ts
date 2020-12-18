@@ -5,6 +5,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -13,6 +14,7 @@ import User from "../../../../users/infra/typeorm/entities/User";
 import Builder from "./Builder";
 import Client from "./Client";
 import Company from "./Company";
+import Installment from "./Installment";
 import OriginSale from "./OriginSale";
 import PaymentType from "./PaymentType";
 import Realty from "./Realty";
@@ -132,6 +134,9 @@ class Sale {
     }
   })
   sale_has_sellers: User[];
+
+  @OneToMany(type => Installment, installment => installment.sale)
+  installments: Installment[];
 }
 
 export default Sale;
