@@ -6,6 +6,7 @@ import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IRequestSaleDTO from "@modules/sales/dtos/IRequestSaleDTO";
+import INotValidSaleDTO from "@modules/sales/dtos/INotValidSaleDTO";
 
 class SaleRepository implements ISaleRepository {
   private ormRepository: Repository<Sale>;
@@ -32,6 +33,7 @@ class SaleRepository implements ISaleRepository {
       .leftJoinAndSelect("sale.user_coordinator", "coordinator")
       .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
       .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
+      .leftJoinAndSelect("sale.motive", "motive")
       .leftJoinAndSelect("sale.installments", "installments")
       .innerJoinAndSelect(
         "sellers.subsidiary", "subsidiary", "subsidiary.city = :city", { city }
@@ -62,6 +64,7 @@ class SaleRepository implements ISaleRepository {
           'users_directors',
           'sale_has_captivators',
           'sale_has_sellers',
+          'motive',
           'installments',
         ]
       });
@@ -226,6 +229,24 @@ class SaleRepository implements ISaleRepository {
   async validSale(id: string, status: Status ): Promise<void> {
     try {
       await this.ormRepository.update(id, { status });
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async notValidSale(data: INotValidSaleDTO): Promise<void> {
+    const {
+      id,
+      status,
+      motive,
+      another_motive,
+    } = data;
+    try {
+      await this.ormRepository.update(id, { 
+        status,
+        motive,
+        another_motive,
+      });
     } catch (err) {
       throw new AppError(err.detail);
     }

@@ -1,24 +1,21 @@
 import AppError from '@shared/errors/AppError';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
-import Sale, { Status } from '@modules/sales/infra/typeorm/entities/Sale';
-
-
-interface IRequestDTO {
-  id: string;
-}
+import INotValidSaleDTO from '@modules/sales/dtos/INotValidSaleDTO';
 
 class NotValidSaleService {
   constructor(private salesRepository: ISaleRepository) {}
 
-  public async execute({ id }: IRequestDTO): Promise<void> {
+  public async execute( 
+    data: INotValidSaleDTO
+  ): Promise<void> {
+    const {id} = data;
     const sale = await this.salesRepository.findById(id);
 
     if (!sale) {
       throw new AppError('Sale not exists.');
     }
-
-    const status = Status.CA;
-    await this.salesRepository.validSale(id, status);
+    
+    await this.salesRepository.notValidSale(data);
   }
 }
 

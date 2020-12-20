@@ -132,6 +132,10 @@ saleRoutes.patch('/valid/:id', celebrate({
 saleRoutes.patch('/not-valid/:id', celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),
+  },
+  [Segments.BODY]: {
+    motive: Joi.string().uuid().required(),
+    another_motive: Joi.string(),
   }
 }), saleController.notValidSale);
 

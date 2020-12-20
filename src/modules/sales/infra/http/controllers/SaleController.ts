@@ -8,7 +8,7 @@ import ClientsRepository from '@modules/sales/infra/typeorm/repositories/Clients
 import CreateClientService from '@modules/sales/services/CreateClientService';
 import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
 import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService';
-import { SaleType } from '@modules/sales/infra/typeorm/entities/Sale';
+import { SaleType, Status } from '@modules/sales/infra/typeorm/entities/Sale';
 import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
 import { classToClass } from 'class-transformer';
 import NotValidSaleService from '@modules/sales/services/NotValidSaleServivce';
@@ -217,11 +217,16 @@ class SaleController {
   }
 
   async notValidSale(request:Request, response: Response): Promise<Response> {
+    const { motive, another_motive } = request.body;
+
     const saleRepository = new SaleRepository();
     const notValidSaleService = new NotValidSaleService(saleRepository);
     
     await notValidSaleService.execute({
       id: request.params.id,
+      status: Status.CA,
+      motive,
+      another_motive,
     });
 
     return response.status(200).send();
