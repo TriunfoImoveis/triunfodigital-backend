@@ -15,6 +15,7 @@ import realtyRoutes from '@modules/sales/infra/http/routes/realty.routes';
 import saleRoutes from '@modules/sales/infra/http/routes/sale.routes';
 import paymentTypeRoutes from '@modules/sales/infra/http/routes/paymentType.routes';
 import rankingRouter from '@modules/users/infra/http/routes/ranking.routes';
+import motiveRoutes from '@modules/sales/infra/http/routes/motive.routes';
 
 const routes = Router();
 
@@ -34,6 +35,7 @@ routes.use('/payment-type', paymentTypeRoutes);
 routes.use('/origin-sale', originRoutes);
 routes.use('/company', companyRoutes);
 routes.use('/realty', realtyRoutes);
+routes.use('/motive', motiveRoutes);
 routes.use('/sale', saleRoutes);
 
 export default routes;

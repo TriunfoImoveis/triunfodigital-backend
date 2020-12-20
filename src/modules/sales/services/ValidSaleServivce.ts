@@ -33,7 +33,7 @@ class ValidSaleService {
     if (installments.length === 1) {
       var status = Status.PT;
     } else {
-      var status = Status.EP;
+      var status = Status.PE;
     }
 
     await this.salesRepository.validSale(id, status);

@@ -15,6 +15,7 @@ import Builder from "./Builder";
 import Client from "./Client";
 import Company from "./Company";
 import Installment from "./Installment";
+import Motive from "./Motive";
 import OriginSale from "./OriginSale";
 import PaymentType from "./PaymentType";
 import Realty from "./Realty";
@@ -26,9 +27,9 @@ export enum SaleType {
 }
 
 export enum Status {
-  PE  = 'PENDENTE',
+  NV  = 'NAO_VALIDADO',
   CA  = 'CAIU',
-  EP  = 'EM PARTE',
+  PE  = 'PENDENTE',
   PT  = 'PAGO TOTAL',
 }
 
@@ -55,8 +56,15 @@ class Sale {
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true})
   bonus: number;
 
-  @Column({ type: 'enum', enum: Status, default: Status.PE })
+  @Column({ type: 'enum', enum: Status, default: Status.NV })
   status: Status;
+
+  @Column({ type: 'varchar', length: 150, nullable: true })
+  another_motive: string;
+
+  @ManyToOne(type => Motive, {nullable: true})
+  @JoinColumn({ name: 'motive_id' })
+  motive: Motive;
 
   @ManyToOne(type => OriginSale, sales => Sale, {nullable: false})
   @JoinColumn({ name: 'origin_id' })

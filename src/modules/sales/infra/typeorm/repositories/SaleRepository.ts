@@ -178,7 +178,7 @@ class SaleRepository implements ISaleRepository {
         )
         .andWhere(
           "sale.status IN (:...status)",
-          { status: ["EM PARTE", "PAGO TOTAL"] }
+          { status: ["PENDENTE", "PAGO TOTAL"] }
         )
         .getMany();
 
@@ -213,7 +213,7 @@ class SaleRepository implements ISaleRepository {
         )
         .andWhere(
           "sale.status IN (:...status)",
-          { status: ["EM PARTE", "PAGO TOTAL"] }
+          { status: ["PENDENTE", "PAGO TOTAL"] }
         )
         .getMany();
 

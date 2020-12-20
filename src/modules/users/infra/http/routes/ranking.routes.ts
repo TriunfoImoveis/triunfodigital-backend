@@ -20,7 +20,7 @@ rankingRouter.get('/', celebrate({
       .integer()
       .positive()
       .min(2010)
-      .max(2050)
+      .max(3000)
       .default(date.getFullYear()),
   }
 }), rankingController.index);
