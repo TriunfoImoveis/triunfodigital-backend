@@ -15,6 +15,9 @@ class OriginsRepository implements IOriginRepository {
   async findAll(): Promise<OriginSale[]> {
     try {
       const origins = await this.ormRepository.find({
+        where: {
+          active: true
+        },
         order: {
           name: "ASC",
         }

@@ -1,12 +1,12 @@
 import { getRepository, Repository, getConnection } from "typeorm";
 
 import AppError from '@shared/errors/AppError';
-import Sale from "@modules/sales/infra/typeorm/entities/Sale";
+import Sale, { Status } from "@modules/sales/infra/typeorm/entities/Sale";
 import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
-import IValidSaleDTO from "@modules/sales/dtos/IValidSaleDTO";
 import IRequestSaleDTO from "@modules/sales/dtos/IRequestSaleDTO";
+import INotValidSaleDTO from "@modules/sales/dtos/INotValidSaleDTO";
 
 class SaleRepository implements ISaleRepository {
   private ormRepository: Repository<Sale>;
@@ -22,21 +22,23 @@ class SaleRepository implements ISaleRepository {
 
       const sales = await this.ormRepository.createQueryBuilder("sale")
       .select()
-      .leftJoinAndSelect("sale.origin", "origin")
+      .innerJoinAndSelect("sale.origin", "origin")
       .leftJoinAndSelect("sale.company", "company")
-      .leftJoinAndSelect("sale.payment_type", "payment")
-      .leftJoinAndSelect("sale.realty", "realty")
+      .innerJoinAndSelect("sale.payment_type", "payment")
+      .innerJoinAndSelect("sale.realty", "realty")
       .leftJoinAndSelect("sale.builder", "builder")
-      .leftJoinAndSelect("sale.client_buyer", "client_buyer")
+      .innerJoinAndSelect("sale.client_buyer", "client_buyer")
       .leftJoinAndSelect("sale.client_seller", "client_seller")
-      .leftJoinAndSelect("sale.users_directors", "directors")
+      .innerJoinAndSelect("sale.users_directors", "directors")
       .leftJoinAndSelect("sale.user_coordinator", "coordinator")
       .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
-      .leftJoinAndSelect("sale.sale_has_sellers", "sellers")
+      .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
+      .leftJoinAndSelect("sale.motive", "motive")
+      .leftJoinAndSelect("sale.installments", "installments")
       .innerJoinAndSelect(
         "sellers.subsidiary", "subsidiary", "subsidiary.city = :city", { city }
       )
-      .where("status = :status", { status })
+      .where("sale.status = :status", { status })
       .andWhere("sellers.name ILIKE :name", { name: name+"%" })
       .getMany();
 
@@ -62,6 +64,8 @@ class SaleRepository implements ISaleRepository {
           'users_directors',
           'sale_has_captivators',
           'sale_has_sellers',
+          'motive',
+          'installments',
         ]
       });
       return sale;
@@ -177,7 +181,7 @@ class SaleRepository implements ISaleRepository {
         )
         .andWhere(
           "sale.status IN (:...status)",
-          { status: ["EM PARTE", "PAGO TOTAL"] }
+          { status: ["PENDENTE", "PAGO TOTAL"] }
         )
         .getMany();
 
@@ -212,7 +216,7 @@ class SaleRepository implements ISaleRepository {
         )
         .andWhere(
           "sale.status IN (:...status)",
-          { status: ["EM PARTE", "PAGO TOTAL"] }
+          { status: ["PENDENTE", "PAGO TOTAL"] }
         )
         .getMany();
 
@@ -222,12 +226,27 @@ class SaleRepository implements ISaleRepository {
     }
   }
 
-  async validSale(id: string, data: IValidSaleDTO): Promise<Sale | undefined> {
+  async validSale(id: string, status: Status ): Promise<void> {
     try {
-      await this.ormRepository.update(id, data);
-      const saleValidated = await this.ormRepository.findOne(id);
+      await this.ormRepository.update(id, { status });
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
 
-      return saleValidated;
+  async notValidSale(data: INotValidSaleDTO): Promise<void> {
+    const {
+      id,
+      status,
+      motive,
+      another_motive,
+    } = data;
+    try {
+      await this.ormRepository.update(id, { 
+        status,
+        motive,
+        another_motive,
+      });
     } catch (err) {
       throw new AppError(err.detail);
     }

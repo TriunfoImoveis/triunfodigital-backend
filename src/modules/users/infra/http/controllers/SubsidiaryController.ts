@@ -50,6 +50,7 @@ class SubsidiaryController {
   async update(request: Request, response: Response): Promise<Response> {
     const subsidiaryRepository = new SubsidiaryRepository();
     const updateSubsidiary = new UpdateSubsidiaryService(subsidiaryRepository);
+    
     const subsidiaryUpdated = await updateSubsidiary.execute({
       id: request.params.id,
       subsidiary: request.body,

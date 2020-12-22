@@ -73,6 +73,7 @@ usersRouter.put(
       departament: Joi.string().uuid(),
       subsidiary: Joi.string().uuid(),
       office: Joi.string().uuid(),
+      active: Joi.boolean(),
     },
   }),
   usersController.update,

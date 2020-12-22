@@ -18,8 +18,13 @@ paymentTypeRoutes.use(ensuredAthenticated);
 
 paymentTypeRoutes.post('/', celebrate({
   [Segments.BODY]: {
-    type: Joi.string().valid('NOVO', 'USADO').required(),
+    type: Joi.string().valid(
+      'NOVO', 'USADO'
+    ).required(),
     name: Joi.string().required(),
+    status: Joi.string().valid(
+      'TOTAL', 'PARCELADO'
+    ).required(),
   }
 }), paymentTypeController.create);
 

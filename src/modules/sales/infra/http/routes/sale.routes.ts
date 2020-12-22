@@ -15,7 +15,7 @@ saleRoutes.get('/', celebrate({
     name: Joi.string().default(''),
     city: Joi.string().required(),
     status: Joi.string().valid(
-      'PENDENTE', 'CAIU', 'EM PARTE', 'PAGO TOTAL'
+      'NAO_VALIDADO', 'CAIU', 'PENDENTE', 'PAGO TOTAL'
     ).required(),
   }
 }), saleController.index);
@@ -54,8 +54,8 @@ saleRoutes.post('/new', celebrate({
       gender: Joi.string().valid('MASCULINO', 'FEMININO', 'OUTRO').required(),
     }).required(),
     user_coordinator: Joi.string().uuid(),
-    users_directors: Joi.array().length(2).required(),
-    users_sellers: Joi.array().length(1).required(),
+    users_directors: Joi.array().min(2).max(2).required(),
+    users_sellers: Joi.array().min(1).required(),
   }
 }), saleController.createSaleNew);
 
@@ -107,9 +107,9 @@ saleRoutes.post('/used', celebrate({
       gender: Joi.string().valid('MASCULINO', 'FEMININO', 'OUTRO').required(),
     }).required(),
     user_coordinator: Joi.string().uuid(),
-    users_directors: Joi.array().length(2).required(),
-    users_captivators: Joi.array().length(1).required(),
-    users_sellers: Joi.array().length(1).required(),
+    users_directors: Joi.array().min(2).max(2).required(),
+    users_captivators: Joi.array().min(1).required(),
+    users_sellers: Joi.array().min(1).required(),
   }
 }), saleController.createSaleUsed);
 
@@ -125,10 +125,18 @@ saleRoutes.patch('/valid/:id', celebrate({
     id: Joi.string().uuid(),
   },
   [Segments.BODY]: {
-    status: Joi.string().valid(
-      'PENDENTE', 'CAIU', 'EM PARTE', 'PAGO TOTAL'
-    ).required(),
+    installments: Joi.array().min(1).required(),
   }
 }), saleController.validSale);
+
+saleRoutes.patch('/not-valid/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  },
+  [Segments.BODY]: {
+    motive: Joi.string().uuid().required(),
+    another_motive: Joi.string(),
+  }
+}), saleController.notValidSale);
 
 export default saleRoutes;

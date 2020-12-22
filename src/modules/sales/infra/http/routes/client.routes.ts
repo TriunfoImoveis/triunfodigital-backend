@@ -7,9 +7,13 @@ import ClientController from '@modules/sales/infra/http/controllers/ClientContro
 const clientRouter = Router();
 const clientController = new ClientController();
 
-clientRouter.use(ensuredAthenticated);
+clientRouter.get('/', celebrate({
+  [Segments.QUERY]: {
+    cpf: Joi.string().pattern(/^[0-9]{11,11}$/),
+  }
+}), clientController.index);
 
-clientRouter.get('/', clientController.index);
+clientRouter.use(ensuredAthenticated);
 
 // clientRouter.post('/', celebrate({
 //   [Segments.BODY]: {

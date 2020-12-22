@@ -91,6 +91,7 @@ class UsersController {
 
     const usersRepository = new UsersRepository();
     const updateUser = new UpdateUserService(usersRepository);
+    
     const updatedUser = await updateUser.execute({
       id: request.params.id,
       old_password: old_password,

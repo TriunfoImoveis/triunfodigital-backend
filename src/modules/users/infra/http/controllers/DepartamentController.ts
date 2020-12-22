@@ -58,6 +58,7 @@ class DepartamentController {
   async update(request: Request, response: Response): Promise<Response> {
     const departamentsRepository = new DepartamentsRepository();
     const departamentService = new UpdateDepartamentService(departamentsRepository);
+    
     const departamentUpdated = await departamentService.execute({
       id: request.params.id,
       data: request.body,

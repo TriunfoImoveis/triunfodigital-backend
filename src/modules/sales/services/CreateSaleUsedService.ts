@@ -3,6 +3,7 @@ import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import AppError from "@shared/errors/AppError";
 import Sale from "@modules/sales/infra/typeorm/entities/Sale";
 import CompanyRepository from "@modules/sales/infra/typeorm/repositories/CompanyRepository";
+import UsersRepository from "@modules/users/infra/typeorm/repositories/UsersRepository";
 
 class CreateSaleUsedService {
   constructor(private saleRepository: ISaleRepository) {}
@@ -26,6 +27,16 @@ class CreateSaleUsedService {
     users_directors,
     users_sellers,
   }: ICreateSaleUsedDTO): Promise<Sale> {
+    var usersRepository = new UsersRepository();
+
+    if (user_coordinator) {
+      const coordinatorExists = await usersRepository.findById(String(user_coordinator));
+      if (!coordinatorExists) {
+        throw new AppError("User coordinator not exists.");
+      } else if (coordinatorExists.office.name !== "Coordenador") {
+        throw new AppError("User isn't coordinator.");
+      }
+    }
 
     if (company) {
       const companyRepository = new CompanyRepository();

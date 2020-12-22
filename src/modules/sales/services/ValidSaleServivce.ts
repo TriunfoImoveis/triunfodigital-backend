@@ -1,30 +1,42 @@
 import AppError from '@shared/errors/AppError';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
-import IValidSaleDTO from '@modules/sales/dtos/IValidSaleDTO';
+import ICreateInstallmentDTO from '@modules/sales/dtos/ICreateInstallmentDTO';
+import Sale, { Status } from '@modules/sales/infra/typeorm/entities/Sale';
+import IInstallmentRepository from '../repositories/IInstallmentRepository';
 
 
 interface IRequestDTO {
   id: string;
-  data: IValidSaleDTO
+  installments: ICreateInstallmentDTO[];
 }
 
 class ValidSaleService {
-  constructor(private salesRepository: ISaleRepository) {}
+  constructor(
+    private salesRepository: ISaleRepository,
+    private instalmentRepository: IInstallmentRepository
+  ) {}
 
-  public async execute({ id, data }: IRequestDTO): Promise<Sale> {
+  public async execute({ id, installments }: IRequestDTO): Promise<void> {
     const sale = await this.salesRepository.findById(id);
 
     if (!sale) {
       throw new AppError('Sale not exists.');
     }
 
-    const saleValidated = await this.salesRepository.validSale(id, data);
+    installments.map(
+      async (installment) => {
+        installment.sale = sale;
+        await this.instalmentRepository.create(installment);
+      }
+    );
 
-    if (!saleValidated) {
-      throw new AppError('Error when validating the Sale, check your data.');
+    if (installments.length === 1) {
+      var status = Status.PT;
+    } else {
+      var status = Status.PE;
     }
 
-    return saleValidated;
+    await this.salesRepository.validSale(id, status);
   }
 }
 

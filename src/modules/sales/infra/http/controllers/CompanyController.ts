@@ -29,6 +29,7 @@ class CompanyController {
   async create(request: Request, response: Response): Promise<Response> {
     const {
       name,
+      cnpj,
       percentage,
     } = request.body;
 
@@ -37,6 +38,7 @@ class CompanyController {
 
     const newCompany = await createCompanyService.execute({
       name,
+      cnpj,
       percentage,
     });
 

@@ -18,11 +18,12 @@ class PaymentTypeController {
   }
 
   async create(request: Request, response: Response): Promise<Response> {
-    const { type, name } = request.body;
+    const { type, name, status } = request.body;
     const paymentTypeRepository = new PaymentTypeRepository();
     const new_payment_type = await paymentTypeRepository.create({
       type,
       name,
+      status,
     });
 
     return response.json(new_payment_type);

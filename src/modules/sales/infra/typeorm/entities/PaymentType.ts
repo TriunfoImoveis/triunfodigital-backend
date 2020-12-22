@@ -5,6 +5,11 @@ export enum Type {
   U = 'USADO',
 }
 
+export enum TypeStatus {
+  T = "TOTAL",
+  P = "PARCELADO",
+}
+
 @Entity('payment_types')
 class PaymentType {
 
@@ -18,7 +23,10 @@ class PaymentType {
   name: string;
 
   @Column({ type: 'boolean', default: true })
-  active: Boolean;
+  active: boolean;
+
+  @Column({ type: 'enum', enum: TypeStatus, nullable: true })
+  status: TypeStatus;
 
 }
 
