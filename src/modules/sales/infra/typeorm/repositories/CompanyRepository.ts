@@ -38,12 +38,11 @@ class CompanyRepository implements ICompanyRepository {
     }
   }
 
-  async findByName(name: string): Promise<Company | undefined> {
+  async findByCNPJ(cnpj: string): Promise<Company | undefined> {
     try {
       const company = await this.ormRepository.findOne({
-        where: {name: name}
+        where: { cnpj }
       });
-
       return company;
     } catch (err) {
       throw new AppError(err.detail);

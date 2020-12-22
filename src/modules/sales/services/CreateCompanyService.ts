@@ -8,16 +8,18 @@ class CreateCompanyService {
 
   public async execute({
     name,
+    cnpj,
     percentage,
   }: ICreateCompanyDTO): Promise<Company> {
-    const checkCompanyExists = await this.companyRepository.findByName(name);
+    const checkCompanyExists = await this.companyRepository.findByCNPJ(cnpj);
 
     if (checkCompanyExists) {
-      throw new AppError('Company with this Name already exists.');
+      throw new AppError('Company with this CNPJ already exists.');
     }
 
     const company = await this.companyRepository.create({
       name,
+      cnpj,
       percentage,
     });
 
