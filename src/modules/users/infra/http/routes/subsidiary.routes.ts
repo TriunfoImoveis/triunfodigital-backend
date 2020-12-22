@@ -38,6 +38,7 @@ subsidiaryRouter.put('/:id', celebrate({
     city: Joi.string(),
     state: Joi.string(),
     country: Joi.string(),
+    active: Joi.boolean(),
   }
 }), subsidiaryController.update);
 

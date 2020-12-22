@@ -23,7 +23,7 @@ class PaymentType {
   name: string;
 
   @Column({ type: 'boolean', default: true })
-  active: Boolean;
+  active: boolean;
 
   @Column({ type: 'enum', enum: TypeStatus, nullable: true })
   status: TypeStatus;

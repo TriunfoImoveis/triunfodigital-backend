@@ -12,4 +12,5 @@ export default interface IUpdateUserDTO {
   departament?: Departament;
   subsidiary?: Subsidiary;
   office?: Office;
+  active?: boolean;
 }

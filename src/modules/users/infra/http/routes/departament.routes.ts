@@ -39,6 +39,7 @@ departamentRouter.put('/:id', celebrate({
     initials: Joi.string(),
     goal: Joi.number(),
     subsidiary: Joi.string().uuid(),
+    active: Joi.boolean(),
   }
 }), departamentController.update);
 

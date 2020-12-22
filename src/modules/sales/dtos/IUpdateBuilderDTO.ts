@@ -6,4 +6,5 @@ export default interface IUpdateBuilderDTO {
   responsible?: string;
   state?: string;
   city?: string;
+  active?: boolean;
 }

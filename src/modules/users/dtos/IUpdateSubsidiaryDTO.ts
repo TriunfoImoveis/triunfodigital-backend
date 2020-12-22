@@ -4,4 +4,5 @@ export default interface IUpdateSubsidiaryDTO {
   city?: string;
   state?: string;
   country?: string;
+  active?: boolean;
 }

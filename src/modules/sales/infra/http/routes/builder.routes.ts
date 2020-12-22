@@ -41,6 +41,7 @@ builderRouter.put('/:id', celebrate({
     responsible: Joi.string(),
     state: Joi.string().length(2),
     city: Joi.string(),
+    active: Joi.boolean(),
   }
 }), builderController.update);
 
