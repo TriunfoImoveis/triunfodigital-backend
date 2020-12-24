@@ -1,6 +1,6 @@
 import AppError from '@shared/errors/AppError';
-import Office from '@modules/users/infra/typeorm/entities/Office';
-import IOfficeRepository from '@modules/users/repositories/IOfficeRepository';
+import Office from '@modules/organizations/infra/typeorm/entities/Office';
+import IOfficeRepository from '@modules/organizations/repositories/IOfficeRepository';
 
 interface IRequest {
   name: string;

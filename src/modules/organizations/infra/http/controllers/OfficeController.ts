@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 
-import CreateOfficeService from '@modules/users/services/CreateOfficeService';
+import CreateOfficeService from '@modules/organizations/services/CreateOfficeService';
 import AppError from '@shared/errors/AppError';
-import UpdateOfficeService from '@modules/users/services/UpdateOfficeService';
-import OfficesRepository from '@modules/users/infra/typeorm/repositories/OfficesRepository';
+import UpdateOfficeService from '@modules/organizations/services/UpdateOfficeService';
+import OfficesRepository from '@modules/organizations/infra/typeorm/repositories/OfficesRepository';
 
 class OfficeController {
   async index(request: Request, response: Response): Promise<Response> {
@@ -18,7 +18,7 @@ class OfficeController {
     const office = await officesRepository.findById(request.params.id);
 
     if (!office) {
-      throw new AppError('Office not exist.');
+      throw new AppError('Office not exists.');
     }
 
     return response.json(office);

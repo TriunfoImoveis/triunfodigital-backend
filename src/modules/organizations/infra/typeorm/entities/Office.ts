@@ -7,7 +7,7 @@ import {
   OneToMany
 } from 'typeorm';
 
-import User from './User';
+import User from '@modules/users/infra/typeorm/entities/User';
 
 @Entity('offices')
 class Office {

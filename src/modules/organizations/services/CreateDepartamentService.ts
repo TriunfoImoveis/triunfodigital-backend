@@ -1,7 +1,7 @@
 import AppError from '@shared/errors/AppError';
-import Departament from '@modules/users/infra/typeorm/entities/Departament';
-import IDepartamentRepository from '@modules/users/repositories/IDepartamentRepository';
-import ICreateDepartamentDTO from '@modules/users/dtos/ICreateDepartamentDTO';
+import Departament from '@modules/organizations/infra/typeorm/entities/Departament';
+import IDepartamentRepository from '@modules/organizations/repositories/IDepartamentRepository';
+import ICreateDepartamentDTO from '@modules/organizations/dtos/ICreateDepartamentDTO';
 
 class CreateDepartamentService {
   constructor(

@@ -1,7 +1,7 @@
 import AppError from '@shared/errors/AppError';
-import Subsidiary from '@modules/users/infra/typeorm/entities/Subsidiary';
-import ISubsidiaryRepository from '@modules/users/repositories/ISubsidiaryRepository';
-import ICreateSubsidiaryDTO from '@modules/users/dtos/ICreateSubsidiaryDTO';
+import Subsidiary from '@modules/organizations/infra/typeorm/entities/Subsidiary';
+import ISubsidiaryRepository from '@modules/organizations/repositories/ISubsidiaryRepository';
+import ICreateSubsidiaryDTO from '@modules/organizations/dtos/ICreateSubsidiaryDTO';
 
 class CreateSubsidiaryService {
   constructor(private subsidiariesRepository: ISubsidiaryRepository) {}

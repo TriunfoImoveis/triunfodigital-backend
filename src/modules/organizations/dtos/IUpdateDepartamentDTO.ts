@@ -1,4 +1,4 @@
-import Subsidiary from '@modules/users/infra/typeorm/entities/Subsidiary';
+import Subsidiary from '@modules/organizations/infra/typeorm/entities/Subsidiary';
 
 export default interface IUpdateDepartamentDTO {
   name?: string;

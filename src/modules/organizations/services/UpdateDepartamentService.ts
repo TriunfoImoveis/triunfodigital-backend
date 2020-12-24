@@ -1,7 +1,7 @@
 import AppError from '@shared/errors/AppError';
-import Departament from '@modules/users/infra/typeorm/entities/Departament';
-import IUpdateDepartamentDTO from '@modules/users/dtos/IUpdateDepartamentDTO';
-import IDepartamentRepository from '@modules/users/repositories/IDepartamentRepository';
+import Departament from '@modules/organizations/infra/typeorm/entities/Departament';
+import IUpdateDepartamentDTO from '@modules/organizations/dtos/IUpdateDepartamentDTO';
+import IDepartamentRepository from '@modules/organizations/repositories/IDepartamentRepository';
 
 interface IRequestDTO {
   id: string;

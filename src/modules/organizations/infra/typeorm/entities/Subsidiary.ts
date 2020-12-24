@@ -7,8 +7,8 @@ import {
   OneToMany
 } from 'typeorm';
 
-import Departament from './Departament';
-import User from './User';
+import Departament from '@modules/organizations/infra/typeorm/entities/Departament';
+import User from '@modules/users/infra/typeorm/entities/User';
 
 @Entity('subsidiaries')
 class Subsidiary {

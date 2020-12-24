@@ -1,10 +1,10 @@
 import { getRepository, Repository } from 'typeorm';
 
 import AppError from '@shared/errors/AppError';
-import ICreateSubsidiaryDTO from '@modules/users/dtos/ICreateSubsidiaryDTO';
-import IUpdateOfficeDTO from '@modules/users/dtos/IUpdateOfficeDTO';
-import ISubsidiaryRepository from '@modules/users/repositories/ISubsidiaryRepository';
-import Subsidiary from '@modules/users/infra/typeorm/entities/Subsidiary';
+import ICreateSubsidiaryDTO from '@modules/organizations/dtos/ICreateSubsidiaryDTO';
+import IUpdateOfficeDTO from '@modules/organizations/dtos/IUpdateOfficeDTO';
+import ISubsidiaryRepository from '@modules/organizations/repositories/ISubsidiaryRepository';
+import Subsidiary from '@modules/organizations/infra/typeorm/entities/Subsidiary';
 
 class SubsidiaryRepository implements ISubsidiaryRepository {
   private ormRepository: Repository<Subsidiary>;
@@ -35,7 +35,7 @@ class SubsidiaryRepository implements ISubsidiaryRepository {
     }
   }
 
-  async findSubsidiarysActive(): Promise<Subsidiary[] | undefined> {
+  async findSubsidiarysActive(): Promise<Subsidiary[]> {
     try {
       const subsidiary = await this.ormRepository.find({
         where: {

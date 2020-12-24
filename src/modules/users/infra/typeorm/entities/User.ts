@@ -8,14 +8,13 @@ import {
   JoinColumn,
   ManyToMany,
 } from 'typeorm';
-
 import { Exclude, Expose } from 'class-transformer';
-import uploadConfig from '../../../../../config/upload';
 
-import Departament from './Departament';
-import Office from './Office';
-import Subsidiary from './Subsidiary';
-import Sale from '../../../../sales/infra/typeorm/entities/Sale';
+import uploadConfig from '@config/upload';
+import Departament from '@modules/organizations/infra/typeorm/entities/Departament';
+import Office from '@modules/organizations/infra/typeorm/entities/Office';
+import Subsidiary from '@modules/organizations/infra/typeorm/entities/Subsidiary';
+import Sale from '@modules/sales/infra/typeorm/entities/Sale';
 
 @Entity('users')
 class User {

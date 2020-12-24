@@ -1,6 +1,6 @@
-import Departament from '@modules/users/infra/typeorm/entities/Departament';
-import Office from '@modules/users/infra/typeorm/entities/Office';
-import Subsidiary from '@modules/users/infra/typeorm/entities/Subsidiary';
+import Departament from '@modules/organizations/infra/typeorm/entities/Departament';
+import Office from '@modules/organizations/infra/typeorm/entities/Office';
+import Subsidiary from '@modules/organizations/infra/typeorm/entities/Subsidiary';
 
 export default interface IUpdateUserDTO {
   name?: string;

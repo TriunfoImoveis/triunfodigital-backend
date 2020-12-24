@@ -40,6 +40,7 @@ class SaleRepository implements ISaleRepository {
       )
       .where("sale.status = :status", { status })
       .andWhere("sellers.name ILIKE :name", { name: name+"%" })
+      .orderBy("sale.sale_date", "DESC")
       .getMany();
 
       return sales;
