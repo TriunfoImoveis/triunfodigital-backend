@@ -1,11 +1,15 @@
 import { Router } from 'express';
 
+// USERS
 import usersRouter from '@modules/users/infra/http/routes/user.routes';
 import sessionRouter from '@modules/users/infra/http/routes//session.routes';
-import officeRouter from '@modules/users/infra/http/routes/office.routes';
-import departamentRouter from '@modules/users/infra/http/routes/departament.routes';
-import subsidiaryRouter from '@modules/users/infra/http/routes/subsidiary.routes';
 
+// ORGANIZATIONS
+import officeRouter from '@modules/organizations/infra/http/routes/office.routes';
+import departamentRouter from '@modules/organizations/infra/http/routes/departament.routes';
+import subsidiaryRouter from '@modules/organizations/infra/http/routes/subsidiary.routes';
+
+// SALES
 import clientRouter from '@modules/sales/infra/http/routes/client.routes';
 import builderRouter from '@modules/sales/infra/http/routes/builder.routes';
 import propertyRoutes from '@modules/sales/infra/http/routes/property.routes';

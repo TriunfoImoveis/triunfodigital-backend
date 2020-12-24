@@ -1,9 +1,9 @@
 import { Request,Response } from "express";
 
 import AppError from '@shared/errors/AppError';
-import DepartamentsRepository from '@modules/users/infra/typeorm/repositories/DepartamentsRepository';
-import CreateDepartamentService from "@modules/users/services/CreateDepartamentService";
-import UpdateDepartamentService from "@modules/users/services/UpdateDepartamentService";
+import DepartamentsRepository from '@modules/organizations/infra/typeorm/repositories/DepartamentsRepository';
+import CreateDepartamentService from "@modules/organizations/services/CreateDepartamentService";
+import UpdateDepartamentService from "@modules/organizations/services/UpdateDepartamentService";
 
 class DepartamentController {
   async index(request: Request, response: Response): Promise<Response> {

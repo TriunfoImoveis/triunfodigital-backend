@@ -1,7 +1,7 @@
 import AppError from '@shared/errors/AppError';
-import ISubsidiaryRepository from '@modules/users/repositories/ISubsidiaryRepository';
-import Subsidiary from '@modules/users/infra/typeorm/entities/Subsidiary';
-import IUpdateSubsidiaryDTO from '@modules/users/dtos/IUpdateSubsidiaryDTO';
+import ISubsidiaryRepository from '@modules/organizations/repositories/ISubsidiaryRepository';
+import Subsidiary from '@modules/organizations/infra/typeorm/entities/Subsidiary';
+import IUpdateSubsidiaryDTO from '@modules/organizations/dtos/IUpdateSubsidiaryDTO';
 
 interface IRequest {
   id: string;

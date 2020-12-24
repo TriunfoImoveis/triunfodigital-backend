@@ -1,10 +1,10 @@
 import { getRepository, Repository } from 'typeorm';
 
 import AppError from '@shared/errors/AppError';
-import ICreateOfficeDTO from '@modules/users/dtos/ICreateOfficeDTO';
-import IUpdateOfficeDTO from '@modules/users/dtos/IUpdateOfficeDTO';
-import IOfficeRepository from '@modules/users/repositories/IOfficeRepository';
-import Office from '@modules/users/infra/typeorm/entities/Office';
+import ICreateOfficeDTO from '@modules/organizations/dtos/ICreateOfficeDTO';
+import IUpdateOfficeDTO from '@modules/organizations/dtos/IUpdateOfficeDTO';
+import IOfficeRepository from '@modules/organizations/repositories/IOfficeRepository';
+import Office from '@modules/organizations/infra/typeorm/entities/Office';
 
 class OfficesRepository implements IOfficeRepository {
   private ormRepository: Repository<Office>;
@@ -13,7 +13,7 @@ class OfficesRepository implements IOfficeRepository {
     this.ormRepository = getRepository(Office);
   }
 
-  async findOfficesActive(): Promise<Office[] | undefined> {
+  async findOfficesActive(): Promise<Office[]> {
     try {
       const office = await this.ormRepository.find({
         where: {

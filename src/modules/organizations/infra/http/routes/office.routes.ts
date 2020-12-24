@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 
-import OfficeController from '@modules/users/infra/http/controllers/OfficeController';
+import OfficeController from '@modules/organizations/infra/http/controllers/OfficeController';
 import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 
 const officeRouter = Router();

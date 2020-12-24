@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 
 import AppError from '@shared/errors/AppError';
-import CreateSubsidiaryService from '@modules/users/services/CreateSubsidiaryService';
-import UpdateSubsidiaryService from '@modules/users/services/UpdateSubsidiaryService';
-import SubsidiaryRepository from '@modules/users/infra/typeorm/repositories/SubsidiaryRepository';
+import CreateSubsidiaryService from '@modules/organizations/services/CreateSubsidiaryService';
+import UpdateSubsidiaryService from '@modules/organizations/services/UpdateSubsidiaryService';
+import SubsidiaryRepository from '@modules/organizations/infra/typeorm/repositories/SubsidiaryRepository';
 
 class SubsidiaryController {
   async index(request: Request, response: Response): Promise<Response> {
