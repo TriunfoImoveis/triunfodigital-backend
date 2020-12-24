@@ -1,4 +1,5 @@
 import {hash, compare} from 'bcryptjs';
+import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
@@ -11,8 +12,12 @@ interface IRequestDTO {
   body: IUpdateUserDTO;
 }
 
+@injectable()
 class UpdateUserService {
-  constructor(private usersRepository: IUserRepository) {}
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUserRepository,
+  ) {}
 
   public async execute({
     id,
@@ -22,13 +27,13 @@ class UpdateUserService {
     const user = await this.usersRepository.findById(id);
 
     if (!user) { //Verifica se o usuario existe.
-      throw new AppError('User not exists.', 401);
+      throw new AppError('User not exists.', 404);
     }
 
     if (old_password) { // Verifica se a senha antiga é a mesma no banco de dados.
       const passwordMatched = await compare(old_password, user.password);
       if (!passwordMatched) {
-        throw new AppError('Incorrect password.');
+        throw new AppError('Incorrect password.', 401);
       }
     }
 

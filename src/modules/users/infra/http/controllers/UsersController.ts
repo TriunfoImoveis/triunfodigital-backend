@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
+import { classToClass } from 'class-transformer';
+import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import CreateUserService from '@modules/users/services/CreateUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
-import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 import UploadAvatarUserService from '@modules/users/services/UploadAvatarUserService';
-import { classToClass } from 'class-transformer';
-import { container } from 'tsyringe';
 import ListUserService from '@modules/users/services/ListUserService';
+import ShowUserService from '@modules/users/services/ShowUserService';
 
 class UsersController {
   async index(request: Request, response: Response): Promise<Response> {
@@ -28,8 +28,7 @@ class UsersController {
       throw new AppError('Office not is validate string.');
     }
 
-    const usersRepository = new UsersRepository();
-    const listUserService = new ListUserService(usersRepository);
+    const listUserService = container.resolve(ListUserService);
 
     const usersList = await listUserService.execute({
       name,
@@ -54,8 +53,7 @@ class UsersController {
       office,
     } = request.body;
 
-    const usersRepository = new UsersRepository();
-    const createUser = new CreateUserService(usersRepository);
+    const createUser = container.resolve(CreateUserService);
 
     const newUser = await createUser.execute({
       name,
@@ -73,12 +71,11 @@ class UsersController {
   }
 
   async show(request: Request, response: Response): Promise<Response> {
-    const userRepository = new UsersRepository();
-    const user = await userRepository.findById(request.params.id);
+    const showUserServive = container.resolve(ShowUserService);
 
-    if (!user) {
-      throw new AppError('User not exists.');
-    }
+    const user = await showUserServive.execute(
+      request.params.id
+    );
 
     return response.json(classToClass(user));
   }
@@ -89,8 +86,7 @@ class UsersController {
     delete request.body.old_password;
     delete request.body.password_confirmation;
 
-    const usersRepository = new UsersRepository();
-    const updateUser = new UpdateUserService(usersRepository);
+    const updateUser = container.resolve(UpdateUserService);
     
     const updatedUser = await updateUser.execute({
       id: request.params.id,

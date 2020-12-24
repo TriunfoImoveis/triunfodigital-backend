@@ -36,6 +36,12 @@
       {
         "ts": "never"
       }
+    ],
+    "@typescript-eslint/naming-convention": [
+      "error", 
+      { 
+        "prefixWithI": "always" 
+      }
     ]
   },
   "settings": {
