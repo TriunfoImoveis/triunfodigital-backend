@@ -45,14 +45,14 @@ officeRouter.put(
   officeController.update,
 );
 
-officeRouter.delete(
-  '/:id',
-  celebrate({
-    [Segments.PARAMS]: {
-      id: Joi.string().uuid(),
-    },
-  }),
-  officeController.delete,
-);
+// officeRouter.delete(
+//   '/:id',
+//   celebrate({
+//     [Segments.PARAMS]: {
+//       id: Joi.string().uuid(),
+//     },
+//   }),
+//   officeController.delete,
+// );
 
 export default officeRouter;

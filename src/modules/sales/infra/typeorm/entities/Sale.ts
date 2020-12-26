@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 
-import User from "../../../../users/infra/typeorm/entities/User";
+import User from "@modules/users/infra/typeorm/entities/User";
 import Builder from "./Builder";
 import Client from "./Client";
 import Company from "./Company";

@@ -42,10 +42,10 @@ subsidiaryRouter.put('/:id', celebrate({
   }
 }), subsidiaryController.update);
 
-subsidiaryRouter.delete('/:id', celebrate({
-  [Segments.PARAMS]: {
-    id: Joi.string().uuid(),
-  }
-}), subsidiaryController.delete);
+// subsidiaryRouter.delete('/:id', celebrate({
+//   [Segments.PARAMS]: {
+//     id: Joi.string().uuid(),
+//   }
+// }), subsidiaryController.delete);
 
 export default subsidiaryRouter;

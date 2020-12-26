@@ -1,25 +1,26 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
 
 import CreateOfficeService from '@modules/organizations/services/CreateOfficeService';
-import AppError from '@shared/errors/AppError';
 import UpdateOfficeService from '@modules/organizations/services/UpdateOfficeService';
-import OfficesRepository from '@modules/organizations/infra/typeorm/repositories/OfficesRepository';
+import ListOfficeService from '@modules/organizations/services/ListOfficeService';
+import ShowOfficeService from '@modules/organizations/services/ShowOfficeService';
 
 class OfficeController {
   async index(request: Request, response: Response): Promise<Response> {
-    const officesRepository = new OfficesRepository();
-    const officesList = await officesRepository.findOfficesActive();
+    const listOfficeService = container.resolve(ListOfficeService);
+
+    const officesList = await listOfficeService.execute();
 
     return response.json(officesList);
   }
 
   async show(request: Request, response: Response): Promise<Response> {
-    const officesRepository = new OfficesRepository();
-    const office = await officesRepository.findById(request.params.id);
+    const showOfficeService = container.resolve(ShowOfficeService);
 
-    if (!office) {
-      throw new AppError('Office not exists.');
-    }
+    const office = await showOfficeService.execute(
+      request.params.id
+    );
 
     return response.json(office);
   }
@@ -27,10 +28,9 @@ class OfficeController {
   async create(request: Request, response: Response): Promise<Response> {
     const { name } = request.body;
 
-    const officesRepository = new OfficesRepository();
-    const createOffice = new CreateOfficeService(officesRepository);
+    const createOfficeService = container.resolve(CreateOfficeService);
 
-    const newOffice = await createOffice.execute({
+    const newOffice = await createOfficeService.execute({
       name,
     });
 
@@ -38,24 +38,22 @@ class OfficeController {
   }
 
   async update(request: Request, response: Response): Promise<Response> {
-    const { id } = request.params;
-
-    const officesRepository = new OfficesRepository();
-    const updateOffice = new UpdateOfficeService(officesRepository);
-    const updatedOffice = await updateOffice.execute({
-      id,
+    const updateOfficeService = container.resolve(UpdateOfficeService);
+    
+    const updatedOffice = await updateOfficeService.execute({
+      id: request.params.id,
       body: request.body,
     });
 
     return response.json(updatedOffice);
   }
 
-  async delete(request: Request, response: Response): Promise<Response> {
-    const officesRepository = new OfficesRepository();
-    await officesRepository.delete(request.params.id);
+  // async delete(request: Request, response: Response): Promise<Response> {
+  //   const officesRepository = new OfficesRepository();
+  //   await officesRepository.delete(request.params.id);
 
-    return response.status(204).send();
-  }
+  //   return response.status(204).send();
+  // }
 }
 
 export default OfficeController;
