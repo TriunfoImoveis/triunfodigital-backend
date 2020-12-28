@@ -43,10 +43,10 @@ departamentRouter.put('/:id', celebrate({
   }
 }), departamentController.update);
 
-departamentRouter.delete('/:id', celebrate({
-  [Segments.PARAMS]: {
-    id: Joi.string().uuid(),
-  }
-}), departamentController.delete);
+// departamentRouter.delete('/:id', celebrate({
+//   [Segments.PARAMS]: {
+//     id: Joi.string().uuid(),
+//   }
+// }), departamentController.delete);
 
 export default departamentRouter;
