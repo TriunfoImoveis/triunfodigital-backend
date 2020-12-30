@@ -1,7 +1,7 @@
 import AppError from '@shared/errors/AppError';
 import IUpdateCompanyDTO from "@modules/sales/dtos/IUpdateCompanyDTO";
-import Company from "@modules/sales/infra/typeorm/entities/Company";
-import ICompanyRepository from "@modules/sales/repositories/ICompanyRepository";
+import Company from "@modules/organizations/infra/typeorm/entities/Company";
+import ICompanyRepository from "@modules/organizations/repositories/ICompanyRepository";
 
 interface IRequestDTO {
   id: string;

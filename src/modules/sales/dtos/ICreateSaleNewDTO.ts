@@ -5,7 +5,7 @@ import OriginSale from "@modules/sales/infra/typeorm/entities/OriginSale";
 import Realty from "@modules/sales/infra/typeorm/entities/Realty";
 import { SaleType } from "@modules/sales/infra/typeorm/entities/Sale";
 import PaymentType from "@modules/sales/infra/typeorm/entities/PaymentType";
-import Company from "@modules/sales/infra/typeorm/entities/Company";
+import Company from "@modules/organizations/infra/typeorm/entities/Company";
 
 export default interface ICreateSaleNewDTO {
   sale_type: SaleType;

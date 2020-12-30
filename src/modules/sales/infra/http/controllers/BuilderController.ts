@@ -1,17 +1,17 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
 
 import CreateBuilderService from '@modules/sales/services/CreateBuilderService';
-import BuildersRespository from '@modules/sales/infra/typeorm/repositories/BuildersRepository';
 import ShowBuilderService from '@modules/sales/services/ShowBuilderService';
 import UpdateBuilderService from '@modules/sales/services/UpdateBuilderService';
 import DeactivateBuilderService from '@modules/sales/services/DeactivateBuilderServivce';
 import ActivateBuilderService from '@modules/sales/services/ActivateBuilderService';
+import ListBuilderService from '@modules/sales/services/ListBuilderService';
 
 class BuilderController {
-
   async index(request: Request, response: Response): Promise<Response> {
-    const buildersRepository = new BuildersRespository();
-    const builders = await buildersRepository.findBuildersActive();
+    const listBuilderService = container.resolve(ListBuilderService);
+    const builders = await listBuilderService.execute();
 
     return response.json(builders);
   }
@@ -27,9 +27,7 @@ class BuilderController {
       city,
     } = request.body;
 
-    const buildersRepository = new BuildersRespository();
-    const createBuilderService = new CreateBuilderService(buildersRepository);
-
+    const createBuilderService = container.resolve(CreateBuilderService);
     const newBuilder = await createBuilderService.execute({
       name,
       cnpj,
@@ -44,9 +42,7 @@ class BuilderController {
   }
 
   async show(request: Request, response: Response): Promise<Response> {
-    const buildersRepository = new BuildersRespository();
-    const showBuilderService = new ShowBuilderService(buildersRepository);
-
+    const showBuilderService = container.resolve(ShowBuilderService);
     const builder = await showBuilderService.execute({
       id: request.params.id,
     });
@@ -55,9 +51,7 @@ class BuilderController {
   }
 
   async update(request: Request, response: Response): Promise<Response> {
-    const buildersRepository = new BuildersRespository();
-    const updateBuilderService = new UpdateBuilderService(buildersRepository);
-
+    const updateBuilderService = container.resolve(UpdateBuilderService);
     const builderUpdated = await updateBuilderService.execute({
       id: request.params.id,
       data: request.body,
@@ -67,20 +61,16 @@ class BuilderController {
   }
 
   async deactivate(request: Request, response: Response): Promise<Response> {
-    const buildersRepository = new BuildersRespository();
-    const deactivateBuilderService = new DeactivateBuilderService(buildersRepository);
-
+    const deactivateBuilderService = container.resolve(DeactivateBuilderService);
     await deactivateBuilderService.execute({
       id: request.params.id,
     });
 
-    return response.status(204).send();
+    return response.status(200).send();
   }
 
   async activate(request: Request, response: Response): Promise<Response> {
-    const buildersRepository = new BuildersRespository();
-    const activateBuilderService = new ActivateBuilderService(buildersRepository);
-
+    const activateBuilderService = container.resolve(ActivateBuilderService);
     const builderActivated = await activateBuilderService.execute({
       id: request.params.id,
     });

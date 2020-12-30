@@ -1,10 +1,9 @@
 import { Request,Response } from "express";
+import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
-import DepartamentsRepository from '@modules/organizations/infra/typeorm/repositories/DepartamentsRepository';
 import CreateDepartamentService from "@modules/organizations/services/CreateDepartamentService";
 import UpdateDepartamentService from "@modules/organizations/services/UpdateDepartamentService";
-import { container } from "tsyringe";
 import ListDepartamentService from "@modules/organizations/services/ListDepartamentService";
 import ShowDepartamentService from "@modules/organizations/services/ShowDepartamentService";
 

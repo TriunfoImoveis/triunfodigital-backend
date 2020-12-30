@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import AppError from '@shared/errors/AppError';
 import CreateSubsidiaryService from '@modules/organizations/services/CreateSubsidiaryService';
 import UpdateSubsidiaryService from '@modules/organizations/services/UpdateSubsidiaryService';
-import SubsidiaryRepository from '@modules/organizations/infra/typeorm/repositories/SubsidiaryRepository';
 import ListSubsidiaryService from '@modules/organizations/services/ListSubsidiaryService';
 import ShowSubsidiaryService from '@modules/organizations/services/ShowSubsidiaryService';
 

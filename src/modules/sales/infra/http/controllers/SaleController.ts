@@ -213,7 +213,7 @@ class SaleController {
       installments: request.body.installments,
     });
 
-    return response.status(200).send();
+    return response.status(200).send("Successfully validated sale.");
   }
 
   async notValidSale(request:Request, response: Response): Promise<Response> {

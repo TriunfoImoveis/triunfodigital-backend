@@ -1,8 +1,8 @@
 import { getRepository, Repository } from "typeorm";
 
 import AppError from '@shared/errors/AppError';
-import ICompanyRepository from "@modules/sales/repositories/ICompanyRepository";
-import Company from "@modules/sales/infra/typeorm/entities/Company";
+import ICompanyRepository from "@modules/organizations/repositories/ICompanyRepository";
+import Company from "@modules/organizations/infra/typeorm/entities/Company";
 import ICreateCompanyDTO from "@modules/sales/dtos/ICreateCompanyDTO";
 import IUpdateCompanyDTO from "@modules/sales/dtos/IUpdateCompanyDTO";
 

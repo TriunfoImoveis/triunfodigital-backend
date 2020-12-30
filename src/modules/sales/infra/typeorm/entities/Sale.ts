@@ -11,9 +11,9 @@ import {
 } from "typeorm";
 
 import User from "@modules/users/infra/typeorm/entities/User";
+import Company from "@modules/organizations/infra/typeorm/entities/Company";
 import Builder from "./Builder";
 import Client from "./Client";
-import Company from "./Company";
 import Installment from "./Installment";
 import Motive from "./Motive";
 import OriginSale from "./OriginSale";

@@ -2,7 +2,7 @@ import AppError from '@shared/errors/AppError';
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
-import CompanyRepository from '@modules/sales/infra/typeorm/repositories/CompanyRepository';
+import CompanyRepository from '@modules/organizations/infra/typeorm/repositories/CompanyRepository';
 import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 
 class CreateSaleNewService {

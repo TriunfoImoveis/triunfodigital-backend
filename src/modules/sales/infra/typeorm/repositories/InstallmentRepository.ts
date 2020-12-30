@@ -1,4 +1,4 @@
-import { getRepository, Repository } from 'typeorm';
+import { getConnection, getRepository, Repository } from 'typeorm';
 
 import AppError from '@shared/errors/AppError';
 import ICreateInstallmentDTO from '@modules/sales/dtos/ICreateInstallmentDTO';
@@ -12,14 +12,36 @@ class InstallmentRespository implements IInstallmentRepository {
     this.ormRepository = getRepository(Installment);
   }
 
-  async create(data: ICreateInstallmentDTO): Promise<void> {
+  async create(installments: ICreateInstallmentDTO[]): Promise<void> {
+    const connection = getConnection();
+    const queryRunner = connection.createQueryRunner();
+
+    await queryRunner.startTransaction();
+
     try {
-      const installment = this.ormRepository.create(data);
-      await this.ormRepository.save(installment);
+      const installmentsInstance = this.ormRepository.create(installments);
+      await queryRunner.manager.save(installmentsInstance);
+
+      await queryRunner.commitTransaction();
+
     } catch (err) {
-      throw new AppError(err.detail);
+
+      await queryRunner.rollbackTransaction();
+      throw new AppError(err);
+
+    } finally {
+      await queryRunner.release();
     }
   }
+  
+  // createInstance(data: ICreateInstallmentDTO): Installment {
+  //   try {
+  //     const installment = this.ormRepository.create(data);
+  //     return installment;
+  //   } catch (err) {
+  //     throw new AppError(err.detail);
+  //   }
+  // }
 }
 
 export default InstallmentRespository;

@@ -7,6 +7,8 @@ import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IRequestSaleDTO from "@modules/sales/dtos/IRequestSaleDTO";
 import INotValidSaleDTO from "@modules/sales/dtos/INotValidSaleDTO";
+import ICreateInstallmentDTO from "@modules/sales/dtos/ICreateInstallmentDTO";
+import Installment from "../entities/Installment";
 
 class SaleRepository implements ISaleRepository {
   private ormRepository: Repository<Sale>;
@@ -14,7 +16,6 @@ class SaleRepository implements ISaleRepository {
   constructor() {
     this.ormRepository = getRepository(Sale);
   }
-
 
   async findAll(data: IRequestSaleDTO): Promise<Sale[]> {
     try {
@@ -227,9 +228,12 @@ class SaleRepository implements ISaleRepository {
     }
   }
 
-  async validSale(id: string, status: Status ): Promise<void> {
+  async validSale(
+    id: string, 
+    status: Status
+  ): Promise<void> {
     try {
-      await this.ormRepository.update(id, { status });
+      await this.ormRepository.update(id, {status});
     } catch (err) {
       throw new AppError(err.detail);
     }

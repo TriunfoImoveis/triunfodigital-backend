@@ -1,5 +1,5 @@
 import AppError from '@shared/errors/AppError';
-import ICompanyRepository from '@modules/sales/repositories/ICompanyRepository';
+import ICompanyRepository from '@modules/organizations/repositories/ICompanyRepository';
 
 
 interface IRequestDTO {

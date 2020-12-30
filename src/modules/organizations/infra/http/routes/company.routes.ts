@@ -2,8 +2,7 @@ import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 
 import ensuredAthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
-import CompanyController from '@modules/sales/infra/http/controllers/CompanyController';
-import { string } from 'yup';
+import CompanyController from '@modules/organizations/infra/http/controllers/CompanyController';
 
 const companyRouter = Router();
 const companyController = new CompanyController();

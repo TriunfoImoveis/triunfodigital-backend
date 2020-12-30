@@ -2,7 +2,7 @@ import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import AppError from "@shared/errors/AppError";
 import Sale from "@modules/sales/infra/typeorm/entities/Sale";
-import CompanyRepository from "@modules/sales/infra/typeorm/repositories/CompanyRepository";
+import CompanyRepository from "@modules/organizations/infra/typeorm/repositories/CompanyRepository";
 import UsersRepository from "@modules/users/infra/typeorm/repositories/UsersRepository";
 
 class CreateSaleUsedService {
