@@ -20,6 +20,7 @@ import realtyRoutes from '@modules/sales/infra/http/routes/realty.routes';
 import saleRoutes from '@modules/sales/infra/http/routes/sale.routes';
 import paymentTypeRoutes from '@modules/sales/infra/http/routes/paymentType.routes';
 import motiveRoutes from '@modules/sales/infra/http/routes/motive.routes';
+import installmentRoutes from '@modules/sales/infra/http/routes/installment.routes';
 
 const routes = Router();
 
@@ -43,5 +44,6 @@ routes.use('/origin-sale', originRoutes);
 routes.use('/realty', realtyRoutes);
 routes.use('/motive', motiveRoutes);
 routes.use('/sale', saleRoutes);
+routes.use('/installment', installmentRoutes);
 
 export default routes;

@@ -205,7 +205,7 @@ class SaleController {
     const saleRepository = new SaleRepository();
     const installmentRepository = new InstallmentRespository();
     const validSaleService = new ValidSaleService(
-      saleRepository, installmentRepository
+      saleRepository
     );
     
     await validSaleService.execute({

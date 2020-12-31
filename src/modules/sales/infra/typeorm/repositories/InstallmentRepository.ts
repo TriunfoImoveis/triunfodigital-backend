@@ -12,7 +12,7 @@ class InstallmentRespository implements IInstallmentRepository {
     this.ormRepository = getRepository(Installment);
   }
 
-  async create(installments: ICreateInstallmentDTO[]): Promise<void> {
+  async create(installments: ICreateInstallmentDTO[]): Promise<Installment[]> {
     const connection = getConnection();
     const queryRunner = connection.createQueryRunner();
 
@@ -20,9 +20,11 @@ class InstallmentRespository implements IInstallmentRepository {
 
     try {
       const installmentsInstance = this.ormRepository.create(installments);
-      await queryRunner.manager.save(installmentsInstance);
+      const listInstallment = await queryRunner.manager.save(installmentsInstance);
 
       await queryRunner.commitTransaction();
+
+      return listInstallment;
 
     } catch (err) {
 
