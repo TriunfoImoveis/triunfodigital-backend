@@ -13,37 +13,24 @@ class InstallmentRespository implements IInstallmentRepository {
   }
 
   async create(installments: ICreateInstallmentDTO[]): Promise<Installment[]> {
-    const connection = getConnection();
-    const queryRunner = connection.createQueryRunner();
-
-    await queryRunner.startTransaction();
-
     try {
       const installmentsInstance = this.ormRepository.create(installments);
-      const listInstallment = await queryRunner.manager.save(installmentsInstance);
-
-      await queryRunner.commitTransaction();
-
+      const listInstallment = await this.ormRepository.save(installmentsInstance);
       return listInstallment;
-
     } catch (err) {
-
-      await queryRunner.rollbackTransaction();
-      throw new AppError(err);
-
-    } finally {
-      await queryRunner.release();
+      throw new AppError(err.detail);
     }
   }
   
-  // createInstance(data: ICreateInstallmentDTO): Installment {
-  //   try {
-  //     const installment = this.ormRepository.create(data);
-  //     return installment;
-  //   } catch (err) {
-  //     throw new AppError(err.detail);
-  //   }
-  // }
+  async delete(installments: Installment[]): Promise<void> {
+    try {
+      installments.forEach(async (installment)=>{
+        await this.ormRepository.delete(installment.id);
+      });
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
 }
 
 export default InstallmentRespository;

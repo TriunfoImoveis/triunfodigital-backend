@@ -5,6 +5,7 @@ import ICreateInstallmentDTO from "@modules/sales/dtos/ICreateInstallmentDTO";
 import IInstallmentRepository from "@modules/sales/repositories/IInstallmentRepository";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import Installment from "@modules/sales/infra/typeorm/entities/Installment";
+import { Status } from "@modules/sales/infra/typeorm/entities/Sale";
 
 interface IRequestDTO {
   id: string;
@@ -26,6 +27,8 @@ class CreateInstallmentService {
 
     if (!sale) {
       throw new AppError("Venda não existe.", 404);
+    } else if (sale.status !== Status.NV) {
+      throw new AppError("Venda já validada.", 400);
     }
 
     var totalValueInstallments = 0;
@@ -41,6 +44,10 @@ class CreateInstallmentService {
         "O valor total das parcelas não confere com o valor da comissão.", 
         400
       );
+    }
+
+    if (sale.installments.length !== 0) {
+      await this.installmentsRepository.delete(sale.installments);
     }
 
     const listInstallment = await this.installmentsRepository.create(installments);

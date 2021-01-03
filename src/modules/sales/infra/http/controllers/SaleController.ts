@@ -210,7 +210,6 @@ class SaleController {
     
     await validSaleService.execute({
       id: request.params.id,
-      installments: request.body.installments,
     });
 
     return response.status(200).send("Successfully validated sale.");
