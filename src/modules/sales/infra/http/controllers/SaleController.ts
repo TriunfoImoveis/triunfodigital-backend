@@ -203,16 +203,15 @@ class SaleController {
 
   async validSale(request:Request, response: Response): Promise<Response> {
     const saleRepository = new SaleRepository();
-    const installmentRepository = new InstallmentRespository();
     const validSaleService = new ValidSaleService(
       saleRepository
     );
     
-    await validSaleService.execute({
-      id: request.params.id,
-    });
+    await validSaleService.execute(
+      request.params.id,
+    );
 
-    return response.status(200).send("Successfully validated sale.");
+    return response.status(200).send("Venda validada com sucesso.");
   }
 
   async notValidSale(request:Request, response: Response): Promise<Response> {

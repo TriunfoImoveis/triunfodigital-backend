@@ -8,7 +8,7 @@ import {
 
 import Sale from "./Sale";
 
-export enum Status {
+export enum StatusInstallment {
     PEN = "PENDENTE",
     VEN = "VENCIDO",
     PAG = "PAGO",
@@ -28,8 +28,8 @@ class Installment {
     @Column({ type: 'date', nullable: false })
     due_date: Date;
 
-    @Column({ type: 'enum', enum: Status, default: Status.PEN })
-    status: Status;
+    @Column({ type: 'enum', enum: StatusInstallment, default: StatusInstallment.PEN })
+    status: StatusInstallment;
 
     @Column({ type: 'decimal', precision: 14, scale: 2, nullable: true })
     amount_paid: number;

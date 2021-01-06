@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import { container } from 'tsyringe';
 
 import CreateInstallmentService from '@modules/sales/services/CreateInstallmentService';
+import UpdateInstallmentService from '@modules/sales/services/UpdateInstallmentService';
 
 class InstallmentController {
   async create(request: Request, response: Response): Promise<Response> {
@@ -14,8 +15,14 @@ class InstallmentController {
     return response.json(listInstallment);
   }
 
-  async delete(request: Request, response: Response): Promise<Response> {
-    return response.status(200).send("ok");
+  async update(request: Request, response: Response): Promise<Response> {
+    const updateInstallmentService = container.resolve(UpdateInstallmentService);
+    await updateInstallmentService.execute({
+      id: request.params.id,
+      data: request.body,
+    });
+
+    return response.status(200).send();
   }
 }
 

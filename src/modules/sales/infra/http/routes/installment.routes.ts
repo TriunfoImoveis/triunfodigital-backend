@@ -24,14 +24,13 @@ installmentRoutes.post('/:id', celebrate({
   }
 }), installmentController.create);
 
-installmentRoutes.delete('/:id', celebrate({
+installmentRoutes.patch('/paid/:id', celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),
   },
   [Segments.BODY]: {
-    motive: Joi.string().uuid().required(),
-    another_motive: Joi.string(),
+    pay_date: Joi.date().less(new Date()).required(),
   }
-}), installmentController.delete);
+}), installmentController.update);
 
 export default installmentRoutes;

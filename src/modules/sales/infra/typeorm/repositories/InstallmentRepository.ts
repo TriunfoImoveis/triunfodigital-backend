@@ -1,9 +1,10 @@
-import { getConnection, getRepository, Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 
 import AppError from '@shared/errors/AppError';
 import ICreateInstallmentDTO from '@modules/sales/dtos/ICreateInstallmentDTO';
 import IInstallmentRepository from '@modules/sales/repositories/IInstallmentRepository';
 import Installment from '@modules/sales/infra/typeorm/entities/Installment';
+import IUpdateInstallmentDTO from '@modules/sales/dtos/IUpdateInstallmentDTO';
 
 class InstallmentRespository implements IInstallmentRepository {
   private ormRepository: Repository<Installment>;
@@ -27,6 +28,23 @@ class InstallmentRespository implements IInstallmentRepository {
       installments.forEach(async (installment)=>{
         await this.ormRepository.delete(installment.id);
       });
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async findById(id: string): Promise<Installment | undefined> {
+    try {
+      const installment = await this.ormRepository.findOne(id);
+      return installment;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async update(id: string, data: IUpdateInstallmentDTO): Promise<void> {
+    try {
+      await this.ormRepository.update(id, data);
     } catch (err) {
       throw new AppError(err.detail);
     }
