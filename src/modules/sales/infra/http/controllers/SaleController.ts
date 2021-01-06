@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import { classToClass } from 'class-transformer';
+import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import SaleRepository from '@modules/sales/infra/typeorm/repositories/SaleRepository';
@@ -10,9 +12,8 @@ import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
 import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService';
 import { SaleType, Status } from '@modules/sales/infra/typeorm/entities/Sale';
 import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
-import { classToClass } from 'class-transformer';
 import NotValidSaleService from '@modules/sales/services/NotValidSaleServivce';
-import InstallmentRespository from '@modules/sales/infra/typeorm/repositories/InstallmentRepository';
+import CreateFirstInstallmentService from '@modules/sales/services/CreateFirstInstallmentService';
 
 class SaleController {
 
@@ -61,8 +62,9 @@ class SaleController {
       user_coordinator,
       users_directors,
       users_sellers,
+      installment,
     } = request.body;
-
+    
     const realtyRepository = new RealtyRepository();
     const createRealtyService = new CreateRealtyService(realtyRepository);
 
@@ -111,6 +113,13 @@ class SaleController {
       users_directors,
       users_sellers,
     });
+    
+    // Criar 1º parcela da venda
+    const createInstallmentService = container.resolve(CreateFirstInstallmentService);
+    await createInstallmentService.execute({
+      id: sale.id,
+      installment,
+    });
 
     return response.json(sale);
   }
@@ -133,6 +142,7 @@ class SaleController {
       users_directors,
       users_captivators,
       users_sellers,
+      installment,
     } = request.body;
 
     const realtyRepository = new RealtyRepository();
@@ -196,6 +206,13 @@ class SaleController {
       users_directors,
       users_captivators,
       users_sellers,
+    });
+
+    // Criar 1º parcela da venda
+    const createInstallmentService = container.resolve(CreateFirstInstallmentService);
+    await createInstallmentService.execute({
+      id: sale.id,
+      installment,
     });
 
     return response.json(sale);

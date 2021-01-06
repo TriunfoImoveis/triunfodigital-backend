@@ -56,6 +56,11 @@ saleRoutes.post('/new', celebrate({
     user_coordinator: Joi.string().uuid(),
     users_directors: Joi.array().min(2).max(2).required(),
     users_sellers: Joi.array().min(1).required(),
+    installment: Joi.object({
+      installment_number: Joi.number().integer().min(1).required(),
+      value: Joi.number().min(0).required(),
+      due_date: Joi.date().greater(new Date()).required(),
+    }).required(),
   }
 }), saleController.createSaleNew);
 
@@ -110,6 +115,11 @@ saleRoutes.post('/used', celebrate({
     users_directors: Joi.array().min(2).max(2).required(),
     users_captivators: Joi.array().min(1).required(),
     users_sellers: Joi.array().min(1).required(),
+    installment: Joi.object({
+      installment_number: Joi.number().integer().min(1).required(),
+      value: Joi.number().min(0).required(),
+      due_date: Joi.date().greater(new Date()).required(),
+    }).required(), 
   }
 }), saleController.createSaleUsed);
 

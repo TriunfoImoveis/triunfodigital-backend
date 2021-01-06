@@ -22,6 +22,15 @@ class InstallmentRespository implements IInstallmentRepository {
       throw new AppError(err.detail);
     }
   }
+
+  async createFirstInstallment(installment: ICreateInstallmentDTO): Promise<void> {
+    try {
+      const installmentInstance = this.ormRepository.create(installment);
+      await this.ormRepository.save(installmentInstance);
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
   
   async delete(installments: Installment[]): Promise<void> {
     try {

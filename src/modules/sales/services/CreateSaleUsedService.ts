@@ -32,9 +32,9 @@ class CreateSaleUsedService {
     if (user_coordinator) {
       const coordinatorExists = await usersRepository.findById(String(user_coordinator));
       if (!coordinatorExists) {
-        throw new AppError("User coordinator not exists.");
+        throw new AppError("Usuário coordenador não existe.");
       } else if (coordinatorExists.office.name !== "Coordenador") {
-        throw new AppError("User isn't coordinator.");
+        throw new AppError("Usuário não é coordenador.");
       }
     }
 
