@@ -43,6 +43,9 @@ class User {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   goal: number;
 
+  @Column({ type: 'varchar', length: 6, nullable: true })
+  creci: string;
+
   @Column({ type: 'boolean', default: true })
   active: boolean;
 

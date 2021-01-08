@@ -9,6 +9,7 @@ export default interface ICreateUsersDTO {
   phone: string;
   admission_date: Date;
   goal: number;
+  creci?: string;
   departament: Departament;
   subsidiary: Subsidiary;
   office: Office;
