@@ -1,4 +1,5 @@
 import { inject, injectable } from "tsyringe";
+import { add } from "date-fns";
 
 import AppError from "@shared/errors/AppError";
 import ICreateInstallmentDTO from "@modules/sales/dtos/ICreateInstallmentDTO";
@@ -30,6 +31,7 @@ class CreateFirstInstallmentService {
       throw new AppError("Venda já validada.", 400);
     }
 
+    installment.due_date = add(installment.due_date, {hours: 3});
     installment.sale = sale;
 
     await this.installmentsRepository.createFirstInstallment(installment);

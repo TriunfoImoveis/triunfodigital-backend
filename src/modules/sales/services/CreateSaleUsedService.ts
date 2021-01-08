@@ -1,3 +1,5 @@
+import { add } from "date-fns";
+
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import AppError from "@shared/errors/AppError";
@@ -48,7 +50,7 @@ class CreateSaleUsedService {
 
     const sale = await this.saleRepository.createSaleUsed({
       sale_type,
-      sale_date,
+      sale_date: add(sale_date, {hours: 3}),
       realty_ammount,
       percentage_sale,
       company,

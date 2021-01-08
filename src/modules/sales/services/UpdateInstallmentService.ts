@@ -1,12 +1,13 @@
 import { inject, injectable } from "tsyringe";
+import { add } from 'date-fns';
+
 import IInstallmentRepository from "@modules/sales/repositories/IInstallmentRepository";
 import AppError from "@shared/errors/AppError";
 import { StatusInstallment } from "@modules/sales/infra/typeorm/entities/Installment";
-import IUpdateInstallmentDTO from "@modules/sales/dtos/IUpdateInstallmentDTO";
 
 interface IRequestDTO {
   id: string;
-  data: IUpdateInstallmentDTO;
+  pay_date: Date;
 }
 
 @injectable()
@@ -16,14 +17,19 @@ class UpdateInstallmentService {
     private installmentsRepository: IInstallmentRepository,
   ) {}
 
-  public async execute({id, data}: IRequestDTO): Promise<void> {
+  public async execute({id, pay_date}: IRequestDTO): Promise<void> {
     const checkInstallmentExists = await this.installmentsRepository.findById(id);
     if (!checkInstallmentExists) {
       throw new AppError("Parcela não existe.", 404);
     }
-
-    data.status = StatusInstallment.PAG;
-    await this.installmentsRepository.update(id, data);
+    
+    await this.installmentsRepository.update(
+      id, 
+      {
+        pay_date: add(pay_date, {hours: 3}), 
+        status: StatusInstallment.PAG,
+      }
+    );
   }
 }
 

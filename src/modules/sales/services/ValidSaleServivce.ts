@@ -10,7 +10,7 @@ class ValidSaleService {
 
   public async execute(id: string): Promise<void> {
     const sale = await this.salesRepository.findById(id);
-  
+    
     if (!sale) {
       throw new AppError("Venda não existe.", 404);
     } else if (sale.status !== Status.NV) {
@@ -21,8 +21,11 @@ class ValidSaleService {
         400
       );
     } else {
-      // Verificar se a primeira parcela está com o status de PAGO.
+      var totalValueInstallments = 0;
       sale.installments.forEach((installment)=>{
+        totalValueInstallments += Number(installment.value);
+
+        // Verificar se a primeira parcela está com o status de PAGO.
         if (installment.installment_number === 1 && installment.status !== StatusInstallment.PAG) {
           throw new AppError(
             "Antes de validar é necessário confirmar o pagamento da primeira parcela.", 
@@ -30,6 +33,14 @@ class ValidSaleService {
           );
         }
       });
+
+      // Comparar o total das parcelas com o valor da comissão.
+      if (totalValueInstallments !== Number(sale.commission)) {
+        throw new AppError(
+          "O valor total das parcelas não confere com o valor da comissão.", 
+          400
+        );
+      }
     }
 
     // Define o status da venda conforme a quantidade de parcelas.

@@ -12,6 +12,7 @@ export enum StatusInstallment {
     PEN = "PENDENTE",
     VEN = "VENCIDO",
     PAG = "PAGO",
+    CAI = "CAIU",
 }
 
 @Entity('installments')

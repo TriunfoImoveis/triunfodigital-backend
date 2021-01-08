@@ -5,7 +5,7 @@ import ensuredAthenticated from '@shared/infra/http/middlewares/ensuredAuthentic
 import InstallmentController from '@modules/sales/infra/http/controllers/InstallmentController';
 
 const installmentRoutes = Router();
-const installmentController = new InstallmentController();
+const installmentController = new InstallmentController(); 
 
 installmentRoutes.use(ensuredAthenticated);
 
@@ -18,7 +18,7 @@ installmentRoutes.post('/:id', celebrate({
       Joi.object({
         installment_number: Joi.number().integer().min(1).required(),
         value: Joi.number().min(0).required(),
-        due_date: Joi.date().greater(new Date()).required(),
+        due_date: Joi.date().iso().greater(Date()).required(),
       })
     ).min(1).required()
   }
@@ -29,7 +29,7 @@ installmentRoutes.patch('/paid/:id', celebrate({
     id: Joi.string().uuid(),
   },
   [Segments.BODY]: {
-    pay_date: Joi.date().less(new Date()).required(),
+    pay_date: Joi.date().iso().max(Date()).required(),
   }
 }), installmentController.update);
 

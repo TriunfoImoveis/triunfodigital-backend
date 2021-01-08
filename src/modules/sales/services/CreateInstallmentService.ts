@@ -1,4 +1,5 @@
 import { inject, injectable } from "tsyringe";
+import { add } from "date-fns";
 
 import AppError from "@shared/errors/AppError";
 import ICreateInstallmentDTO from "@modules/sales/dtos/ICreateInstallmentDTO";
@@ -30,15 +31,19 @@ class CreateInstallmentService {
     } else if (sale.status !== Status.NV) {
       throw new AppError("Venda já validada.", 400);
     }
-
+    // Add a venda em cada parcela e somar o total das parcelas.
     var totalValueInstallments = 0;
     installments.map(
       (installment) => {
+        installment.due_date = add(
+          installment.due_date, 
+          {hours: 3}
+        )
         installment.sale = sale;
         totalValueInstallments += Number(installment.value);
       }
     );
-    
+    // Comparar o total das parcelas com o valor da comissão.
     if (totalValueInstallments !== Number(sale.commission)) {
       throw new AppError(
         "O valor total das parcelas não confere com o valor da comissão.", 
