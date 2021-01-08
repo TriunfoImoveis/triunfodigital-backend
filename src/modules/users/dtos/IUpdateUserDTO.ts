@@ -9,6 +9,7 @@ export default interface IUpdateUserDTO {
   phone?: string;
   admission_date?: Date;
   goal?: number;
+  creci?: string;
   departament?: Departament;
   subsidiary?: Subsidiary;
   office?: Office;
