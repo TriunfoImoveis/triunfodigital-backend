@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 
 import AppError from '@shared/errors/AppError';
-import CompanyRepository from '@modules/sales/infra/typeorm/repositories/CompanyRepository';
-import CreateCompanyService from '@modules/sales/services/CreateCompanyService';
-import UpdateCompanyService from '@modules/sales/services/UpdateCompanyService';
-import ActivateCompanyService from '@modules/sales/services/ActivateCompanyService';
-import DeactivateCompanyService from '@modules/sales/services/DeactivateCompanyServivce';
+import CompanyRepository from '@modules/organizations/infra/typeorm/repositories/CompanyRepository';
+import CreateCompanyService from '@modules/organizations/services/CreateCompanyService';
+import UpdateCompanyService from '@modules/organizations/services/UpdateCompanyService';
+import ActivateCompanyService from '@modules/organizations/services/ActivateCompanyService';
+import DeactivateCompanyService from '@modules/organizations/services/DeactivateCompanyServivce';
 
 class CompanyController {
   async index(request: Request, response: Response): Promise<Response> {

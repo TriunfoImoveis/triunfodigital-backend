@@ -1,8 +1,10 @@
+import { add } from "date-fns";
+
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import AppError from "@shared/errors/AppError";
 import Sale from "@modules/sales/infra/typeorm/entities/Sale";
-import CompanyRepository from "@modules/sales/infra/typeorm/repositories/CompanyRepository";
+import CompanyRepository from "@modules/organizations/infra/typeorm/repositories/CompanyRepository";
 import UsersRepository from "@modules/users/infra/typeorm/repositories/UsersRepository";
 
 class CreateSaleUsedService {
@@ -32,9 +34,9 @@ class CreateSaleUsedService {
     if (user_coordinator) {
       const coordinatorExists = await usersRepository.findById(String(user_coordinator));
       if (!coordinatorExists) {
-        throw new AppError("User coordinator not exists.");
+        throw new AppError("Usuário coordenador não existe.");
       } else if (coordinatorExists.office.name !== "Coordenador") {
-        throw new AppError("User isn't coordinator.");
+        throw new AppError("Usuário não é coordenador.");
       }
     }
 
@@ -48,7 +50,7 @@ class CreateSaleUsedService {
 
     const sale = await this.saleRepository.createSaleUsed({
       sale_type,
-      sale_date,
+      sale_date: add(sale_date, {hours: 3}),
       realty_ammount,
       percentage_sale,
       company,

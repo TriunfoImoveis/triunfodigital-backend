@@ -1,20 +1,22 @@
 import { Request,Response } from "express";
+import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
-import DepartamentsRepository from '@modules/organizations/infra/typeorm/repositories/DepartamentsRepository';
 import CreateDepartamentService from "@modules/organizations/services/CreateDepartamentService";
 import UpdateDepartamentService from "@modules/organizations/services/UpdateDepartamentService";
+import ListDepartamentService from "@modules/organizations/services/ListDepartamentService";
+import ShowDepartamentService from "@modules/organizations/services/ShowDepartamentService";
 
 class DepartamentController {
   async index(request: Request, response: Response): Promise<Response> {
     const { subsidiary } = request.query;
 
     if (typeof subsidiary !== "string") {
-      throw new AppError("Subsidiary not is validate string.");
+      throw new AppError("Subsidiary not is validate string.", 400);
     }
 
-    const departamentsRepository = new DepartamentsRepository();
-    const departamentsList = await departamentsRepository.findDepartamentsActive(
+    const listDepartamentService = container.resolve(ListDepartamentService);
+    const departamentsList = await listDepartamentService.execute(
       subsidiary
     );
 
@@ -23,12 +25,11 @@ class DepartamentController {
 
   async show(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
-    const departamentsRepository = new DepartamentsRepository();
-    const departament = await departamentsRepository.findById(id);
-
-    if (!departament) {
-      throw new AppError('Departament not exists.');
-    }
+    
+    const showDepartamentService = container.resolve(
+      ShowDepartamentService
+    );
+    const departament = await showDepartamentService.execute(id);
 
     return response.json(departament);
   }
@@ -41,10 +42,9 @@ class DepartamentController {
       subsidiary,
     } = request.body;
 
-    const departamentsRepository = new DepartamentsRepository();
-    const createDepartament = new CreateDepartamentService(departamentsRepository);
+    const createDepartamentService = container.resolve(CreateDepartamentService);
 
-    const newDepartament = await createDepartament.execute({
+    const newDepartament = await createDepartamentService.execute({
       name,
       initials,
       goal,
@@ -56,10 +56,8 @@ class DepartamentController {
   }
 
   async update(request: Request, response: Response): Promise<Response> {
-    const departamentsRepository = new DepartamentsRepository();
-    const departamentService = new UpdateDepartamentService(departamentsRepository);
-    
-    const departamentUpdated = await departamentService.execute({
+    const updateDepartamentService = container.resolve(UpdateDepartamentService);
+    const departamentUpdated = await updateDepartamentService.execute({
       id: request.params.id,
       data: request.body,
     });
@@ -67,12 +65,12 @@ class DepartamentController {
     return response.json(departamentUpdated);
   }
 
-  async delete(request: Request, response: Response): Promise<Response> {
-    const departamentsRepository = new DepartamentsRepository();
-    await departamentsRepository.delete(request.params.id);
+  // async delete(request: Request, response: Response): Promise<Response> {
+  //   const departamentsRepository = new DepartamentsRepository();
+  //   await departamentsRepository.delete(request.params.id);
 
-    return response.status(204).send();
-  }
+  //   return response.status(204).send();
+  // }
 }
 
 export default DepartamentController;

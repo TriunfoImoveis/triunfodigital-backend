@@ -1,7 +1,7 @@
 import AppError from '@shared/errors/AppError';
 import ICreateCompanyDTO from "@modules/sales/dtos/ICreateCompanyDTO";
-import Company from "@modules/sales/infra/typeorm/entities/Company";
-import ICompanyRepository from "@modules/sales/repositories/ICompanyRepository";
+import Company from "@modules/organizations/infra/typeorm/entities/Company";
+import ICompanyRepository from "@modules/organizations/repositories/ICompanyRepository";
 
 class CreateCompanyService {
   constructor(private companyRepository: ICompanyRepository) {}

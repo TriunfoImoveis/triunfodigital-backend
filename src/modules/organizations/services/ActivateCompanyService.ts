@@ -1,6 +1,6 @@
 import AppError from '@shared/errors/AppError';
-import ICompanyRepository from '@modules/sales/repositories/ICompanyRepository';
-import Company from '@modules/sales/infra/typeorm/entities/Company';
+import ICompanyRepository from '@modules/organizations/repositories/ICompanyRepository';
+import Company from '@modules/organizations/infra/typeorm/entities/Company';
 
 
 interface IRequestDTO {

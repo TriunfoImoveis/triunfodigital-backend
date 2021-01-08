@@ -1,10 +1,16 @@
+import { inject, injectable } from 'tsyringe';
+
 import AppError from '@shared/errors/AppError';
 import Subsidiary from '@modules/organizations/infra/typeorm/entities/Subsidiary';
 import ISubsidiaryRepository from '@modules/organizations/repositories/ISubsidiaryRepository';
 import ICreateSubsidiaryDTO from '@modules/organizations/dtos/ICreateSubsidiaryDTO';
 
+@injectable()
 class CreateSubsidiaryService {
-  constructor(private subsidiariesRepository: ISubsidiaryRepository) {}
+  constructor(
+    @inject('SubsidiariesRepository')
+    private subsidiariesRepository: ISubsidiaryRepository,
+  ) {}
 
   public async execute({
     name,
@@ -18,7 +24,7 @@ class CreateSubsidiaryService {
     );
 
     if (checkSubsidiaryExist) {
-      throw new AppError('Subsidiary already used.');
+      throw new AppError('Subsidiary already used.', 400);
     }
 
     const subsidiary = await this.subsidiariesRepository.create({
@@ -30,7 +36,7 @@ class CreateSubsidiaryService {
     });
 
     if (!subsidiary) {
-      throw new AppError('error when creating the Subsidiary, check your data');
+      throw new AppError('error when creating the Subsidiary, check your data', 400);
     }
 
     return subsidiary;

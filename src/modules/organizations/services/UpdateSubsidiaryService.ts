@@ -1,3 +1,5 @@
+import { inject, injectable } from 'tsyringe';
+
 import AppError from '@shared/errors/AppError';
 import ISubsidiaryRepository from '@modules/organizations/repositories/ISubsidiaryRepository';
 import Subsidiary from '@modules/organizations/infra/typeorm/entities/Subsidiary';
@@ -8,8 +10,12 @@ interface IRequest {
   subsidiary: IUpdateSubsidiaryDTO;
 }
 
+@injectable()
 class UpdateSubsidiaryService {
-  constructor(private subsidiariesRepository: ISubsidiaryRepository) {}
+  constructor(
+    @inject('SubsidiariesRepository')
+    private subsidiariesRepository: ISubsidiaryRepository,
+  ) {}
 
   public async execute({
     id,
@@ -18,7 +24,7 @@ class UpdateSubsidiaryService {
     const checkSubsidiaryExist = await this.subsidiariesRepository.findById(id);
 
     if (!checkSubsidiaryExist) {
-      throw new AppError('Subsidiary not exist.');
+      throw new AppError('Subsidiary not exist.', 404);
     }
 
     const subsidiaryUpdated = await this.subsidiariesRepository.update(
@@ -27,7 +33,7 @@ class UpdateSubsidiaryService {
     );
 
     if (!subsidiaryUpdated) {
-      throw new AppError('error when updating the subsidiary, check your data');
+      throw new AppError('error when updating the subsidiary, check your data', 400);
     }
 
     return subsidiaryUpdated;

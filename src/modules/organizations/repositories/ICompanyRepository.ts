@@ -1,4 +1,4 @@
-import Company from "@modules/sales/infra/typeorm/entities/Company";
+import Company from "@modules/organizations/infra/typeorm/entities/Company";
 import ICreateCompanyDTO from "@modules/sales/dtos/ICreateCompanyDTO";
 import IUpdateCompanyDTO from "@modules/sales/dtos/IUpdateCompanyDTO";
 
