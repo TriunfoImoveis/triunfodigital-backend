@@ -3,7 +3,7 @@ import ICreateBuilderDTO from "@modules/sales/dtos/ICreateBuilderDTO";
 import IUpdateBuilderDTO from "@modules/sales/dtos/IUpdateBuilderDTO";
 
 export default interface IBuilderRepository {
-  findBuildersActive(): Promise<Builder[]>;
+  findBuildersActive(city: string): Promise<Builder[]>;
   findByName(name: string): Promise<Builder | undefined>;
   findById(id: string): Promise<Builder | undefined>;
   findByIdAndActivate(id: string): Promise<Builder | undefined>;

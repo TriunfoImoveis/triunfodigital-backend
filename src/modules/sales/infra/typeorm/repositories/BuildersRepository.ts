@@ -13,10 +13,11 @@ class BuildersRespository implements IBuilderRepository {
     this.ormRepository = getRepository(Builder);
   }
 
-  async findBuildersActive(): Promise<Builder[]> {
+  async findBuildersActive(city: string): Promise<Builder[]> {
     try {
       const builders = await this.ormRepository.find({
         where: {
+          city,
           active: true,
         },
         order: {
