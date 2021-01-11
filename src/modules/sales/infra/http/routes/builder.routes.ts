@@ -7,7 +7,11 @@ import BuilderController from '@modules/sales/infra/http/controllers/BuilderCont
 const builderRouter = Router();
 const builderController = new BuilderController();
 
-builderRouter.get('/', builderController.index);
+builderRouter.get('/', celebrate({
+  [Segments.QUERY]: {
+    city: Joi.string().required(),
+  }
+}), builderController.index);
 
 builderRouter.use(ensuredAthenticated);
 

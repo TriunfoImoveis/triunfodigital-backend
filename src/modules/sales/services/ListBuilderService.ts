@@ -10,8 +10,8 @@ class ListBuilderService {
     private buildersRepository: IBuilderRepository,
   ) {}
 
-  public async execute(): Promise<Builder[]> {
-    const builders = await this.buildersRepository.findBuildersActive();
+  public async execute(city: string): Promise<Builder[]> {
+    const builders = await this.buildersRepository.findBuildersActive(city);
 
     return builders;
   }

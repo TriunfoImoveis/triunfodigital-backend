@@ -7,11 +7,17 @@ import UpdateBuilderService from '@modules/sales/services/UpdateBuilderService';
 import DeactivateBuilderService from '@modules/sales/services/DeactivateBuilderServivce';
 import ActivateBuilderService from '@modules/sales/services/ActivateBuilderService';
 import ListBuilderService from '@modules/sales/services/ListBuilderService';
+import AppError from '@shared/errors/AppError';
 
 class BuilderController {
   async index(request: Request, response: Response): Promise<Response> {
+    const {city} = request.query;
+    if (typeof city != "string") {
+      throw new AppError("Cidade não é uma string válida.");
+    }
+
     const listBuilderService = container.resolve(ListBuilderService);
-    const builders = await listBuilderService.execute();
+    const builders = await listBuilderService.execute(city);
 
     return response.json(builders);
   }
