@@ -2,6 +2,7 @@ import { inject, injectable } from "tsyringe";
 
 import IBuilderRepository from "@modules/sales/repositories/IBuilderRepository";
 import Builder from "@modules/sales/infra/typeorm/entities/Builder";
+import IRequestBuilderDTO from "@modules/sales/dtos/IRequestBuilderDTO";
 
 @injectable()
 class ListBuilderService {
@@ -10,8 +11,8 @@ class ListBuilderService {
     private buildersRepository: IBuilderRepository,
   ) {}
 
-  public async execute(city: string): Promise<Builder[]> {
-    const builders = await this.buildersRepository.findBuildersActive(city);
+  public async execute({uf, city}: IRequestBuilderDTO): Promise<Builder[]> {
+    const builders = await this.buildersRepository.findBuildersActive({uf, city});
 
     return builders;
   }

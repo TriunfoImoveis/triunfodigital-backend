@@ -11,13 +11,15 @@ import AppError from '@shared/errors/AppError';
 
 class BuilderController {
   async index(request: Request, response: Response): Promise<Response> {
-    const {city} = request.query;
-    if (typeof city != "string") {
+    const {uf, city} = request.query;
+    if (typeof uf != "string") {
+      throw new AppError("Estado não é uma string válida.");
+    } else if (typeof city != "string") {
       throw new AppError("Cidade não é uma string válida.");
     }
 
     const listBuilderService = container.resolve(ListBuilderService);
-    const builders = await listBuilderService.execute(city);
+    const builders = await listBuilderService.execute({uf, city});
 
     return response.json(builders);
   }

@@ -1,9 +1,10 @@
 import Builder from "@modules/sales/infra/typeorm/entities/Builder";
 import ICreateBuilderDTO from "@modules/sales/dtos/ICreateBuilderDTO";
 import IUpdateBuilderDTO from "@modules/sales/dtos/IUpdateBuilderDTO";
+import IRequestBuilderDTO from "@modules/sales/dtos/IRequestBuilderDTO";
 
 export default interface IBuilderRepository {
-  findBuildersActive(city: string): Promise<Builder[]>;
+  findBuildersActive(data: IRequestBuilderDTO): Promise<Builder[]>;
   findByName(name: string): Promise<Builder | undefined>;
   findById(id: string): Promise<Builder | undefined>;
   findByIdAndActivate(id: string): Promise<Builder | undefined>;

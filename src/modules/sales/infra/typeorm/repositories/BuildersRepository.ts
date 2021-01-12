@@ -1,10 +1,11 @@
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Like, Repository } from 'typeorm';
 
 import AppError from '@shared/errors/AppError';
 import ICreateBuilderDTO from '@modules/sales/dtos/ICreateBuilderDTO';
 import IBuilderRepository from '@modules/sales/repositories/IBuilderRepository';
 import Builder from '@modules/sales/infra/typeorm/entities/Builder';
 import IUpdateBuilderDTO from '@modules/sales/dtos/IUpdateBuilderDTO';
+import IRequestBuilderDTO from '@modules/sales/dtos/IRequestBuilderDTO';
 
 class BuildersRespository implements IBuilderRepository {
   private ormRepository: Repository<Builder>;
@@ -13,11 +14,13 @@ class BuildersRespository implements IBuilderRepository {
     this.ormRepository = getRepository(Builder);
   }
 
-  async findBuildersActive(city: string): Promise<Builder[]> {
+  async findBuildersActive(data: IRequestBuilderDTO): Promise<Builder[]> {
+    const {uf, city} = data;
     try {
       const builders = await this.ormRepository.find({
         where: {
-          city,
+          state: uf,
+          city: Like(city),
           active: true,
         },
         order: {
