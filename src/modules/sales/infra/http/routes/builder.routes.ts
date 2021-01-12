@@ -9,7 +9,8 @@ const builderController = new BuilderController();
 
 builderRouter.get('/', celebrate({
   [Segments.QUERY]: {
-    city: Joi.string().required(),
+    uf: Joi.string().length(2).required(),
+    city: Joi.string().default('%'),
   }
 }), builderController.index);
 
