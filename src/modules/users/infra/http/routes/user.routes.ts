@@ -87,4 +87,10 @@ usersRouter.patch(
   usersController.uploadAvatar,
 );
 
+usersRouter.patch('/active/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  }
+}), usersController.updateStatusUser);
+
 export default usersRouter;

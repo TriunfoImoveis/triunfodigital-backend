@@ -12,13 +12,13 @@ class ShowUserService {
     ){}
 
     public async execute(id: string): Promise<User> {
-        const user = await this.usersRepository.findById(id);
+        const userExists = await this.usersRepository.findById(id);
 
-        if (!user) {
-          throw new AppError('User not exists.', 404);
+        if (!userExists) {
+          throw new AppError('Usuário não existe.', 404);
         }
 
-        return user;
+        return userExists;
     }
 }
 

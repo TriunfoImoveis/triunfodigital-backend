@@ -11,8 +11,12 @@ class ListBuilderService {
     private buildersRepository: IBuilderRepository,
   ) {}
 
-  public async execute({uf, city}: IRequestBuilderDTO): Promise<Builder[]> {
-    const builders = await this.buildersRepository.findBuildersActive({uf, city});
+  public async execute({name, uf, city}: IRequestBuilderDTO): Promise<Builder[]> {
+    const builders = await this.buildersRepository.findBuildersActive({
+      name, 
+      uf, 
+      city
+    });
 
     return builders;
   }
