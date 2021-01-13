@@ -15,10 +15,11 @@ class BuildersRespository implements IBuilderRepository {
   }
 
   async findBuildersActive(data: IRequestBuilderDTO): Promise<Builder[]> {
-    const {uf, city} = data;
+    const {name, uf, city} = data;
     try {
       const builders = await this.ormRepository.find({
         where: {
+          name: Like(name+"%"),
           state: uf,
           city: Like(city),
           active: true,

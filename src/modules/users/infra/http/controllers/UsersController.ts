@@ -8,6 +8,7 @@ import UpdateUserService from '@modules/users/services/UpdateUserService';
 import UploadAvatarUserService from '@modules/users/services/UploadAvatarUserService';
 import ListUserService from '@modules/users/services/ListUserService';
 import ShowUserService from '@modules/users/services/ShowUserService';
+import UpdateStatusUserService from '@modules/users/services/UpdateStatusUserService';
 
 class UsersController {
   async index(request: Request, response: Response): Promise<Response> {
@@ -108,6 +109,16 @@ class UsersController {
     });
 
     return response.json(classToClass(user));
+  }
+
+  async updateStatusUser(request: Request, response: Response): Promise<Response> {
+    const updateStatusUserService = container.resolve(UpdateStatusUserService);
+
+    await updateStatusUserService.execute(
+      request.params.id
+    );
+
+    return response.status(200).send();
   }
 }
 

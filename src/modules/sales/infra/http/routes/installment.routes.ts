@@ -29,8 +29,9 @@ installmentRoutes.patch('/paid/:id', celebrate({
     id: Joi.string().uuid(),
   },
   [Segments.BODY]: {
-    pay_date: Joi.date().iso().max(Date()).required(),
+    pay_date: Joi.date().iso().max(Date.now()).required(),
   }
 }), installmentController.update);
+console.log(Date());
 
 export default installmentRoutes;
