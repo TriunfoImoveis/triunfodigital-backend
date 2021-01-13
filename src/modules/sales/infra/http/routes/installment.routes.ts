@@ -18,7 +18,7 @@ installmentRoutes.post('/:id', celebrate({
       Joi.object({
         installment_number: Joi.number().integer().min(1).required(),
         value: Joi.number().min(0).required(),
-        due_date: Joi.date().iso().greater(Date()).required(),
+        due_date: Joi.date().iso().greater(new Date()).required(),
       })
     ).min(1).required()
   }
@@ -27,11 +27,7 @@ installmentRoutes.post('/:id', celebrate({
 installmentRoutes.patch('/paid/:id', celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),
-  },
-  [Segments.BODY]: {
-    pay_date: Joi.date().iso().max(Date.now()).required(),
   }
 }), installmentController.update);
-console.log(Date());
 
 export default installmentRoutes;

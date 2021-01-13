@@ -17,13 +17,10 @@ class InstallmentController {
   }
 
   async update(request: Request, response: Response): Promise<Response> {
-    console.log(Date());
-    const {pay_date} = request.body;
     const updateInstallmentService = container.resolve(UpdateInstallmentService);
-    await updateInstallmentService.execute({
-      id: request.params.id,
-      pay_date,
-    });
+    await updateInstallmentService.execute(
+      request.params.id
+    );
 
     return response.status(200).send();
   }
