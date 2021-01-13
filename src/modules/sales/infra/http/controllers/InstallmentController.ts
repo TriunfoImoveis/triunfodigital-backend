@@ -17,6 +17,7 @@ class InstallmentController {
   }
 
   async update(request: Request, response: Response): Promise<Response> {
+    console.log(Date());
     const {pay_date} = request.body;
     const updateInstallmentService = container.resolve(UpdateInstallmentService);
     await updateInstallmentService.execute({

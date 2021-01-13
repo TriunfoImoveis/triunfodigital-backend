@@ -32,5 +32,6 @@ installmentRoutes.patch('/paid/:id', celebrate({
     pay_date: Joi.date().iso().max(Date.now()).required(),
   }
 }), installmentController.update);
+console.log(Date());
 
 export default installmentRoutes;
