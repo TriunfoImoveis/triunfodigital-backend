@@ -48,5 +48,5 @@ jobs:
             cd ~/app/developer
             yarn
             ./node_modules/.bin/typeorm migration:run
-            pm2 restart dev-triunfodigital
+            pm2 restart api-dev
      
