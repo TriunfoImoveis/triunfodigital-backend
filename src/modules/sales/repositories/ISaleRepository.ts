@@ -5,6 +5,7 @@ import IRequestSaleDTO from "@modules/sales/dtos/IRequestSaleDTO";
 import INotValidSaleDTO from "../dtos/INotValidSaleDTO";
 import ICreateInstallmentDTO from "../dtos/ICreateInstallmentDTO";
 import Installment from "@modules/sales/infra/typeorm/entities/Installment";
+import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
 
 export default interface ISaleRepository {
   findAll(data: IRequestSaleDTO): Promise<Sale[]>;
@@ -12,6 +13,7 @@ export default interface ISaleRepository {
 
   createSaleNew(data: ICreateSaleNewDTO): Promise<Sale | undefined>;
   createSaleUsed(data: ICreateSaleUsedDTO): Promise<Sale | undefined>;
+  update(id: string, body: IUpdateSaleDTO): Promise<Sale | undefined>;
   validSale(
     id: string, 
     status: Status

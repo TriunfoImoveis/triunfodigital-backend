@@ -7,8 +7,7 @@ import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IRequestSaleDTO from "@modules/sales/dtos/IRequestSaleDTO";
 import INotValidSaleDTO from "@modules/sales/dtos/INotValidSaleDTO";
-import ICreateInstallmentDTO from "@modules/sales/dtos/ICreateInstallmentDTO";
-import Installment from "../entities/Installment";
+import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
 
 class SaleRepository implements ISaleRepository {
   private ormRepository: Repository<Sale>;
@@ -160,6 +159,17 @@ class SaleRepository implements ISaleRepository {
 
     } finally {
         await queryRunner.release();
+    }
+  }
+
+  async update(id: string, body: IUpdateSaleDTO): Promise<Sale | undefined> {
+    try {
+      await this.ormRepository.update(id, body);
+      const sale = this.ormRepository.findOne(id);
+
+      return sale;
+    } catch (err) {
+      throw new AppError(err.detail);
     }
   }
 
