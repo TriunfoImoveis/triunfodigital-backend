@@ -4,6 +4,7 @@ import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
 import AppError from "@shared/errors/AppError";
 import IRealtyRepository from "@modules/sales/repositories/IRealtyRepository";
+import IClientRepository from "@modules/sales/repositories/IClientRepository";
 
 interface IRequestDTO {
   id: string;
@@ -18,6 +19,9 @@ class UpdateSaleService {
 
     @inject('RealtiesRepository')
     private realtiesRepository: IRealtyRepository,
+
+    @inject('ClientsRepository')
+    private clientsRepository: IClientRepository,
   ) {}
 
   public async execute({id, body}: IRequestDTO): Promise<void> {
@@ -37,7 +41,11 @@ class UpdateSaleService {
 
     // Atualizar o cliente comprador
     if (body.client_buyer) {
-      
+      const client_buyer = saleExists.client_buyer;
+      await this.clientsRepository.update(
+        client_buyer.id, 
+        body.client_buyer
+      );
     }
   }
 }
