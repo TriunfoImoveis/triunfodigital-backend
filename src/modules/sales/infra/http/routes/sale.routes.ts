@@ -8,8 +8,6 @@ import SaleController from '@modules/sales/infra/http/controllers/SaleController
 const saleRoutes = Router();
 const saleController = new SaleController();
 
-saleRoutes.use(ensuredAthenticated);
-
 saleRoutes.get('/', celebrate({
   [Segments.QUERY]: {
     name: Joi.string().default(''),
@@ -121,6 +119,7 @@ saleRoutes.post('/used', celebrate({
   }
 }), saleController.createSaleUsed);
 
+saleRoutes.use(ensuredAthenticated);
 
 saleRoutes.get('/:id', celebrate({
   [Segments.PARAMS]: {
