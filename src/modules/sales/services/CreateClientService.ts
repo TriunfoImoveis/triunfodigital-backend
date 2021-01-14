@@ -39,7 +39,10 @@ class CreateClientService {
   });
 
   if (!client) {
-    throw new AppError('Error when creating the client, check your data');
+    throw new AppError(
+      "Erro durante a criação do cliente, ckeck seus dados",
+      400
+    );
   }
 
   return client;

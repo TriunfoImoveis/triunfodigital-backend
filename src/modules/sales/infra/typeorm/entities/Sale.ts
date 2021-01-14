@@ -30,7 +30,7 @@ export enum Status {
   NV  = 'NAO_VALIDADO',
   CA  = 'CAIU',
   PE  = 'PENDENTE',
-  PT  = 'PAGO TOTAL',
+  PT  = 'PAGO_TOTAL',
 }
 
 @Entity('sales')

@@ -146,4 +146,60 @@ saleRoutes.patch('/not-valid/:id', celebrate({
   }
 }), saleController.notValidSale);
 
+saleRoutes.put('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  },
+  [Segments.BODY]: {
+    sale_date: Joi.date().iso().max(new Date()),
+    realty_ammount: Joi.number().min(0),
+    company: Joi.string().uuid(),
+    percentage_company: Joi.number().min(0),
+    bonus: Joi.number().min(0),
+    origin: Joi.string().uuid(),
+    payment_type: Joi.string().uuid(),
+    builder: Joi.string().uuid(),
+    realty: Joi.object({
+      enterprise: Joi.string(),
+      unit: Joi.string(),
+      state: Joi.string().length(2).uppercase(),
+      city: Joi.string(),
+      neighborhood: Joi.string(),
+      property: Joi.string().uuid(),
+    }),
+    client_buyer: Joi.object({
+      name: Joi.string(),
+      cpf: Joi.string().pattern(/^[0-9]{11,11}$/),
+      email: Joi.string().email(),
+      phone: Joi.string().pattern(/^[0-9]{10,11}$/),
+      whatsapp: Joi.string(),
+      date_birth: Joi.date().iso().less(new Date()),
+      occupation: Joi.string(),
+      civil_status: Joi.string().valid(
+        'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
+      ),
+      number_children: Joi.number().integer().min(0),
+      gender: Joi.string().valid('MASCULINO', 'FEMININO', 'OUTRO'),
+    }),
+    client_seller: Joi.object({
+      name: Joi.string(),
+      cpf: Joi.string().pattern(/^[0-9]{11,11}$/),
+      email: Joi.string().email(),
+      phone: Joi.string().pattern(/^[0-9]{10,11}$/),
+      whatsapp: Joi.string(),
+      date_birth: Joi.date().iso().less(new Date()),
+      occupation: Joi.string(),
+      civil_status: Joi.string().valid(
+        'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
+      ),
+      number_children: Joi.number().integer().min(0),
+      gender: Joi.string().valid('MASCULINO', 'FEMININO', 'OUTRO'),
+    }),
+    user_coordinator: Joi.string().uuid(),
+    users_directors: Joi.array().min(2).max(2),
+    users_captivators: Joi.array().min(1),
+    users_sellers: Joi.array().min(1),
+  }
+}), saleController.update);
+
 export default saleRoutes;

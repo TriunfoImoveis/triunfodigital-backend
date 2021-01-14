@@ -16,13 +16,16 @@ class UpdateClientService {
   const checkClientExists = await this.clientsRepository.findById(client_id);
 
   if (!checkClientExists) {
-    throw new AppError('Client not exists.');
+    throw new AppError("Cliente não existe.", 404);
   }
 
   const clientUpdated = await this.clientsRepository.update(client_id, data);
 
   if (!clientUpdated) {
-    throw new AppError('Error when updating the client, check your data');
+    throw new AppError(
+      "Erro durante a atualização do cliente, ckeck seus dados",
+      400
+    );
   }
 
   return clientUpdated;

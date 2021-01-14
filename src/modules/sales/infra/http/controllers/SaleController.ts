@@ -14,6 +14,7 @@ import { SaleType, Status } from '@modules/sales/infra/typeorm/entities/Sale';
 import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
 import NotValidSaleService from '@modules/sales/services/NotValidSaleServivce';
 import CreateFirstInstallmentService from '@modules/sales/services/CreateFirstInstallmentService';
+import UpdateSaleService from '@modules/sales/services/UpdateSaleService';
 
 class SaleController {
 
@@ -51,7 +52,6 @@ class SaleController {
       sale_date,
       realty_ammount,
       percentage_sale,
-      company,
       commission,
       bonus,
       origin,
@@ -101,7 +101,6 @@ class SaleController {
       sale_date,
       realty_ammount,
       percentage_sale,
-      company,
       commission,
       bonus,
       origin,
@@ -130,7 +129,6 @@ class SaleController {
       sale_date,
       realty_ammount,
       percentage_sale,
-      company,
       commission,
       bonus,
       origin,
@@ -194,7 +192,6 @@ class SaleController {
       sale_date,
       realty_ammount,
       percentage_sale,
-      company,
       commission,
       bonus,
       origin,
@@ -234,14 +231,23 @@ class SaleController {
   async notValidSale(request:Request, response: Response): Promise<Response> {
     const { motive, another_motive } = request.body;
 
-    const saleRepository = new SaleRepository();
-    const notValidSaleService = new NotValidSaleService(saleRepository);
+    const notValidSaleService = container.resolve(NotValidSaleService);
     
     await notValidSaleService.execute({
       id: request.params.id,
       status: Status.CA,
       motive,
       another_motive,
+    });
+
+    return response.status(200).send();
+  }
+
+  async update(request: Request, response: Response): Promise<Response> {
+    const updateSaleService = container.resolve(UpdateSaleService);
+    await updateSaleService.execute({
+      id: request.params.id,
+      body: request.body
     });
 
     return response.status(200).send();

@@ -4,7 +4,6 @@ import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import AppError from "@shared/errors/AppError";
 import Sale from "@modules/sales/infra/typeorm/entities/Sale";
-import CompanyRepository from "@modules/organizations/infra/typeorm/repositories/CompanyRepository";
 import UsersRepository from "@modules/users/infra/typeorm/repositories/UsersRepository";
 
 class CreateSaleUsedService {
@@ -15,8 +14,6 @@ class CreateSaleUsedService {
     sale_date,
     realty_ammount,
     percentage_sale,
-    company,
-    percentage_company,
     commission,
     bonus,
     origin,
@@ -40,21 +37,13 @@ class CreateSaleUsedService {
       }
     }
 
-    if (company) {
-      const companyRepository = new CompanyRepository();
-      const percentage = await companyRepository.findOne(company.id);
-      if (percentage) {
-        percentage_company = percentage.percentage;
-      }
-    }
+    const ajusted_date = add(sale_date, {hours: 3});
 
     const sale = await this.saleRepository.createSaleUsed({
       sale_type,
-      sale_date: add(sale_date, {hours: 3}),
+      sale_date: ajusted_date,
       realty_ammount,
       percentage_sale,
-      company,
-      percentage_company,
       commission,
       bonus,
       origin,
@@ -69,7 +58,10 @@ class CreateSaleUsedService {
     });
 
     if (!sale) {
-      throw new AppError('Error when creating the sale, check your data');
+      throw new AppError(
+        "Erro durante a criação da venda, ckeck seus dados",
+        400
+      );
     }
 
     return sale;

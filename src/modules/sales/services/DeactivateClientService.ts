@@ -13,7 +13,7 @@ class DeactivateClientService {
     const client = await this.clientRepository.findById(id);
 
     if (!client) {
-      throw new AppError('Client not exists.');
+      throw new AppError("Cliente não existe.", 404);
     }
 
     await this.clientRepository.deactivate(id);

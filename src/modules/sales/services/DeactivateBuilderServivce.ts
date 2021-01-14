@@ -18,7 +18,7 @@ class DeactivateBuilderService {
     const builder = await this.buildersRepository.findById(id);
 
     if (!builder) {
-      throw new AppError('Builder not exists.', 404);
+      throw new AppError("Contrutora não existe.", 404);
     }
 
     await this.buildersRepository.deactivate(id);

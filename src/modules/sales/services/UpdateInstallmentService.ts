@@ -16,6 +16,8 @@ class UpdateInstallmentService {
     const checkInstallmentExists = await this.installmentsRepository.findById(id);
     if (!checkInstallmentExists) {
       throw new AppError("Parcela não existe.", 404);
+    } else if (checkInstallmentExists.status !== StatusInstallment.PEN) {
+      throw new AppError("Parcela não está mais como Pendente.", 400);
     }
     
     const current_date = new Date();
