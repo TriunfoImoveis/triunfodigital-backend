@@ -15,7 +15,7 @@ saleRoutes.get('/', celebrate({
     name: Joi.string().default(''),
     city: Joi.string().required(),
     status: Joi.string().valid(
-      'NAO_VALIDADO', 'CAIU', 'PENDENTE', 'PAGO TOTAL'
+      'NAO_VALIDADO', 'CAIU', 'PENDENTE', 'PAGO_TOTAL'
     ).required(),
   }
 }), saleController.index);
