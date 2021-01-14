@@ -19,7 +19,7 @@ class ListClientService {
     }
 
     if (!client) {
-      throw new AppError("Client not exists.", 404);
+      throw new AppError("Cliente não existe.", 404);
     }
 
     return client;

@@ -14,13 +14,16 @@ class ActivateClientService {
     const client = await this.clientRepository.findById(id);
 
     if (!client) {
-      throw new AppError('Client not exists.');
+      throw new AppError("Cliente não existe.", 404);
     }
 
     const clientActivate = await this.clientRepository.activate(id);
 
     if (!clientActivate) {
-      throw new AppError('Error when activating the client, check your data.');
+      throw new AppError(
+        "Erro durante a atualização do cliente, ckeck seus dados",
+        400
+      );
     }
 
     return clientActivate;

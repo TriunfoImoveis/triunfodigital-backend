@@ -23,13 +23,16 @@ class UpdateBuilderService {
     const checkBuilderExists = await this.buildersRepository.findById(id);
 
     if (!checkBuilderExists) {
-      throw new AppError('Builder not exists.', 404);
+      throw new AppError("Contrutora não existe.", 404);
     }
 
     const builderUpdated = await this.buildersRepository.update(id, data);
 
     if (!builderUpdated) {
-      throw new AppError('Error when updating the Builder, check your data', 400);
+      throw new AppError(
+        "Erro durante a atualização da construtora, ckeck seus dados",
+        400
+      );
     }
 
     return builderUpdated;

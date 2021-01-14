@@ -25,7 +25,10 @@ class CreateRealtyService {
     });
 
     if (!newRealty) {
-      throw new AppError('Error when creating the client, check your data');
+      throw new AppError(
+        "Erro durante a criação do imóvel, ckeck seus dados",
+        400
+      );
     }
 
     return newRealty;

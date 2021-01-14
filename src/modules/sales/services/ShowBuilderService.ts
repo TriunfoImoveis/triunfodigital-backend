@@ -18,7 +18,7 @@ class ShowBuilderService {
     const builder = await this.buildersRepository.findByIdAndActivate(id);
 
     if (!builder) {
-      throw new AppError('Builder not exists.', 404);
+      throw new AppError("Contrutora não existe.", 404);
     }
 
     return builder;

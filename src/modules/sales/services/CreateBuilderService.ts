@@ -24,7 +24,7 @@ class CreateBuilderService {
     const checkBuilderExists = await this.buildersRespository.findByCNPJ(cnpj);
 
     if (checkBuilderExists) {
-      throw new AppError('Builder with this CNPJ already exists.', 400);
+      throw new AppError("Construtora com este CNPJ já existe.", 400);
     }
 
     const builder = await this.buildersRespository.create({
@@ -38,7 +38,10 @@ class CreateBuilderService {
     });
 
     if (!builder) {
-      throw new AppError('Error when creating the Builder, check your data', 400);
+      throw new AppError(
+        "Erro durante a criação da construtora, ckeck seus dados",
+        400
+      );
     }
 
     return builder;

@@ -30,7 +30,7 @@ export enum Status {
   NV  = 'NAO_VALIDADO',
   CA  = 'CAIU',
   PE  = 'PENDENTE',
-  PT  = 'PAGO TOTAL',
+  PT  = 'PAGO_TOTAL',
 }
 
 @Entity('sales')
@@ -47,7 +47,7 @@ class Sale {
   @Column({ type: 'decimal', precision: 14, scale: 2, nullable: false})
   realty_ammount: number;
 
-  @Column({ type: 'integer', nullable: false })
+  @Column({ type: 'decimal', precision: 4, scale: 2, nullable: false})
   percentage_sale: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false})
