@@ -42,7 +42,7 @@ saleRoutes.post('/new', celebrate({
       email: Joi.string().email().required(),
       phone: Joi.string().pattern(/^[0-9]{10,11}$/).required(),
       whatsapp: Joi.string().required(),
-      date_birth: Joi.date().iso().less(new Date()).required(),
+      date_birth: Joi.date().iso().required(),
       occupation: Joi.string().required(),
       civil_status: Joi.string().valid(
         'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
@@ -56,7 +56,7 @@ saleRoutes.post('/new', celebrate({
     installment: Joi.object({
       installment_number: Joi.number().integer().min(1).required(),
       value: Joi.number().min(0).required(),
-      due_date: Joi.date().iso().greater(new Date()).required(),
+      due_date: Joi.date().iso().required(),
     }).required(),
   }
 }), saleController.createSaleNew);
@@ -85,7 +85,7 @@ saleRoutes.post('/used', celebrate({
       email: Joi.string().email().required(),
       phone: Joi.string().pattern(/^[0-9]{10,11}$/).required(),
       whatsapp: Joi.string().required(),
-      date_birth: Joi.date().iso().less(new Date()).required(),
+      date_birth: Joi.date().iso().required(),
       occupation: Joi.string().required(),
       civil_status: Joi.string().valid(
         'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
@@ -99,7 +99,7 @@ saleRoutes.post('/used', celebrate({
       email: Joi.string().email().required(),
       phone: Joi.string().pattern(/^[0-9]{10,11}$/).required(),
       whatsapp: Joi.string().required(),
-      date_birth: Joi.date().iso().less(new Date()).required(),
+      date_birth: Joi.date().iso().required(),
       occupation: Joi.string().required(),
       civil_status: Joi.string().valid(
         'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
@@ -114,7 +114,7 @@ saleRoutes.post('/used', celebrate({
     installment: Joi.object({
       installment_number: Joi.number().integer().min(1).required(),
       value: Joi.number().min(0).required(),
-      due_date: Joi.date().iso().greater(new Date()).required(),
+      due_date: Joi.date().iso().required(),
     }).required(), 
   }
 }), saleController.createSaleUsed);
