@@ -20,7 +20,7 @@ saleRoutes.get('/', celebrate({
 
 saleRoutes.post('/new', celebrate({
   [Segments.BODY]: {
-    sale_date: Joi.date().iso().max(new Date()).required(),
+    sale_date: Joi.date().iso().required(),
     realty_ammount: Joi.number().min(0).required(),
     percentage_sale: Joi.number().min(0).required(),
     commission: Joi.number().min(0).required(),
@@ -64,7 +64,7 @@ saleRoutes.post('/new', celebrate({
 
 saleRoutes.post('/used', celebrate({
   [Segments.BODY]: {
-    sale_date: Joi.date().iso().max(new Date()).required(),
+    sale_date: Joi.date().iso().required(),
     realty_ammount: Joi.number().min(0).required(),
     percentage_sale: Joi.number().min(0).required(),
     commission: Joi.number().min(0).required(),
