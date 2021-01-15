@@ -1,34 +1,30 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import RankingService from '@modules/users/services/RankingService';
-import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
-import SaleRepository from '@modules/sales/infra/typeorm/repositories/SaleRepository';
 
 
 class RankingController {
   async index(request: Request, response: Response): Promise<Response> {
     const {
+      type,
       city,
-      month,
-      year,
+      user,
     } = request.query;
-
-    if (typeof city !== "string") {
-      throw new AppError("City not is valid string.");
+    if (typeof type !== "string") {
+      throw new AppError("Tipo não é uma string válida.");
+    } else if (typeof city !== "string") {
+      throw new AppError("Cidade não é uma string válida.");
+    } else if (typeof user !== "string") {
+      throw new AppError("Tipo de Usuário não é uma string válida.");
     }
 
-    const usersRepository = new UsersRepository;
-    const salesRepository = new SaleRepository;
-    const rankingService = new RankingService(
-      usersRepository,
-      salesRepository
-    );
-
+    const rankingService = container.resolve(RankingService);
     const ranking = await rankingService.execute({
+      type,
       city,
-      month: Number(month),
-      year: Number(year),
+      user,
     });
 
     return response.json(ranking);

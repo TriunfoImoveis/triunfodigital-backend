@@ -64,6 +64,9 @@ class User {
   @ManyToMany(type => Sale, sale => sale.sale_has_sellers)
   sales: Sale[];
 
+  @ManyToMany(type => Sale, sale => sale.sale_has_captivators)
+  captivators: Sale[];
+
   @CreateDateColumn()
   created_at: Date;
 

@@ -88,31 +88,9 @@ class UsersRepository implements IUserRepository {
     }
   }
 
-  async findUserForCity(city: string): Promise<User[]> {
+  async findUsers(data: IRequestUserDTO): Promise<User[]> {
     try {
-      const users = await this.ormRepository.createQueryBuilder("user")
-        .select()
-        .innerJoinAndSelect("user.subsidiary", "subsidiary")
-        .innerJoinAndSelect("user.office", "office")
-        .where("user.active = true")
-        .andWhere("subsidiary.city = :city", { city })
-        .andWhere("office.name = :office", { office: "Corretor" })
-        .orderBy("user.name", "ASC")
-        .getMany();
-
-      return users;
-    } catch (err) {
-      throw new AppError(err.detail);
-    }
-  }
-
-  async findUsers({
-    name,
-    city,
-    departament,
-    office,
-  }: IRequestUserDTO): Promise<User[]> {
-    try {
+      const {name, city, departament, office} = data;
       const users = await this.ormRepository.createQueryBuilder("user")
         .select()
         .innerJoinAndSelect("user.office", "office")
@@ -132,17 +110,32 @@ class UsersRepository implements IUserRepository {
     }
   }
 
-  async quantitySellers(id: string): Promise<number> {
+  async quantitySellers(id_sale: string): Promise<number> {
     try {
       const quantitySellers = await this.ormRepository.createQueryBuilder("user")
         .select("user.id")
         .innerJoinAndSelect(
           "user.sales", "sales",
-          "sales_user.sale_id = :sale", { sale: id }
+          "sales_user.sale_id = :sale", { sale: id_sale }
+        )
+        .getCount();
+      return quantitySellers;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async quantityCaptivators(id_sale: string): Promise<number> {
+    try {
+      const quantityCaptivators = await this.ormRepository.createQueryBuilder("user")
+        .select("user.id")
+        .innerJoinAndSelect(
+          "user.captivators", "captivators",
+          "captivators_user.sale_id = :sale", { sale: id_sale }
         )
         .getCount();
 
-      return quantitySellers;
+      return quantityCaptivators;
     } catch (err) {
       throw new AppError(err.detail);
     }

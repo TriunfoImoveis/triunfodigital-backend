@@ -14,14 +14,9 @@ rankingRouter.use(ensuredAuthenticated);
 
 rankingRouter.get('/', celebrate({
   [Segments.QUERY]: {
+    type: Joi.string().valid('ANUAL', 'MENSAL').default('ANUAL'),
     city: Joi.string().required(),
-    month: Joi.number().integer().positive().min(1).max(12),
-    year: Joi.number()
-      .integer()
-      .positive()
-      .min(2010)
-      .max(3000)
-      .default(date.getFullYear()),
+    user: Joi.string().valid('Corretor', 'Captador').required(),
   }
 }), rankingController.index);
 

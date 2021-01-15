@@ -6,7 +6,6 @@ import IRequestUserDTO from '@modules/users/dtos/IRequestUserDTO';
 export default interface IUserRepository {
   findByEmail(email: string): Promise<User | undefined>;
   findById(id: string): Promise<User | undefined>;
-  findUserForCity(city: string): Promise<User[]>;
   findUsers(
     data: IRequestUserDTO
   ): Promise<User[]>;
@@ -15,5 +14,6 @@ export default interface IUserRepository {
   update(id: string, data: IUpdateUserDTO): Promise<User | undefined>;
   updateAvatar(data: IUpdateUserDTO): Promise<User>;
 
-  quantitySellers(id: string): Promise<number>;
+  quantitySellers(id_sale: string): Promise<number>;
+  quantityCaptivators(id_sale: string): Promise<number>;
 }

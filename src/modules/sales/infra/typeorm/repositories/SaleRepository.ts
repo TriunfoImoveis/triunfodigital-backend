@@ -173,38 +173,10 @@ class SaleRepository implements ISaleRepository {
     }
   }
 
-
-  async salesForUserAndYear(id: string, year: number): Promise<Sale[]> {
-    try {
-      const sales = await this.ormRepository.createQueryBuilder("sale")
-        .select(["sale.id", "sale.realty_ammount"])
-        .innerJoinAndSelect(
-          "sale_has_sellers", "sellers",
-          "sellers.sale_id = sale.id"
-        )
-        .innerJoinAndSelect(
-          "users", "user",
-          "sellers.user_id = user.id"
-        )
-        .where("user.id = :id_user", { id_user: id })
-        .andWhere(
-          "extract(year from sale.sale_date) = :year",
-          { year: year }
-        )
-        .andWhere(
-          "sale.status IN (:...status)",
-          { status: ["PENDENTE", "PAGO_TOTAL"] }
-        )
-        .getMany();
-
-      return sales;
-    } catch (err) {
-      throw new AppError(err.detail);
-    }
-  }
-
-  async salesForUserAndMonthAndYear(
-    id: string, month: number, year: number
+  async salesForUserSellers(
+    id: string, 
+    format_date: string, 
+    date: string
   ): Promise<Sale[]> {
     try {
       const sales = await this.ormRepository.createQueryBuilder("sale")
@@ -219,12 +191,41 @@ class SaleRepository implements ISaleRepository {
         )
         .where("user.id = :id_user", { id_user: id })
         .andWhere(
-          "extract(year from sale.sale_date) = :year",
-          { year: year }
+          "to_char(sale.sale_date, :format) = :date",
+          { format: format_date, date: date }
         )
         .andWhere(
-          "extract(month from sale.sale_date) = :month",
-          { month: month }
+          "sale.status IN (:...status)",
+          { status: ["PENDENTE", "PAGO_TOTAL"] }
+        )
+        .getMany();
+
+      return sales;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async salesForUserCaptivators(
+    id: string, 
+    format_date: string, 
+    date: string
+  ): Promise<Sale[]> {
+    try {
+      const sales = await this.ormRepository.createQueryBuilder("sale")
+        .select(["sale.id", "sale.realty_ammount"])
+        .innerJoinAndSelect(
+          "sale_has_captivators", "captivators",
+          "captivators.sale_id = sale.id"
+        )
+        .innerJoinAndSelect(
+          "users", "user",
+          "captivators.user_id = user.id"
+        )
+        .where("user.id = :id_user", { id_user: id })
+        .andWhere(
+          "to_char(sale.sale_date, :format) = :date",
+          { format: format_date, date: date }
         )
         .andWhere(
           "sale.status IN (:...status)",
