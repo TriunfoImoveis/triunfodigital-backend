@@ -18,7 +18,7 @@ installmentRoutes.post('/:id', celebrate({
       Joi.object({
         installment_number: Joi.number().integer().min(1).required(),
         value: Joi.number().min(0).required(),
-        due_date: Joi.date().iso().greater(new Date()).required(),
+        due_date: Joi.date().iso().required(),
       })
     ).min(1).required()
   }
