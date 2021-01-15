@@ -20,10 +20,14 @@ export default interface ISaleRepository {
   ): Promise<void>;
   notValidSale(data: INotValidSaleDTO): Promise<void>;
 
-  salesForUserAndYear(id: string, year: number): Promise<Sale[]>;
-  salesForUserAndMonthAndYear(
+  salesForUserSellers(
     id: string,
-    month: number,
-    year: number,
+    format_date: string,
+    date: string,
+  ): Promise<Sale[]>;
+  salesForUserCaptivators(
+    id: string,
+    format_date: string,
+    date: string,
   ): Promise<Sale[]>;
 }

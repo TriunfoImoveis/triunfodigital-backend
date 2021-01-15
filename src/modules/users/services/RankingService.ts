@@ -1,60 +1,107 @@
+import { inject, injectable } from "tsyringe";
+import { format, getMonth, getYear } from "date-fns";
+
 import IUserRepository from "@modules/users/repositories/IUserRepository";
 import IResponseRankingDTO from "@modules/users/dtos/IResponseRankingDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
-
+import Sale from "@modules/sales/infra/typeorm/entities/Sale";
 
 interface IRequestRankingDTO {
+  type: string;
   city: string;
-  month?: number;
-  year: number;
+  user: string;
 }
 
+@injectable()
 class RankingService {
   constructor(
+    @inject('UsersRepository')
     private usersRepository: IUserRepository,
+
+    @inject('SalesRepository')
     private salesRepository: ISaleRepository,
   ) {}
 
   public async execute({
+    type,
     city,
-    month,
-    year,
+    user,
   }: IRequestRankingDTO): Promise<IResponseRankingDTO[]> {
-    const usersForCity = await this.usersRepository.findUserForCity(city);
 
-    let ranking: IResponseRankingDTO[];
+    // Pega a data atual e o formato Ano e Mês juntos para filtrar as vendas
+    var date = new Date();
+    if (type === "MENSAL") {
+      var format_date = "yyyyMM";
+      var dateFormated = format(date, format_date);
+    } else {
+      var format_date = "yyyy";
+      var dateFormated = format(date, format_date);
+    }
 
-    ranking = await Promise.all(
-      usersForCity.map(async (user) => {
-        let vgv = 0;
+    // Verifica se é ranking de Corretores ou Captadores e filtra os usuários
+    var users = await this.usersRepository.findUsers({
+      city,
+      office: "Corretor",
+      departament: "%",
+      name: "%"
+    });
+    // Gera o ranking e VGV de cada usuário (Corretores ou captadores)
+    var ranking: IResponseRankingDTO[];
+    if (user === "Captador") {
+      // Gerar ranking de Corretores Captadores
+      ranking = await Promise.all(
+        users.map(async (user) => {
+          const sales = await this.salesRepository.salesForUserCaptivators(user.id, format_date, dateFormated);
 
-        if (month) {
-          var sales = await this.salesRepository.salesForUserAndMonthAndYear(user.id, month, year);
-        } else {
-          var sales = await this.salesRepository.salesForUserAndYear(user.id, year);
-        }
+          let vgv = 0;
+          await Promise.all(
+            sales.map(async (sale) => {
+      
+              const quantity = await this.usersRepository.quantityCaptivators(sale.id);
+              const partialSale = sale.realty_ammount/quantity;
+              vgv += partialSale;
+      
+            })
+          );
 
-        await Promise.all(
-          sales.map(async (sale) => {
+          return {
+            id: user.id,
+            avatar: user.avatar,
+            avatar_url: user.getAvatarUrl(),
+            name: user.name,
+            vgv: Number(vgv.toFixed(2)),
+          };
+        }),
+      );
+    } else {
+      // Gerar ranking de Corretores Vendedores
+      ranking = await Promise.all(
+        users.map(async (user) => {
+          const sales = await this.salesRepository.salesForUserSellers(user.id, format_date, dateFormated);
+          
+          let vgv = 0;
+          await Promise.all(
+            sales.map(async (sale) => {
+      
+              const quantity = await this.usersRepository.quantitySellers(sale.id);
+              const partialSale = sale.realty_ammount/quantity;
+              vgv += partialSale;
+      
+            })
+          );
 
-            const quantitySale = await this.usersRepository.quantitySellers(sale.id);
-            const partialSale = sale.realty_ammount/quantitySale;
-            vgv += partialSale;
+          return {
+            id: user.id,
+            avatar: user.avatar,
+            avatar_url: user.getAvatarUrl(),
+            name: user.name,
+            vgv: Number(vgv.toFixed(2)),
+          };
+        }),
+      );
+    }
 
-          })
-        );
-
-        return {
-          id: user.id,
-          avatar: user.avatar,
-          avatar_url: user.getAvatarUrl(),
-          name: user.name,
-          vgv: Number(vgv.toFixed(2)),
-        };
-
-      }),
-    );
-
+    // Ordena o ranking do maior VGV para o menor
     ranking.sort((a ,b) => {
       return b.vgv - a.vgv;
     });
