@@ -38,6 +38,10 @@ class CreateSaleUsedService {
       }
     }
 
+    if (installment.value > commission) {
+      throw new AppError("Valor da parcela não pode ser maior que a comissão.", 400);
+    }
+
     const ajusted_date = add(sale_date, {hours: 3});
     installment.due_date = add(sale_date, {hours: 3});
 
