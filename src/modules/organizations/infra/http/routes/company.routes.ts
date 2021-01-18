@@ -21,7 +21,6 @@ companyRouter.post('/', celebrate({
   [Segments.BODY]: {
     name: Joi.string().required(),
     cnpj: Joi.string().pattern(/^[0-9]{14,14}$/).required(),
-    percentage: Joi.number().min(0).required(),
   }
 }), companyController.create);
 
@@ -32,7 +31,6 @@ companyRouter.put('/:id', celebrate({
   [Segments.BODY]: {
     name: Joi.string(),
     cnpj: Joi.string().pattern(/^[0-9]{14,14}$/),
-    percentage: Joi.number().min(0).max(99),
     active: Joi.boolean(),
   }
 }), companyController.update);

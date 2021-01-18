@@ -9,22 +9,23 @@ class CreateCompanyService {
   public async execute({
     name,
     cnpj,
-    percentage,
   }: ICreateCompanyDTO): Promise<Company> {
     const checkCompanyExists = await this.companyRepository.findByCNPJ(cnpj);
 
     if (checkCompanyExists) {
-      throw new AppError('Company with this CNPJ already exists.');
+      throw new AppError("Empresa com este CNPJ já existe.", 400);
     }
 
     const company = await this.companyRepository.create({
       name,
       cnpj,
-      percentage,
     });
 
     if (!company) {
-      throw new AppError('Error when creating the Company, check your data');
+      throw new AppError(
+        "Erro ao criar empresa, check seus dados e tente novamente.", 
+        400
+      );
     }
 
     return company;

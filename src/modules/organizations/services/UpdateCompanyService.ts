@@ -18,13 +18,16 @@ class UpdateCompanyService {
     const checkCompanyExists = await this.companyRepository.findOne(id);
 
     if (!checkCompanyExists) {
-      throw new AppError('Company not exists.');
+      throw new AppError("Empresa não existe.", 404);
     }
 
     const companyUpdated = await this.companyRepository.update(id, data);
 
     if (!companyUpdated) {
-      throw new AppError('Error when updating the Company, check your data');
+      throw new AppError(
+        "Erro ao atualizar empresa, check seus dados e tente novamente.", 
+        400
+      );
     }
 
     return companyUpdated;

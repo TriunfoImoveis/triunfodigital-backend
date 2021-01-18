@@ -30,7 +30,6 @@ class CompanyController {
     const {
       name,
       cnpj,
-      percentage,
     } = request.body;
 
     const companyRepository = new CompanyRepository();
@@ -39,7 +38,6 @@ class CompanyController {
     const newCompany = await createCompanyService.execute({
       name,
       cnpj,
-      percentage,
     });
 
     return response.json(newCompany);
