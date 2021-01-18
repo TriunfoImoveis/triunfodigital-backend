@@ -8,6 +8,7 @@ import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IRequestSaleDTO from "@modules/sales/dtos/IRequestSaleDTO";
 import INotValidSaleDTO from "@modules/sales/dtos/INotValidSaleDTO";
 import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
+import ICreateInstallmentDTO from "@modules/sales/dtos/ICreateInstallmentDTO";
 
 class SaleRepository implements ISaleRepository {
   private ormRepository: Repository<Sale>;
@@ -76,7 +77,10 @@ class SaleRepository implements ISaleRepository {
   }
 
 
-  async createSaleNew(data: ICreateSaleNewDTO): Promise<Sale | undefined> {
+  async createSaleNew(
+    data: ICreateSaleNewDTO, 
+    installment: ICreateInstallmentDTO
+  ): Promise<Sale | undefined> {
     const connection = getConnection();
     const queryRunner = connection.createQueryRunner();
 
@@ -102,6 +106,9 @@ class SaleRepository implements ISaleRepository {
         sale.sale_has_sellers = users_sellers;
         const newSale = await queryRunner.manager.save(sale);
 
+        installment.sale = newSale;
+        await queryRunner.manager.save('Installment', installment);
+
         await queryRunner.commitTransaction();
 
         return newSale;
@@ -117,7 +124,10 @@ class SaleRepository implements ISaleRepository {
   }
 
 
-  async createSaleUsed(data: ICreateSaleUsedDTO): Promise<Sale | undefined> {
+  async createSaleUsed(
+    data: ICreateSaleUsedDTO,
+    installment: ICreateInstallmentDTO
+  ): Promise<Sale | undefined> {
     const connection = getConnection();
     const queryRunner = connection.createQueryRunner();
 
@@ -147,6 +157,9 @@ class SaleRepository implements ISaleRepository {
         sale.sale_has_captivators = users_captivators;
         sale.sale_has_sellers = users_sellers;
         const newSale = await queryRunner.manager.save(sale);
+
+        installment.sale = newSale;
+        await queryRunner.manager.save('Installment', installment);
 
         await queryRunner.commitTransaction();
 

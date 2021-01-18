@@ -111,14 +111,7 @@ class SaleController {
       user_coordinator,
       users_directors,
       users_sellers,
-    });
-    
-    // Criar 1º parcela da venda
-    const createInstallmentService = container.resolve(CreateFirstInstallmentService);
-    await createInstallmentService.execute({
-      id: sale.id,
-      installment,
-    });
+    }, installment);
 
     return response.json(sale);
   }
@@ -203,14 +196,7 @@ class SaleController {
       users_directors,
       users_captivators,
       users_sellers,
-    });
-
-    // Criar 1º parcela da venda
-    const createInstallmentService = container.resolve(CreateFirstInstallmentService);
-    await createInstallmentService.execute({
-      id: sale.id,
-      installment,
-    });
+    }, installment);
 
     return response.json(sale);
   }
