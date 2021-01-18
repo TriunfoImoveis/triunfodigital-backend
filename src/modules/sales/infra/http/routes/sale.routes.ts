@@ -148,8 +148,10 @@ saleRoutes.put('/:id', celebrate({
     id: Joi.string().uuid(),
   },
   [Segments.BODY]: {
-    sale_date: Joi.date().iso().max(new Date()),
+    sale_date: Joi.date().iso(),
     realty_ammount: Joi.number().min(0),
+    percentage_sale: Joi.number().min(0),
+    commission: Joi.number().min(0),
     company: Joi.string().uuid(),
     percentage_company: Joi.number().min(0),
     bonus: Joi.number().min(0),
@@ -170,7 +172,7 @@ saleRoutes.put('/:id', celebrate({
       email: Joi.string().email(),
       phone: Joi.string().pattern(/^[0-9]{10,11}$/),
       whatsapp: Joi.string(),
-      date_birth: Joi.date().iso().less(new Date()),
+      date_birth: Joi.date().iso(),
       occupation: Joi.string(),
       civil_status: Joi.string().valid(
         'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
@@ -184,7 +186,7 @@ saleRoutes.put('/:id', celebrate({
       email: Joi.string().email(),
       phone: Joi.string().pattern(/^[0-9]{10,11}$/),
       whatsapp: Joi.string(),
-      date_birth: Joi.date().iso().less(new Date()),
+      date_birth: Joi.date().iso(),
       occupation: Joi.string(),
       civil_status: Joi.string().valid(
         'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'

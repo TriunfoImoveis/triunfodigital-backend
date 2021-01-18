@@ -29,7 +29,10 @@ class CreateUserService {
     const checkEmailExist = await this.usersRepository.findByEmail(email);
 
     if (checkEmailExist) {
-      throw new AppError('E-mail address already used.', 400);
+      throw new AppError(
+        "Endereço de e-mail já usado.", 
+        400
+      );
     }
 
     const hashedPassword = await hash(password, 8);
@@ -48,7 +51,10 @@ class CreateUserService {
     });
 
     if (!user) {
-      throw new AppError('error when creating the user, check your data', 400);
+      throw new AppError(
+        "Erro ao criar o usuário, check seus dados e tente novamente.", 
+        400
+      );
     }
 
     return user;
