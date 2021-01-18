@@ -21,10 +21,10 @@ saleRoutes.get('/', celebrate({
 saleRoutes.post('/new', celebrate({
   [Segments.BODY]: {
     sale_date: Joi.date().iso().required(),
-    realty_ammount: Joi.number().min(0).required(),
-    percentage_sale: Joi.number().min(0).required(),
-    commission: Joi.number().min(0).required(),
-    bonus: Joi.number().min(0),
+    realty_ammount: Joi.number().positive().required(),
+    percentage_sale: Joi.number().positive().required(),
+    commission: Joi.number().positive().required(),
+    bonus: Joi.number().positive(),
     origin: Joi.string().uuid().required(),
     payment_type: Joi.string().uuid().required(),
     realty: Joi.object({
@@ -55,7 +55,7 @@ saleRoutes.post('/new', celebrate({
     users_sellers: Joi.array().min(1).required(),
     installment: Joi.object({
       installment_number: Joi.number().integer().min(1).required(),
-      value: Joi.number().min(0).required(),
+      value: Joi.number().positive().required(),
       due_date: Joi.date().iso().required(),
     }).required(),
   }
@@ -65,10 +65,10 @@ saleRoutes.post('/new', celebrate({
 saleRoutes.post('/used', celebrate({
   [Segments.BODY]: {
     sale_date: Joi.date().iso().required(),
-    realty_ammount: Joi.number().min(0).required(),
-    percentage_sale: Joi.number().min(0).required(),
-    commission: Joi.number().min(0).required(),
-    bonus: Joi.number().min(0),
+    realty_ammount: Joi.number().positive().required(),
+    percentage_sale: Joi.number().positive().required(),
+    commission: Joi.number().positive().required(),
+    bonus: Joi.number().positive(),
     origin: Joi.string().uuid().required(),
     payment_type: Joi.string().uuid().required(),
     realty: Joi.object({
@@ -113,7 +113,7 @@ saleRoutes.post('/used', celebrate({
     users_sellers: Joi.array().min(1).required(),
     installment: Joi.object({
       installment_number: Joi.number().integer().min(1).required(),
-      value: Joi.number().min(0).required(),
+      value: Joi.number().positive().required(),
       due_date: Joi.date().iso().required(),
     }).required(), 
   }
@@ -148,11 +148,13 @@ saleRoutes.put('/:id', celebrate({
     id: Joi.string().uuid(),
   },
   [Segments.BODY]: {
-    sale_date: Joi.date().iso().max(new Date()),
-    realty_ammount: Joi.number().min(0),
+    sale_date: Joi.date().iso(),
+    realty_ammount: Joi.number().positive(),
+    percentage_sale: Joi.number().positive(),
+    commission: Joi.number().positive(),
     company: Joi.string().uuid(),
-    percentage_company: Joi.number().min(0),
-    bonus: Joi.number().min(0),
+    percentage_company: Joi.number().positive(),
+    bonus: Joi.number().positive(),
     origin: Joi.string().uuid(),
     payment_type: Joi.string().uuid(),
     builder: Joi.string().uuid(),
@@ -170,7 +172,7 @@ saleRoutes.put('/:id', celebrate({
       email: Joi.string().email(),
       phone: Joi.string().pattern(/^[0-9]{10,11}$/),
       whatsapp: Joi.string(),
-      date_birth: Joi.date().iso().less(new Date()),
+      date_birth: Joi.date().iso(),
       occupation: Joi.string(),
       civil_status: Joi.string().valid(
         'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
@@ -184,7 +186,7 @@ saleRoutes.put('/:id', celebrate({
       email: Joi.string().email(),
       phone: Joi.string().pattern(/^[0-9]{10,11}$/),
       whatsapp: Joi.string(),
-      date_birth: Joi.date().iso().less(new Date()),
+      date_birth: Joi.date().iso(),
       occupation: Joi.string(),
       civil_status: Joi.string().valid(
         'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'

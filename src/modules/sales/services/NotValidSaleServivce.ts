@@ -31,7 +31,10 @@ class NotValidSaleService {
 
     if (sale.installments.length !== 0) {
       sale.installments.forEach(async (installment)=>{
-        if (installment.status === StatusInstallment.PEN) {
+        if (
+          (installment.status === StatusInstallment.PEN) || 
+          (installment.status === StatusInstallment.VEN)
+        ) {
           await this.installmentsRepository.update(
             installment.id, 
             {
