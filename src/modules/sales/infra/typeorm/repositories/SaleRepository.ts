@@ -177,10 +177,25 @@ class SaleRepository implements ISaleRepository {
 
   async update(id: string, body: IUpdateSaleDTO): Promise<Sale | undefined> {
     try {
-      await this.ormRepository.update(id, body);
-      const sale = this.ormRepository.findOne(id);
+      const sale = await this.ormRepository.findOne(id);
+      if (sale) {
+        if (body.users_sellers) {
+          sale.sale_has_sellers = body.users_sellers;
+          delete body.users_sellers;
+        }
+        if (body.users_captivators) {
+          sale.sale_has_captivators = body.users_captivators;
+          delete body.users_captivators;
+        }
+        await this.ormRepository.save(sale);
+      }
+      if (Object.keys(body).length !== 0) {
+        await this.ormRepository.update(id, body);
+      }
 
-      return sale;
+      const saleupdated = this.ormRepository.findOne(id);
+
+      return saleupdated;
     } catch (err) {
       throw new AppError(err.detail);
     }
