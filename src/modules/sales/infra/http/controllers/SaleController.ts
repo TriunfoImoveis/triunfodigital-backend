@@ -13,7 +13,6 @@ import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService
 import { SaleType, Status } from '@modules/sales/infra/typeorm/entities/Sale';
 import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
 import NotValidSaleService from '@modules/sales/services/NotValidSaleServivce';
-import CreateFirstInstallmentService from '@modules/sales/services/CreateFirstInstallmentService';
 import UpdateSaleService from '@modules/sales/services/UpdateSaleService';
 
 class SaleController {
@@ -211,7 +210,7 @@ class SaleController {
       request.params.id,
     );
 
-    return response.status(200).send("Venda validada com sucesso.");
+    return response.status(204).send();
   }
 
   async notValidSale(request:Request, response: Response): Promise<Response> {
