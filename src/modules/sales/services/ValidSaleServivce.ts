@@ -26,12 +26,12 @@ class ValidSaleService {
         totalValueInstallments += Number(installment.value);
 
         // Verificar se a primeira parcela está com o status de PAGO.
-        if (installment.installment_number === 1 && installment.status !== StatusInstallment.PAG) {
-          throw new AppError(
-            "Antes de validar é necessário confirmar o pagamento da primeira parcela.", 
-            400
-          );
-        }
+        // if (installment.installment_number === 1 && installment.status !== StatusInstallment.PAG) {
+        //   throw new AppError(
+        //     "Antes de validar é necessário confirmar o pagamento da primeira parcela.", 
+        //     400
+        //   );
+        // }
       });
 
       // Comparar o total das parcelas com o valor da comissão.
