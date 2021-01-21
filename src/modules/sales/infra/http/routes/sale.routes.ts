@@ -53,6 +53,8 @@ saleRoutes.post('/new', celebrate({
     user_coordinator: Joi.string().uuid(),
     users_directors: Joi.array().min(2).max(2).required(),
     users_sellers: Joi.array().min(1).required(),
+    value_signal: Joi.number().positive().required(),
+    pay_date_signal: Joi.date().iso().required(),
     installment: Joi.object({
       installment_number: Joi.number().integer().min(1).required(),
       value: Joi.number().positive().required(),
@@ -111,6 +113,8 @@ saleRoutes.post('/used', celebrate({
     users_directors: Joi.array().min(2).max(2).required(),
     users_captivators: Joi.array().min(1).required(),
     users_sellers: Joi.array().min(1).required(),
+    value_signal: Joi.number().positive().required(),
+    pay_date_signal: Joi.date().iso().required(),
     installment: Joi.object({
       installment_number: Joi.number().integer().min(1).required(),
       value: Joi.number().positive().required(),
@@ -198,7 +202,15 @@ saleRoutes.put('/:id', celebrate({
     users_directors: Joi.array().min(2).max(2),
     users_captivators: Joi.array().min(1),
     users_sellers: Joi.array().min(1),
+    value_signal: Joi.number().positive(),
+    pay_date_signal: Joi.date().iso(),
   }
 }), saleController.update);
+
+saleRoutes.patch('/valid_signal/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  },
+}), saleController.validSignal);
 
 export default saleRoutes;

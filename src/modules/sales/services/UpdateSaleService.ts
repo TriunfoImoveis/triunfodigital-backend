@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
+import { add } from "date-fns";
 
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
 import AppError from "@shared/errors/AppError";
 import IRealtyRepository from "@modules/sales/repositories/IRealtyRepository";
 import IClientRepository from "@modules/sales/repositories/IClientRepository";
-import { add } from "date-fns";
 
 interface IRequestDTO {
   id: string;
@@ -86,7 +86,14 @@ class UpdateSaleService {
         )
         body.sale_date = ajusted_date;
       }
-      
+      if (body.pay_date_signal) {
+        const ajusted_date = add(
+          body.pay_date_signal, 
+          {hours: 3}
+        )
+        body.pay_date_signal = ajusted_date;
+      }
+
       await this.salesRepository.update(id, body);
     }
   }

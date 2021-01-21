@@ -295,6 +295,18 @@ class SaleRepository implements ISaleRepository {
       throw new AppError(err.detail);
     }
   }
+
+  async validSignal(id: string, status: Boolean): Promise<void> {
+    try {
+      await this.ormRepository.update(
+        id, 
+        {
+          payment_signal: status
+        });
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
 }
 
 export default SaleRepository;

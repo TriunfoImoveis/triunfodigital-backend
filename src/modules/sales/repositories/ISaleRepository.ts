@@ -35,4 +35,6 @@ export default interface ISaleRepository {
     format_date: string,
     date: string,
   ): Promise<Sale[]>;
+
+  validSignal(id: string, status: Boolean): Promise<void>;
 }

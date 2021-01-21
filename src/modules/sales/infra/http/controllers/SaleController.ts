@@ -12,8 +12,9 @@ import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
 import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService';
 import { SaleType, Status } from '@modules/sales/infra/typeorm/entities/Sale';
 import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
-import NotValidSaleService from '@modules/sales/services/NotValidSaleServivce';
+import NotValidSaleService from '@modules/sales/services/NotValidSaleService';
 import UpdateSaleService from '@modules/sales/services/UpdateSaleService';
+import ValidSignalService from '@modules/sales/services/ValidSignalService';
 
 class SaleController {
 
@@ -61,6 +62,8 @@ class SaleController {
       user_coordinator,
       users_directors,
       users_sellers,
+      value_signal,
+      pay_date_signal,
       installment,
     } = request.body;
     
@@ -110,6 +113,8 @@ class SaleController {
       user_coordinator,
       users_directors,
       users_sellers,
+      value_signal,
+      pay_date_signal,
     }, installment);
 
     return response.json(sale);
@@ -132,6 +137,8 @@ class SaleController {
       users_directors,
       users_captivators,
       users_sellers,
+      value_signal,
+      pay_date_signal,
       installment,
     } = request.body;
 
@@ -195,6 +202,8 @@ class SaleController {
       users_directors,
       users_captivators,
       users_sellers,
+      value_signal,
+      pay_date_signal,
     }, installment);
 
     return response.json(sale);
@@ -236,6 +245,16 @@ class SaleController {
     });
 
     return response.status(200).send();
+  }
+
+  async validSignal(request:Request, response: Response): Promise<Response> {
+    const validSignalService = container.resolve(ValidSignalService);
+    
+    await validSignalService.execute(
+      request.params.id,
+    );
+
+    return response.status(204).send();
   }
 }
 

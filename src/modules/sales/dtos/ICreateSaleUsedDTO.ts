@@ -21,4 +21,6 @@ export default interface ICreateSaleUsedDTO {
   users_directors: User[];
   users_captivators: User[];
   users_sellers: User[];
+  value_signal: number;
+  pay_date_signal: Date;
 }
