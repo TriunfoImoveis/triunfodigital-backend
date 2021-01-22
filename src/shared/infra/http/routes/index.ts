@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 // USERS
 import usersRouter from '@modules/users/infra/http/routes/user.routes';
+import passwordRouter from '@modules/users/infra/http/routes/password.routes';
 import sessionRouter from '@modules/users/infra/http/routes//session.routes';
 import rankingRouter from '@modules/users/infra/http/routes/ranking.routes';
 
@@ -26,6 +27,7 @@ const routes = Router();
 
 // Module Users
 routes.use('/users', usersRouter);
+routes.use('/password', passwordRouter);
 routes.use('/sessions', sessionRouter);
 routes.use('/ranking', rankingRouter);
 

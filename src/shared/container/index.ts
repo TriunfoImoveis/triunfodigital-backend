@@ -30,11 +30,18 @@ import IRealtyRepository from '@modules/sales/repositories/IRealtyRepository';
 import RealtyRepository from '@modules/sales/infra/typeorm/repositories/RealtyRepository';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import SaleRepository from '@modules/sales/infra/typeorm/repositories/SaleRepository';
+import IUserTokenRepository from '@modules/users/repositories/IUserTokenRepository';
+import UserTokensRepository from '@modules/users/infra/typeorm/repositories/UserTokensRepository';
 
 // USER
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
   UsersRepository,
+);
+
+container.registerSingleton<IUserTokenRepository>(
+  'UserTokensRepository',
+  UserTokensRepository,
 );
 // USER
 
