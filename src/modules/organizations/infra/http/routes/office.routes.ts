@@ -3,6 +3,7 @@ import { celebrate, Joi, Segments } from 'celebrate';
 
 import OfficeController from '@modules/organizations/infra/http/controllers/OfficeController';
 import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
+import validatorFields from '@shared/infra/http/validators/validatorFields';
 
 const officeRouter = Router();
 const officeController = new OfficeController();
@@ -15,7 +16,8 @@ officeRouter.post(
   '/',
   celebrate({
     [Segments.BODY]: {
-      name: Joi.string().required(),
+      name: Joi.string().required()
+        .messages(validatorFields({name: "'nome'"})),
     },
   }),
   officeController.create,
@@ -38,8 +40,8 @@ officeRouter.put(
       id: Joi.string().uuid(),
     },
     [Segments.BODY]: {
-      name: Joi.string(),
-      active: Joi.boolean(),
+      name: Joi.string().messages(validatorFields({name: "'nome'"})),
+      active: Joi.boolean().messages(validatorFields({name: "'ativo'"})),
     },
   }),
   officeController.update,

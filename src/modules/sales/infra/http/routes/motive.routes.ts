@@ -3,6 +3,7 @@ import { celebrate, Joi, Segments } from 'celebrate';
 
 import ensuredAthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 import MotiveController from '@modules/sales/infra/http/controllers/MotiveController';
+import validatorFields from '@shared/infra/http/validators/validatorFields';
 
 
 const motiveRoutes = Router();
@@ -14,7 +15,8 @@ motiveRoutes.use(ensuredAthenticated);
 
 motiveRoutes.post('/', celebrate({
   [Segments.BODY]: {
-    description: Joi.string().required(),
+    description: Joi.string().required()
+      .messages(validatorFields({name: "'descrição'"})),
   }
 }), motiveController.create);
 

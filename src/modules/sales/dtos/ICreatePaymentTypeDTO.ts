@@ -3,5 +3,4 @@ import { Type, TypeStatus } from "@modules/sales/infra/typeorm/entities/PaymentT
 export default interface ICreatePaymentTypeDTO {
   type: Type;
   name: string;
-  status: TypeStatus;
 }

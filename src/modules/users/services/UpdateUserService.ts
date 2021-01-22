@@ -1,5 +1,6 @@
 import {hash, compare} from 'bcryptjs';
 import { inject, injectable } from 'tsyringe';
+import { add } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
@@ -50,6 +51,10 @@ class UpdateUserService {
           400
         );
       }
+    }
+
+    if (body.admission_date) {
+      body.admission_date = add(body.admission_date, {hours: 3});
     }
 
     const userUpdate = await this.usersRepository.update(id, body);
