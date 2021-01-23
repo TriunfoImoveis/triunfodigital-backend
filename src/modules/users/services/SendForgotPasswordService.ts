@@ -48,6 +48,10 @@ class SendForgotPasswordService {
         name: user.name,
         email: user.email,
       },
+      from: {
+        name: "Equipe Triunfo Digital",
+        email: "dev.triunfoimoveis@gmail.com",
+      },
       subject: "[Triunfo Digital] Recuperação de Senha",
       templateData: {
         file: pathForgotPasswordTemplate,
