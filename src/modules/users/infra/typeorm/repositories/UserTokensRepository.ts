@@ -1,23 +1,23 @@
-import { getRepository, Repository } from "typeorm";
+import { getMongoRepository, MongoRepository } from "typeorm";
 
 import IUserTokenRepository from "@modules/users/repositories/IUserTokenRepository";
-import UserToken from "@modules/users/infra/typeorm/entities/UserToken";
+import UserToken from "@modules/users/infra/typeorm/schemas/UserToken";
 import AppError from "@shared/errors/AppError";
-import User from "@modules/users/infra/typeorm/entities/User";
+import ICreateUserTokenDTO from "@modules/users/dtos/ICreateUserTokenDTO";
 
 class UserTokensRepository implements IUserTokenRepository {
-  private ormRepository: Repository<UserToken>;
+  private ormRepository: MongoRepository<UserToken>;
 
   constructor() {
-    this.ormRepository = getRepository(UserToken);
+    this.ormRepository = getMongoRepository(UserToken, 'mongo');
   }
 
-  async generate(user: User): Promise<UserToken> {
+  async create(data: ICreateUserTokenDTO): Promise<UserToken> {
     try {
-      const token = this.ormRepository.create({user_id: user});
-      const tokenGenerated = await this.ormRepository.save(token);
+      const tokenInstance = this.ormRepository.create(data);
+      const tokenCreated = await this.ormRepository.save(tokenInstance);
 
-      return tokenGenerated;
+      return tokenCreated;
     } catch (err) {
       throw new AppError(err.detail);
     }
@@ -30,6 +30,14 @@ class UserTokensRepository implements IUserTokenRepository {
       });
 
       return userToken;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async delete(token: string): Promise<void> {
+    try {
+      await this.ormRepository.delete({token});
     } catch (err) {
       throw new AppError(err.detail);
     }

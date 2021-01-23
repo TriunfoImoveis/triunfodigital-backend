@@ -1,5 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import path from 'path';
+import { uuid } from "uuidv4";
 
 import IUserRepository from "@modules/users/repositories/IUserRepository";
 import AppError from "@shared/errors/AppError";
@@ -30,7 +31,10 @@ class SendForgotPasswordService {
       throw new AppError("Usuário não existe.", 404);
     }
 
-    const {token} = await this.userTokensRepository.generate(user);
+    const {token} = await this.userTokensRepository.create({
+      token: uuid(), 
+      user_id: user.id
+    });
 
     const pathForgotPasswordTemplate = path.resolve(
       __dirname, 

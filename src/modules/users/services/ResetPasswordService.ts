@@ -23,17 +23,19 @@ class ResetPasswordService {
   public async execute({token, new_password}: IRequest): Promise<void> {
     const userTokenExists = await this.userTokensRepository.findByToken(token);
     if (!userTokenExists) {
-      throw new AppError("Token de usuário não existe.", 404);
+      throw new AppError("Token inválido ou não existe.", 404);
     }
     
-    const {id} = userTokenExists.user_id;
-    const userExists = await this.usersRepository.findById(id);
-    if (!userExists) {
+    const {user_id} = userTokenExists;
+    const user = await this.usersRepository.findById(user_id);
+    if (!user) {
       throw new AppError("Usuário não existe.", 404);
     }
     
     const hashedPassword = await hash(new_password, 8);
-    await this.usersRepository.update(userExists.id, {password: hashedPassword});
+    await this.usersRepository.update(user.id, {password: hashedPassword});
+
+    await this.userTokensRepository.delete(userTokenExists.token);
   }
 }
 
