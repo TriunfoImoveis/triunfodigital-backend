@@ -1,8 +1,10 @@
 import { inject, injectable } from "tsyringe";
+import path from 'path';
 
 import IUserRepository from "@modules/users/repositories/IUserRepository";
 import AppError from "@shared/errors/AppError";
 import IUserTokenRepository from "@modules/users/repositories/IUserTokenRepository";
+import IMailProvider from "@shared/container/providers/MailProvider/models/IMailProvider";
 
 interface IRequest {
   email: string;
@@ -16,18 +18,41 @@ class SendForgotPasswordService {
 
     @inject('UserTokensRepository')
     private userTokensRepository: IUserTokenRepository,
+  
+    @inject('MailProvider')
+    private mailProvider: IMailProvider,
   ) {}
 
   public async execute({email}: IRequest): Promise<void> {
-    const userExists = await this.usersRepository.findByEmail(email);
+    const user = await this.usersRepository.findByEmail(email);
 
-    if (!userExists) {
+    if (!user) {
       throw new AppError("Usuário não existe.", 404);
     }
 
-    await this.userTokensRepository.generate(userExists);
+    const {token} = await this.userTokensRepository.generate(user);
 
-    console.log("e-mail enviado.");
+    const pathForgotPasswordTemplate = path.resolve(
+      __dirname, 
+      '..', 
+      'views',
+      'forgot_password.hbs'
+    );
+
+    await this.mailProvider.sendMail({
+      to: {
+        name: user.name,
+        email: user.email,
+      },
+      subject: "[Triunfo Digital] Recuperação de Senha",
+      templateData: {
+        file: pathForgotPasswordTemplate,
+        variables: {
+          name: user.name,
+          token,
+        }
+      }
+    });
   }
 }
 
