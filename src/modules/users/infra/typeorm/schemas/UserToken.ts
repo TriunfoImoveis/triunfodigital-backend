@@ -1,11 +1,4 @@
-import {
-  Entity,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ObjectID,
-  ObjectIdColumn,
-} from 'typeorm';
+import {Entity,Column,CreateDateColumn,UpdateDateColumn,ObjectID,ObjectIdColumn} from 'typeorm';
 
 @Entity('user_tokens')
 class UserToken {
