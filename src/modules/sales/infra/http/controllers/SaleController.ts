@@ -95,9 +95,7 @@ class SaleController {
       gender: client_buyer.gender,
     });
 
-    const saleRepository = new SaleRepository();
-    const createSaleNewService = new CreateSaleNewService(saleRepository);
-
+    const createSaleNewService = container.resolve(CreateSaleNewService);
     const sale = await createSaleNewService.execute({
       sale_type: SaleType.N,
       sale_date,

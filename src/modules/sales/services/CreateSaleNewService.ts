@@ -1,13 +1,22 @@
-import { add } from 'date-fns';
+import { add, format } from 'date-fns';
+import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
 import ICreateInstallmentDTO from '@modules/sales/dtos/ICreateInstallmentDTO';
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 
+@injectable()
 class CreateSaleNewService {
-  constructor(private saleRepository: ISaleRepository) {}
+  constructor(
+    @inject('SalesRepository')
+    private saleRepository: ISaleRepository,
+
+    @inject('NotificationsRepository')
+    private notificationsRepository: INotificationsRepository,
+  ) {}
 
   public async execute({
     sale_type,
@@ -71,6 +80,11 @@ class CreateSaleNewService {
         400
       );
     }
+
+    await this.notificationsRepository.create({
+      recipient_id: sale.id,
+      content: "Nova venda de imóvel novo cadastrada."
+    });
 
     return sale;
   }
