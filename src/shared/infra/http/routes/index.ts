@@ -23,6 +23,9 @@ import paymentTypeRoutes from '@modules/sales/infra/http/routes/paymentType.rout
 import motiveRoutes from '@modules/sales/infra/http/routes/motive.routes';
 import installmentRoutes from '@modules/sales/infra/http/routes/installment.routes';
 
+// NOTIFICATION
+import notificationRouter from '@modules/notifications/infra/http/routes/notification.routes';
+
 const routes = Router();
 
 // Module Users
@@ -47,5 +50,8 @@ routes.use('/realty', realtyRoutes);
 routes.use('/motive', motiveRoutes);
 routes.use('/sale', saleRoutes);
 routes.use('/installment', installmentRoutes);
+
+// Module Notifications
+routes.use('/notification', notificationRouter);
 
 export default routes;

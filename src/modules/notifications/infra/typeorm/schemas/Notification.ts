@@ -6,6 +6,7 @@ import {
   ObjectIdColumn, 
   UpdateDateColumn 
 } from "typeorm";
+import Room from "./Room";
 
 @Entity('notifications')
 class Notification {
@@ -16,10 +17,10 @@ class Notification {
   content: string;
 
   @Column('uuid')
-  recipient_id: string;
+  sale_id: string;
 
-  @Column()
-  read: Boolean = false;
+  @Column(type => Room)
+  room: Room[];
 
   @CreateDateColumn()
   created_at: Date;

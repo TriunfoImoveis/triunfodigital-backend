@@ -14,10 +14,26 @@ class NotificationsRepository implements INotificationsRepository {
 
   async create(data: ICreateNotificationDTO): Promise<Notification> {
     try {
+      const {room} = data;
       const notificationInstance = this.ormRepository.create(data);
+      notificationInstance.room = room;
       const notification = await this.ormRepository.save(notificationInstance);
 
       return notification;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async findNotificationsByUser(id_user: string): Promise<Notification[]> {
+    try{
+      const notifications = await this.ormRepository.find({
+        where: {
+          'room.user_id': { $eq: id_user }
+        }
+      });
+
+      return notifications;
     } catch (err) {
       throw new AppError(err.detail);
     }

@@ -2,7 +2,7 @@ import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import Sale, { Status } from "@modules/sales/infra/typeorm/entities/Sale";
 import IRequestSaleDTO from "@modules/sales/dtos/IRequestSaleDTO";
-import INotValidSaleDTO from "../dtos/INotValidSaleDTO";
+import INotValidSaleDTO from "@modules/sales/dtos/INotValidSaleDTO";
 import ICreateInstallmentDTO from "@modules/sales/dtos/ICreateInstallmentDTO";
 import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
 
