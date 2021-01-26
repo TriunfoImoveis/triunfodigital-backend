@@ -1,39 +1,38 @@
 import nodemailer, { Transporter } from 'nodemailer';
 import { inject, injectable } from 'tsyringe';
+import aws from 'aws-sdk';
 
 import IMailProvider from "@shared/container/providers/MailProvider/models/IMailProvider";
 import ISendMailDTO from '@shared/container/providers/MailProvider/dtos/ISendMailDTO';
 import IMailTemplateProvider from '@shared/container/providers/MailTemplateProvider/models/IMailTemplateProvider';
-import AppError from '@shared/errors/AppError';
 import mailConfig from '@config/mail';
+import AppError from '@shared/errors/AppError';
 
 @injectable()
-class EtherealMailProvider implements IMailProvider {
+class SESMailProvider implements IMailProvider {
   private client: Transporter;
 
   constructor(
     @inject('MailTemplateProvider')
     private mailTemplateProvider: IMailTemplateProvider,
   ) {
-    nodemailer.createTestAccount().then(account => {
-      const transporter = nodemailer.createTransport({
-        host: account.smtp.host,
-        port: account.smtp.port,
-        secure: account.smtp.secure,
-        auth: {
-          user: account.user,
-          pass: account.pass
-        }
-      });
-
-      this.client = transporter;
-    });
+    this.client = nodemailer.createTransport({
+      SES: new aws.SES({
+        apiVersion: '2010-12-01',
+        region: 'us-east-1',
+      }),
+    })
   }
 
-  public async sendMail({to, from, subject, templateData}: ISendMailDTO): Promise<void> {
+  public async sendMail({
+    to, 
+    from, 
+    subject, 
+    templateData
+  }: ISendMailDTO): Promise<void> {
     try {
       const {nameDefault, emailDefault} = mailConfig.defaults.from;
-      const message = await this.client.sendMail({
+      await this.client.sendMail({
         from: {
           name: from?.name || nameDefault,
           address: from?.email || emailDefault,
@@ -45,13 +44,10 @@ class EtherealMailProvider implements IMailProvider {
         subject,
         html: await this.mailTemplateProvider.parse(templateData),
       });
-
-      console.log("Menssagem enviada: %s", message.messageId);
-      console.log("Pre-visualização de URL: %s", nodemailer.getTestMessageUrl(message));
     } catch (err) {
       throw new AppError(err);
     }
   }
 }
 
-export default EtherealMailProvider;
+export default SESMailProvider;

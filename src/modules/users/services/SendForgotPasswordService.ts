@@ -1,11 +1,12 @@
 import { inject, injectable } from "tsyringe";
 import path from 'path';
-import { uuid } from "uuidv4";
+import { v4 } from "uuid";
 
 import IUserRepository from "@modules/users/repositories/IUserRepository";
 import AppError from "@shared/errors/AppError";
 import IUserTokenRepository from "@modules/users/repositories/IUserTokenRepository";
 import IMailProvider from "@shared/container/providers/MailProvider/models/IMailProvider";
+import mailConfig from "@config/mail";
 
 interface IRequest {
   email: string;
@@ -32,7 +33,7 @@ class SendForgotPasswordService {
     }
 
     const {token} = await this.userTokensRepository.create({
-      token: uuid(), 
+      token: v4(), 
       user_id: user.id
     });
 
@@ -42,15 +43,11 @@ class SendForgotPasswordService {
       'views',
       'forgot_password.hbs'
     );
-
+    
     await this.mailProvider.sendMail({
       to: {
         name: user.name,
         email: user.email,
-      },
-      from: {
-        name: "Equipe Triunfo Digital",
-        email: "dev.triunfoimoveis@gmail.com",
       },
       subject: "[Triunfo Digital] Recuperação de Senha",
       templateData: {
