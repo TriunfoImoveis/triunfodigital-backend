@@ -5,7 +5,6 @@ import aws from 'aws-sdk';
 import IMailProvider from "@shared/container/providers/MailProvider/models/IMailProvider";
 import ISendMailDTO from '@shared/container/providers/MailProvider/dtos/ISendMailDTO';
 import IMailTemplateProvider from '@shared/container/providers/MailTemplateProvider/models/IMailTemplateProvider';
-import mailConfig from '@config/mail';
 import AppError from '@shared/errors/AppError';
 
 @injectable()
@@ -31,11 +30,10 @@ class SESMailProvider implements IMailProvider {
     templateData
   }: ISendMailDTO): Promise<void> {
     try {
-      const {nameDefault, emailDefault} = mailConfig.defaults.from;
       await this.client.sendMail({
         from: {
-          name: from?.name || nameDefault,
-          address: from?.email || emailDefault,
+          name: from.name,
+          address: from.email,
         },
         to: {
           name: to.name,

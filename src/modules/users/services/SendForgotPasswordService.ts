@@ -44,7 +44,12 @@ class SendForgotPasswordService {
       'forgot_password.hbs'
     );
     
+    const {nameDefault, emailDefault} = mailConfig.defaults.from;
     await this.mailProvider.sendMail({
+      from: {
+        name: nameDefault,
+        email: emailDefault,
+      },
       to: {
         name: user.name,
         email: user.email,

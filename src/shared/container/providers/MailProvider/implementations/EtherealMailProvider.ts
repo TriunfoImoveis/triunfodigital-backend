@@ -5,7 +5,6 @@ import IMailProvider from "@shared/container/providers/MailProvider/models/IMail
 import ISendMailDTO from '@shared/container/providers/MailProvider/dtos/ISendMailDTO';
 import IMailTemplateProvider from '@shared/container/providers/MailTemplateProvider/models/IMailTemplateProvider';
 import AppError from '@shared/errors/AppError';
-import mailConfig from '@config/mail';
 
 @injectable()
 class EtherealMailProvider implements IMailProvider {
@@ -32,11 +31,10 @@ class EtherealMailProvider implements IMailProvider {
 
   public async sendMail({to, from, subject, templateData}: ISendMailDTO): Promise<void> {
     try {
-      const {nameDefault, emailDefault} = mailConfig.defaults.from;
       const message = await this.client.sendMail({
         from: {
-          name: from?.name || nameDefault,
-          address: from?.email || emailDefault,
+          name: from.name,
+          address: from.email,
         },
         to: {
           name: to.name,
