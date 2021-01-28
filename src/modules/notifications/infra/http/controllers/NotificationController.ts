@@ -5,9 +5,10 @@ import ListNotificationService from "@modules/notifications/services/ListNotific
 
 class NotificationController {
   async list(request: Request, response: Response): Promise<Response> {
+    
     const listNotificationService = container.resolve(ListNotificationService);
     const notifications = await listNotificationService.execute(
-      request.params.id,
+      request.user.id,
     );
 
     return response.json(notifications);

@@ -356,7 +356,7 @@ saleRoutes.put('/:id', celebrate({
   }
 }), saleController.update);
 
-saleRoutes.patch('/valid_signal/:id', celebrate({
+saleRoutes.patch('/valid-signal/:id', celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),
   },

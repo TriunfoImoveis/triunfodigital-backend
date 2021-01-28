@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { celebrate, Joi, Segments } from 'celebrate';
 
 import NotificationController from '@modules/notifications/infra/http/controllers/NotificationController';
 import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
@@ -7,12 +6,8 @@ import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenti
 const notificationRouter = Router();
 const notificationController = new NotificationController();
 
-// notificationRouter.use(ensuredAuthenticated);
+notificationRouter.use(ensuredAuthenticated);
 
-notificationRouter.get('/:id', celebrate({
-  [Segments.PARAMS]: {
-    id: Joi.string().uuid(),
-  }
-}), notificationController.list);
+notificationRouter.get('/', notificationController.list);
 
 export default notificationRouter;
