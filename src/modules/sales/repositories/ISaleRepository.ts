@@ -12,11 +12,11 @@ export default interface ISaleRepository {
 
   createSaleNew(
     data: ICreateSaleNewDTO, 
-    installment: ICreateInstallmentDTO
+    installments: ICreateInstallmentDTO[]
   ): Promise<Sale | undefined>;
   createSaleUsed(
     data: ICreateSaleUsedDTO, 
-    installment: ICreateInstallmentDTO
+    installments: ICreateInstallmentDTO[]
   ): Promise<Sale | undefined>;
   update(id: string, body: IUpdateSaleDTO): Promise<Sale | undefined>;
   validSale(

@@ -33,15 +33,28 @@ class CreateSaleNewService {
     users_sellers,
     value_signal,
     pay_date_signal,
-  }: ICreateSaleNewDTO, installment: ICreateInstallmentDTO): Promise<Sale> {
+  }: ICreateSaleNewDTO, installments: ICreateInstallmentDTO[]): Promise<Sale> {
 
-    if (installment.value > commission) {
-      throw new AppError("Valor da parcela não pode ser maior que a comissão.", 400);
+    var totalValueInstallments = 0;
+    installments.map(
+      (installment) => {
+        installment.due_date = add(
+          installment.due_date, 
+          {hours: 3}
+        )
+        totalValueInstallments += Number(installment.value);
+      }
+    );
+    // Comparar o total das parcelas com o valor da comissão.
+    if (totalValueInstallments > commission) {
+      throw new AppError(
+        "O valor total das parcelas não pode ser maior que o valor da comissão.", 
+        400
+      );
     }
 
     const ajusted_date = add(sale_date, {hours: 3});
     const ajusted_date_signal = add(pay_date_signal, {hours: 3});
-    installment.due_date = add(installment.due_date, {hours: 3});
 
     const sale = await this.saleRepository.createSaleNew({
       sale_type,
@@ -60,7 +73,7 @@ class CreateSaleNewService {
       users_sellers,
       value_signal,
       pay_date_signal: ajusted_date_signal,
-    }, installment);
+    }, installments);
 
     if (!sale) {
       throw new AppError(

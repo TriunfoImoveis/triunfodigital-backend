@@ -91,14 +91,16 @@ saleRoutes.post('/new', celebrate({
       .messages(validatorFields({name: "'valor do sinal'"})),
     pay_date_signal: Joi.date().iso().required()
       .messages(validatorFields({name: "'data de pagamento do sinal'"})),
-    installment: Joi.object({
-      installment_number: Joi.number().integer().positive().required()
-        .messages(validatorFields({name: "'nº da parcela'"})),
-      value: Joi.number().positive().required()
-        .messages(validatorFields({name: "'valor da parcela'"})),
-      due_date: Joi.date().iso().required()
-        .messages(validatorFields({name: "'data de vencimento da parcela'"})),
-    }).required().messages(validatorFields({name: "'parcela'"})),
+    installments: Joi.array().items(
+      Joi.object({
+        installment_number: Joi.number().integer().positive().required()
+          .messages(validatorFields({name: "'número da parcela'"})),
+        value: Joi.number().positive().required()
+          .messages(validatorFields({name: "'valor'"})),
+        due_date: Joi.date().iso().required()
+          .messages(validatorFields({name: "'data de vencimento'"})),
+      })
+    ).min(1).required().messages(validatorFields({name: "'parcelas'", min: 1}))
   }
 }), saleController.createSaleNew);
 
@@ -205,14 +207,16 @@ saleRoutes.post('/used', celebrate({
       .messages(validatorFields({name: "'valor do sinal'"})),
     pay_date_signal: Joi.date().iso().required()
       .messages(validatorFields({name: "'data de pagamento do sinal'"})),
-    installment: Joi.object({
-      installment_number: Joi.number().integer().positive().required()
-        .messages(validatorFields({name: "'nº da parcela'"})),
-      value: Joi.number().positive().required()
-        .messages(validatorFields({name: "'valor da parcela'"})),
-      due_date: Joi.date().iso().required()
-        .messages(validatorFields({name: "'data de vencimento da parcela'"})),
-    }).required().messages(validatorFields({name: "'parcela'"})),
+    installments: Joi.array().items(
+      Joi.object({
+        installment_number: Joi.number().integer().positive().required()
+          .messages(validatorFields({name: "'número da parcela'"})),
+        value: Joi.number().positive().required()
+          .messages(validatorFields({name: "'valor'"})),
+        due_date: Joi.date().iso().required()
+          .messages(validatorFields({name: "'data de vencimento'"})),
+      })
+    ).min(1).required().messages(validatorFields({name: "'parcelas'", min: 1}))
   }
 }), saleController.createSaleUsed);
 

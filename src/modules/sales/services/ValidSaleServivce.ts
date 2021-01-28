@@ -1,10 +1,14 @@
+import { inject, injectable } from 'tsyringe';
+
 import AppError from '@shared/errors/AppError';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import { Status } from '@modules/sales/infra/typeorm/entities/Sale';
 import { StatusInstallment } from '@modules/sales/infra/typeorm/entities/Installment';
 
+@injectable()
 class ValidSaleService {
   constructor(
+    @inject('SalesRepository')
     private salesRepository: ISaleRepository,
   ) {}
 

@@ -64,7 +64,7 @@ class SaleController {
       users_sellers,
       value_signal,
       pay_date_signal,
-      installment,
+      installments,
     } = request.body;
     
     const realtyRepository = new RealtyRepository();
@@ -113,7 +113,7 @@ class SaleController {
       users_sellers,
       value_signal,
       pay_date_signal,
-    }, installment);
+    }, installments);
 
     return response.json(sale);
   }
@@ -137,7 +137,7 @@ class SaleController {
       users_sellers,
       value_signal,
       pay_date_signal,
-      installment,
+      installments,
     } = request.body;
 
     const realtyRepository = new RealtyRepository();
@@ -202,17 +202,13 @@ class SaleController {
       users_sellers,
       value_signal,
       pay_date_signal,
-    }, installment);
+    }, installments);
 
     return response.json(sale);
   }
 
   async validSale(request:Request, response: Response): Promise<Response> {
-    const saleRepository = new SaleRepository();
-    const validSaleService = new ValidSaleService(
-      saleRepository
-    );
-    
+    const validSaleService = container.resolve(ValidSaleService);
     await validSaleService.execute(
       request.params.id,
     );

@@ -79,7 +79,7 @@ class SaleRepository implements ISaleRepository {
 
   async createSaleNew(
     data: ICreateSaleNewDTO, 
-    installment: ICreateInstallmentDTO
+    installments: ICreateInstallmentDTO[]
   ): Promise<Sale | undefined> {
     const connection = getConnection();
     const queryRunner = connection.createQueryRunner();
@@ -106,8 +106,11 @@ class SaleRepository implements ISaleRepository {
         sale.sale_has_sellers = users_sellers;
         const newSale = await queryRunner.manager.save(sale);
 
-        installment.sale = newSale;
-        await queryRunner.manager.save('Installment', installment);
+        installments.forEach(async (installment)=>{
+          installment.sale = newSale;
+        });
+
+        await queryRunner.manager.save('Installment', installments);
 
         await queryRunner.commitTransaction();
 
@@ -126,7 +129,7 @@ class SaleRepository implements ISaleRepository {
 
   async createSaleUsed(
     data: ICreateSaleUsedDTO,
-    installment: ICreateInstallmentDTO
+    installments: ICreateInstallmentDTO[]
   ): Promise<Sale | undefined> {
     const connection = getConnection();
     const queryRunner = connection.createQueryRunner();
@@ -158,8 +161,11 @@ class SaleRepository implements ISaleRepository {
         sale.sale_has_sellers = users_sellers;
         const newSale = await queryRunner.manager.save(sale);
 
-        installment.sale = newSale;
-        await queryRunner.manager.save('Installment', installment);
+        installments.forEach(async (installment)=>{
+          installment.sale = newSale;
+        });
+
+        await queryRunner.manager.save('Installment', installments);
 
         await queryRunner.commitTransaction();
 
