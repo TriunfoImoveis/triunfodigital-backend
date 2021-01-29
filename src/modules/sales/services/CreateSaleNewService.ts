@@ -1,14 +1,20 @@
 import { add } from 'date-fns';
+import { container, inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
-import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 import ICreateInstallmentDTO from '@modules/sales/dtos/ICreateInstallmentDTO';
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
+import CreateNotificationService from '@modules/notifications/services/CreateNotificationService';
 
+@injectable()
 class CreateSaleNewService {
-  constructor(private saleRepository: ISaleRepository) {}
+  constructor(
+    @inject('SalesRepository')
+    private saleRepository: ISaleRepository,
+  ) {}
 
   public async execute({
     sale_type,
@@ -25,24 +31,30 @@ class CreateSaleNewService {
     user_coordinator,
     users_directors,
     users_sellers,
-  }: ICreateSaleNewDTO, installment: ICreateInstallmentDTO): Promise<Sale> {
-    var usersRepository = new UsersRepository();
-    
-    if (user_coordinator) {
-      const coordinatorExists = await usersRepository.findById(String(user_coordinator));
-      if (!coordinatorExists) {
-        throw new AppError("Usuário coordenador não existe.");
-      } else if (coordinatorExists.office.name !== "Coordenador") {
-        throw new AppError("Usuário não é coordenador.");
-      }
-    }
+    value_signal,
+    pay_date_signal,
+  }: ICreateSaleNewDTO, installments: ICreateInstallmentDTO[]): Promise<Sale> {
 
-    if (installment.value > commission) {
-      throw new AppError("Valor da parcela não pode ser maior que a comissão.", 400);
+    var totalValueInstallments = 0;
+    installments.map(
+      (installment) => {
+        installment.due_date = add(
+          installment.due_date, 
+          {hours: 3}
+        )
+        totalValueInstallments += Number(installment.value);
+      }
+    );
+    // Comparar o total das parcelas com o valor da comissão.
+    if (totalValueInstallments > commission) {
+      throw new AppError(
+        "O valor total das parcelas não pode ser maior que o valor da comissão.", 
+        400
+      );
     }
 
     const ajusted_date = add(sale_date, {hours: 3});
-    installment.due_date = add(sale_date, {hours: 3});
+    const ajusted_date_signal = add(pay_date_signal, {hours: 3});
 
     const sale = await this.saleRepository.createSaleNew({
       sale_type,
@@ -59,7 +71,9 @@ class CreateSaleNewService {
       user_coordinator,
       users_directors,
       users_sellers,
-    }, installment);
+      value_signal,
+      pay_date_signal: ajusted_date_signal,
+    }, installments);
 
     if (!sale) {
       throw new AppError(
@@ -67,6 +81,13 @@ class CreateSaleNewService {
         400
       );
     }
+
+    const createNotificationService = container.resolve(CreateNotificationService);
+    await createNotificationService.execute({
+      content: "Venda de imóvel novo cadastrada.",
+      sale_id: sale.id,
+      type: 'CREATE',
+    });
 
     return sale;
   }

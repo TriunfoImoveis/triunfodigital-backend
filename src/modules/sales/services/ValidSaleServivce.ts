@@ -1,10 +1,14 @@
+import { inject, injectable } from 'tsyringe';
+
 import AppError from '@shared/errors/AppError';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import { Status } from '@modules/sales/infra/typeorm/entities/Sale';
 import { StatusInstallment } from '@modules/sales/infra/typeorm/entities/Installment';
 
+@injectable()
 class ValidSaleService {
   constructor(
+    @inject('SalesRepository')
     private salesRepository: ISaleRepository,
   ) {}
 
@@ -15,6 +19,11 @@ class ValidSaleService {
       throw new AppError("Venda não existe.", 404);
     } else if (sale.status !== Status.NV) {
       throw new AppError("Venda já validada.", 400);
+    } else if (!sale.payment_signal) {
+      throw new AppError(
+        "Confirme o pagamento do Sinal (ATO) antes de validar a venda.", 
+        400
+      );
     } else if (!sale.installments.length) {
       throw new AppError(
         "Venda não contem parcelas, adicione parcelas antes de validar.", 
@@ -24,14 +33,6 @@ class ValidSaleService {
       var totalValueInstallments = 0;
       sale.installments.forEach((installment)=>{
         totalValueInstallments += Number(installment.value);
-
-        // Verificar se a primeira parcela está com o status de PAGO.
-        // if (installment.installment_number === 1 && installment.status !== StatusInstallment.PAG) {
-        //   throw new AppError(
-        //     "Antes de validar é necessário confirmar o pagamento da primeira parcela.", 
-        //     400
-        //   );
-        // }
       });
 
       // Comparar o total das parcelas com o valor da comissão.

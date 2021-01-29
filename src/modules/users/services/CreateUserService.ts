@@ -1,5 +1,6 @@
 import { hash } from 'bcryptjs';
 import { inject, injectable } from 'tsyringe';
+import { add } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/User';
@@ -36,6 +37,7 @@ class CreateUserService {
     }
 
     const hashedPassword = await hash(password, 8);
+    const ajusted_date = add(admission_date, {hours: 3});
 
     const user = await this.usersRepository.create({
       name,
@@ -44,7 +46,7 @@ class CreateUserService {
       goal,
       creci,
       phone,
-      admission_date,
+      admission_date: ajusted_date,
       departament,
       subsidiary,
       office,

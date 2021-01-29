@@ -21,4 +21,6 @@ export default interface ICreateSaleNewDTO {
   user_coordinator?: User;
   users_directors: User[];
   users_sellers: User[];
+  value_signal: number;
+  pay_date_signal: Date;
 }

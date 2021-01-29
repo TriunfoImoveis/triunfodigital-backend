@@ -5,6 +5,7 @@ import { celebrate, Joi, Segments } from 'celebrate';
 import UsersController from '@modules/users/infra/http/controllers/UsersController';
 import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 import uploadConfig from '@config/upload';
+import validatorFields from '@shared/infra/http/validators/validatorFields';
 
 const usersRouter = Router();
 const usersController = new UsersController();
@@ -27,20 +28,35 @@ usersRouter.use(ensuredAuthenticated);
 
 usersRouter.post(
   '/',
-  // upload.single('avatar'),
   celebrate({
     [Segments.BODY]: {
-      name: Joi.string().required(),
-      email: Joi.string().email().required(),
-      password: Joi.string().min(6).max(15).required(),
-      password_confirmation: Joi.string().required().valid(Joi.ref('password')),
-      phone: Joi.string().required(),
-      goal: Joi.number().required(),
-      creci: Joi.string().alphanum().max(6),
-      admission_date: Joi.date().required(),
-      departament: Joi.string().uuid().required(),
-      subsidiary: Joi.string().uuid().required(),
-      office: Joi.string().uuid().required(),
+      name: Joi.string().required()
+        .messages(validatorFields({name: "'nome'"})),
+      email: Joi.string().email().required()
+        .messages(validatorFields({name: "'email'"})),
+      password: Joi.string().$.min(6).max(15)
+        .rule({ 
+          message: "'senha' deve ter entre 6 e 15 caracteres" 
+        })
+        .required().messages(validatorFields({
+          name: "'senha'"
+        })),
+      password_confirmation: Joi.string().required().valid(Joi.ref('password'))
+        .messages(validatorFields({name: "'confirmar senha'", ref: "'senha'"})),
+      phone: Joi.string().pattern(/^[0-9]{11,11}$/).required()
+        .messages(validatorFields({name: "'telefone'", max: 11})),
+      goal: Joi.number().positive().required()
+        .messages(validatorFields({name: "'meta'"})),
+      creci: Joi.string().alphanum().max(6)
+        .messages(validatorFields({ name: "'creci'", max: 6})),
+      admission_date: Joi.date().iso().required()
+        .messages(validatorFields({name: "'data de admissão'"})),
+      departament: Joi.string().uuid().required()
+        .messages(validatorFields({name: "'departamento'"})),
+      subsidiary: Joi.string().uuid().required()
+        .messages(validatorFields({name: "'filial'"})),
+      office: Joi.string().uuid().required()
+        .messages(validatorFields({name: "'cargo'"})),
     },
   }),
   usersController.create,
@@ -63,19 +79,33 @@ usersRouter.put(
       id: Joi.string().uuid(),
     },
     [Segments.BODY]: {
-      name: Joi.string(),
-      email: Joi.string().email(),
-      old_password: Joi.string(),
-      password: Joi.string(),
-      password_confirmation: Joi.string().valid(Joi.ref('password')),
-      phone: Joi.string(),
-      goal: Joi.number(),
-      creci: Joi.string().alphanum().length(6),
-      admission_date: Joi.date(),
-      departament: Joi.string().uuid(),
-      subsidiary: Joi.string().uuid(),
-      office: Joi.string().uuid(),
-      active: Joi.boolean(),
+      name: Joi.string()
+        .messages(validatorFields({name: "'nome'"})),
+      email: Joi.string().email()
+        .messages(validatorFields({name: "'email'"})),
+      old_password: Joi.string()
+        .messages(validatorFields({name: "'senha antiga'"})),
+      password: Joi.string().$.min(6).max(15)
+        .rule({ 
+          message: "'senha' deve ter entre 6 e 15 caracteres" 
+        })
+        .messages(validatorFields({name: "'senha'"})),
+      password_confirmation: Joi.string().valid(Joi.ref('password'))
+        .messages(validatorFields({name: "'confirmar senha'", ref: "'senha'"})),
+      phone: Joi.string().pattern(/^[0-9]{11,11}$/)
+        .messages(validatorFields({name: "'telefone'", max: 11})),
+      goal: Joi.number().positive()
+        .messages(validatorFields({name: "'meta'"})),
+      creci: Joi.string().alphanum().max(6)
+        .messages(validatorFields({name: "'creci'", max: 6})),
+      admission_date: Joi.date().iso()
+        .messages(validatorFields({name: "'data de admissão'"})),
+      departament: Joi.string().uuid()
+        .messages(validatorFields({name: "'departamento'"})),
+      subsidiary: Joi.string().uuid()
+        .messages(validatorFields({name: "'filial'"})),
+      office: Joi.string().uuid()
+        .messages(validatorFields({name: "'cargo'"})),
     },
   }),
   usersController.update,

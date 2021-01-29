@@ -38,7 +38,11 @@ class Installment {
     @Column({ type: 'date', nullable: true })
     pay_date: Date;
 
-    @ManyToOne(type => Sale, sale => sale.installments, {nullable: false})
+    @ManyToOne(type => Sale, sale => sale.installments, {
+        nullable: false, 
+        onUpdate: "CASCADE", 
+        onDelete: "CASCADE"
+    })
     @JoinColumn({ name: 'sale_id' })
     sale: Sale;
 }

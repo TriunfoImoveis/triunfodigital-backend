@@ -3,6 +3,7 @@ import { celebrate, Joi, Segments } from 'celebrate';
 
 import ensuredAthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 import CompanyController from '@modules/organizations/infra/http/controllers/CompanyController';
+import validatorFields from '@shared/infra/http/validators/validatorFields';
 
 const companyRouter = Router();
 const companyController = new CompanyController();
@@ -19,8 +20,10 @@ companyRouter.get('/:id', celebrate({
 
 companyRouter.post('/', celebrate({
   [Segments.BODY]: {
-    name: Joi.string().required(),
-    cnpj: Joi.string().pattern(/^[0-9]{14,14}$/).required(),
+    name: Joi.string().required()
+      .messages(validatorFields({name: "'nome'"})),
+    cnpj: Joi.string().pattern(/^[0-9]{14,14}$/).required()
+      .messages(validatorFields({name: "'cnpj'", max: 14})),
   }
 }), companyController.create);
 
@@ -29,9 +32,12 @@ companyRouter.put('/:id', celebrate({
     id: Joi.string().uuid(),
   },
   [Segments.BODY]: {
-    name: Joi.string(),
-    cnpj: Joi.string().pattern(/^[0-9]{14,14}$/),
-    active: Joi.boolean(),
+    name: Joi.string()
+      .messages(validatorFields({name: "'nome'"})),
+    cnpj: Joi.string().pattern(/^[0-9]{14,14}$/)
+      .messages(validatorFields({name: "'cnpj'", max: 14})),
+    active: Joi.boolean()
+      .messages(validatorFields({name: "'ativo'"})),
   }
 }), companyController.update);
 

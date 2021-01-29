@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 // USERS
 import usersRouter from '@modules/users/infra/http/routes/user.routes';
+import passwordRouter from '@modules/users/infra/http/routes/password.routes';
 import sessionRouter from '@modules/users/infra/http/routes//session.routes';
 import rankingRouter from '@modules/users/infra/http/routes/ranking.routes';
 
@@ -22,10 +23,14 @@ import paymentTypeRoutes from '@modules/sales/infra/http/routes/paymentType.rout
 import motiveRoutes from '@modules/sales/infra/http/routes/motive.routes';
 import installmentRoutes from '@modules/sales/infra/http/routes/installment.routes';
 
+// NOTIFICATION
+import notificationRouter from '@modules/notifications/infra/http/routes/notification.routes';
+
 const routes = Router();
 
 // Module Users
 routes.use('/users', usersRouter);
+routes.use('/password', passwordRouter);
 routes.use('/sessions', sessionRouter);
 routes.use('/ranking', rankingRouter);
 
@@ -45,5 +50,8 @@ routes.use('/realty', realtyRoutes);
 routes.use('/motive', motiveRoutes);
 routes.use('/sale', saleRoutes);
 routes.use('/installment', installmentRoutes);
+
+// Module Notifications
+routes.use('/notification', notificationRouter);
 
 export default routes;

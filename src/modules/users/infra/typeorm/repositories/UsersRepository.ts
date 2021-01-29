@@ -21,6 +21,8 @@ class UsersRepository implements IUserRepository {
           'office',
           'departament',
           'subsidiary',
+          'sales',
+          'captivators',
         ],
       });
 

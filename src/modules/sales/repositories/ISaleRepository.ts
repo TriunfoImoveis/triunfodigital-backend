@@ -2,7 +2,7 @@ import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import Sale, { Status } from "@modules/sales/infra/typeorm/entities/Sale";
 import IRequestSaleDTO from "@modules/sales/dtos/IRequestSaleDTO";
-import INotValidSaleDTO from "../dtos/INotValidSaleDTO";
+import INotValidSaleDTO from "@modules/sales/dtos/INotValidSaleDTO";
 import ICreateInstallmentDTO from "@modules/sales/dtos/ICreateInstallmentDTO";
 import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
 
@@ -12,11 +12,11 @@ export default interface ISaleRepository {
 
   createSaleNew(
     data: ICreateSaleNewDTO, 
-    installment: ICreateInstallmentDTO
+    installments: ICreateInstallmentDTO[]
   ): Promise<Sale | undefined>;
   createSaleUsed(
     data: ICreateSaleUsedDTO, 
-    installment: ICreateInstallmentDTO
+    installments: ICreateInstallmentDTO[]
   ): Promise<Sale | undefined>;
   update(id: string, body: IUpdateSaleDTO): Promise<Sale | undefined>;
   validSale(
@@ -35,4 +35,6 @@ export default interface ISaleRepository {
     format_date: string,
     date: string,
   ): Promise<Sale[]>;
+
+  validSignal(id: string, status: Boolean): Promise<void>;
 }

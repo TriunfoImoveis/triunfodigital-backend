@@ -143,6 +143,15 @@ class Sale {
   })
   sale_has_sellers: User[];
 
+  @Column({ type: 'decimal', precision: 14, scale: 2, nullable: true })
+  value_signal: number;
+
+  @Column({ type: 'date', nullable: true})
+  pay_date_signal: Date;
+
+  @Column({ type: 'boolean', default: false })
+  payment_signal: Boolean;
+
   @OneToMany(type => Installment, installment => installment.sale)
   installments: Installment[];
 }

@@ -12,8 +12,9 @@ import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
 import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService';
 import { SaleType, Status } from '@modules/sales/infra/typeorm/entities/Sale';
 import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
-import NotValidSaleService from '@modules/sales/services/NotValidSaleServivce';
+import NotValidSaleService from '@modules/sales/services/NotValidSaleService';
 import UpdateSaleService from '@modules/sales/services/UpdateSaleService';
+import ValidSignalService from '@modules/sales/services/ValidSignalService';
 
 class SaleController {
 
@@ -61,7 +62,9 @@ class SaleController {
       user_coordinator,
       users_directors,
       users_sellers,
-      installment,
+      value_signal,
+      pay_date_signal,
+      installments,
     } = request.body;
     
     const realtyRepository = new RealtyRepository();
@@ -92,9 +95,7 @@ class SaleController {
       gender: client_buyer.gender,
     });
 
-    const saleRepository = new SaleRepository();
-    const createSaleNewService = new CreateSaleNewService(saleRepository);
-
+    const createSaleNewService = container.resolve(CreateSaleNewService);
     const sale = await createSaleNewService.execute({
       sale_type: SaleType.N,
       sale_date,
@@ -110,7 +111,9 @@ class SaleController {
       user_coordinator,
       users_directors,
       users_sellers,
-    }, installment);
+      value_signal,
+      pay_date_signal,
+    }, installments);
 
     return response.json(sale);
   }
@@ -132,7 +135,9 @@ class SaleController {
       users_directors,
       users_captivators,
       users_sellers,
-      installment,
+      value_signal,
+      pay_date_signal,
+      installments,
     } = request.body;
 
     const realtyRepository = new RealtyRepository();
@@ -195,17 +200,15 @@ class SaleController {
       users_directors,
       users_captivators,
       users_sellers,
-    }, installment);
+      value_signal,
+      pay_date_signal,
+    }, installments);
 
     return response.json(sale);
   }
 
   async validSale(request:Request, response: Response): Promise<Response> {
-    const saleRepository = new SaleRepository();
-    const validSaleService = new ValidSaleService(
-      saleRepository
-    );
-    
+    const validSaleService = container.resolve(ValidSaleService);
     await validSaleService.execute(
       request.params.id,
     );
@@ -236,6 +239,16 @@ class SaleController {
     });
 
     return response.status(200).send();
+  }
+
+  async validSignal(request:Request, response: Response): Promise<Response> {
+    const validSignalService = container.resolve(ValidSignalService);
+    
+    await validSignalService.execute(
+      request.params.id,
+    );
+
+    return response.status(204).send();
   }
 }
 
