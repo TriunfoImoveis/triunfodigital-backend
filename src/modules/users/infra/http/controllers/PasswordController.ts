@@ -15,12 +15,11 @@ class PasswordController {
   }
 
   async update(request: Request, response: Response): Promise<Response> {
-    const {token, new_password} = request.body;
 
     const resetPasswordService = container.resolve(ResetPasswordService);
     await resetPasswordService.execute({
-      token,
-      new_password
+      token: request.params.id,
+      new_password: request.body.new_password,
     });
 
     return response.status(204).send();

@@ -14,10 +14,8 @@ passwordRouter.post('/forgot', celebrate({
   }
 }), passwordConttroller.create);
 
-passwordRouter.post('/reset', celebrate({
+passwordRouter.post('/reset/:id', celebrate({
   [Segments.BODY]: {
-    token: Joi.string().uuid().required()
-      .messages(validatorFields({name: "'token'"})),
     new_password: Joi.string().$.min(6).max(15)
       .rule({ 
         message: "'nova senha' deve ter entre 6 e 15 caracteres" 
