@@ -44,13 +44,18 @@ class UpdateUserService {
 
     if (body.email) {
       const {email} = body;
-      const emailExists = await this.usersRepository.findByEmail(email);
-      if (emailExists) {
-        throw new AppError(
-          "Usuário com este e-mail já existe, tente outro e-mail.", 
-          400
-        );
-      }
+      // Verifica se o usuário está atualizando o e-mail dele.
+      if (email === user.email) {
+        delete body.email;
+      } else {
+        const emailExists = await this.usersRepository.findByEmail(email);
+        if (emailExists) {
+          throw new AppError(
+            "Usuário com este e-mail já existe, tente outro e-mail.", 
+            400
+          );
+        }
+      }  
     }
 
     if (body.admission_date) {
