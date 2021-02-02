@@ -53,6 +53,7 @@ class UsersController {
       departament,
       subsidiary,
       office,
+      bank_data,
     } = request.body;
 
     const createUser = container.resolve(CreateUserService);
@@ -68,6 +69,7 @@ class UsersController {
       departament,
       subsidiary,
       office,
+      bank_data,
     });
 
     return response.json(classToClass(newUser));

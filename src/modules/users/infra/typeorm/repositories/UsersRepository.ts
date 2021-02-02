@@ -1,4 +1,4 @@
-import { getRepository, Like, Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 
 import AppError from "@shared/errors/AppError";
 import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
@@ -21,8 +21,11 @@ class UsersRepository implements IUserRepository {
           'office',
           'departament',
           'subsidiary',
+          'bank_data',
           'sales',
+          'sales.realty',
           'captivators',
+          'captivators.realty',
         ],
       });
 

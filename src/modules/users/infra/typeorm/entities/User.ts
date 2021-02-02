@@ -7,6 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
   ManyToMany,
+  OneToOne,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 
@@ -15,6 +16,7 @@ import Departament from '@modules/organizations/infra/typeorm/entities/Departame
 import Office from '@modules/organizations/infra/typeorm/entities/Office';
 import Subsidiary from '@modules/organizations/infra/typeorm/entities/Subsidiary';
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
+import BankData from './BankData';
 
 @Entity('users')
 class User {
@@ -60,6 +62,9 @@ class User {
   @ManyToOne(type => Office, users => User)
   @JoinColumn({ name: 'office_id' })
   office: Office;
+ 
+  @OneToOne(type => BankData, bank_data => bank_data.user)
+  bank_data: BankData;
 
   @ManyToMany(type => Sale, sale => sale.sale_has_sellers)
   sales: Sale[];
