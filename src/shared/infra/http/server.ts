@@ -58,16 +58,16 @@ class App {
   }
 
   private async sockets() {
-    const server: http.Server = http.createServer(this.app);
-    const sio: io.Server = new io.Server(server, {transports: ["websocket", "polling"]});
+    // const server: http.Server = http.createServer(this.app);
+    // const sio: io.Server = new io.Server(server, {transports: ["websocket", "polling"]});
     
-    sio.on('connection', (socket: io.Socket) => {
-      console.log('connection');
+    // sio.on('connection', (socket: io.Socket) => {
+    //   console.log('connection');
 
-      socket.on('disconnect', () => {
-          console.log('client disconnected');
-      })
-    });
+    //   socket.on('disconnect', () => {
+    //       console.log('client disconnected');
+    //   })
+    // });
   }
 
   execute() {

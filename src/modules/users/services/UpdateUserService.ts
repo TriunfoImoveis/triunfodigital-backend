@@ -62,6 +62,16 @@ class UpdateUserService {
       body.admission_date = add(body.admission_date, {hours: 3});
     }
 
+    if (body.bank_data) {
+      // Se já existe conta bancária cadastrada, pega o id da conta bancária.
+      if (user.bank_data) {
+        body.bank_data.id = user.bank_data.id;
+      }
+      user.bank_data = body.bank_data;
+      await this.usersRepository.save(user);
+      delete body.bank_data;
+    }
+    
     const userUpdate = await this.usersRepository.update(id, body);
 
     return userUpdate;

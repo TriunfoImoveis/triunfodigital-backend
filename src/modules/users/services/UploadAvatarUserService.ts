@@ -26,7 +26,7 @@ class UploadAvatarUserService {
     const user = await this.usersRepository.findById(user_id);
 
     if (!user) {
-      throw new AppError('Only authenticated users can change avatar.', 401);
+      throw new AppError("Usuário não existe.", 404);
     }
 
     if (user.avatar) {

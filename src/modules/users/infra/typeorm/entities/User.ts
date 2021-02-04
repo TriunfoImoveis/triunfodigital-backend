@@ -63,7 +63,7 @@ class User {
   @JoinColumn({ name: 'office_id' })
   office: Office;
  
-  @OneToOne(type => BankData, bank_data => bank_data.user)
+  @OneToOne(type => BankData, bank_data => bank_data.user, {cascade: true})
   bank_data: BankData;
 
   @ManyToMany(type => Sale, sale => sale.sale_has_sellers)
