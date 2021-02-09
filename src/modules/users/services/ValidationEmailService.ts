@@ -1,18 +1,12 @@
 import { inject, injectable } from "tsyringe";
-import { hash } from "bcryptjs";
 import { isToday } from "date-fns";
 
 import IUserRepository from "@modules/users/repositories/IUserRepository";
 import AppError from "@shared/errors/AppError";
 import IUserTokenRepository from "@modules/users/repositories/IUserTokenRepository";
 
-interface IRequest {
-  token: string;
-  new_password: string;
-}
-
 @injectable()
-class ResetPasswordService {
+class ValidationEmailService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUserRepository,
@@ -21,7 +15,7 @@ class ResetPasswordService {
     private userTokensRepository: IUserTokenRepository,
   ) {}
 
-  public async execute({token, new_password}: IRequest): Promise<void> {
+  public async execute(token: string): Promise<void> {
     const userTokenExists = await this.userTokensRepository.findByToken(token);
     if (!userTokenExists) {
       throw new AppError("Token inválido ou não existe.", 404);
@@ -37,11 +31,10 @@ class ResetPasswordService {
       throw new AppError("Usuário não existe.", 404);
     }
     
-    const hashedPassword = await hash(new_password, 8);
-    await this.usersRepository.update(user.id, {password: hashedPassword});
+    await this.usersRepository.update(user.id, {validated_account: true});
 
     await this.userTokensRepository.delete(userTokenExists.token);
   }
 }
 
-export default ResetPasswordService;
+export default ValidationEmailService;

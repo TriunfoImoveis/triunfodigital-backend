@@ -51,6 +51,9 @@ class User {
   @Column({ type: 'boolean', default: true })
   active: boolean;
 
+  @Column({ type: 'boolean', default: false })
+  validated_account: boolean;
+
   @ManyToOne(type => Departament, users => User)
   @JoinColumn({ name: 'departament_id' })
   departament: Departament;

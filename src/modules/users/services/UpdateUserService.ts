@@ -1,11 +1,12 @@
 import {hash, compare} from 'bcryptjs';
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
 import { add } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 import User from '@modules/users/infra/typeorm/entities/User';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
+import SendValidEmailService from './SendValidEmailService';
 
 interface IRequestDTO {
   id: string;
@@ -55,6 +56,10 @@ class UpdateUserService {
             400
           );
         }
+        body.validated_account = false;
+        // Enviar e-mail de validação de conta
+        const sendValidEmailService = container.resolve(SendValidEmailService);
+        await sendValidEmailService.execute(user.email);
       }  
     }
 

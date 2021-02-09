@@ -15,6 +15,9 @@ passwordRouter.post('/forgot', celebrate({
 }), passwordConttroller.create);
 
 passwordRouter.post('/reset/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid(),
+  },
   [Segments.BODY]: {
     new_password: Joi.string().$.min(6).max(15)
       .rule({ 
