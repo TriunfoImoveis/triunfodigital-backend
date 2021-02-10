@@ -66,7 +66,8 @@ class DepartamentsRepository implements IDepartamentRepository {
         },
         order: {
           name: "ASC",
-        }
+        },
+        cache: true,
       });
       return departaments;
     } catch (err) {

@@ -64,7 +64,8 @@ class ClientsRepository implements IClientRepository {
       const clients = await this.ormRepository.find({
         where: {
           active: true,
-        }
+        },
+        cache: true,
       });
 
       return clients;

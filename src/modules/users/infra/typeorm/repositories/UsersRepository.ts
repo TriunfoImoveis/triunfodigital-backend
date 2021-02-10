@@ -119,6 +119,7 @@ class UsersRepository implements IUserRepository {
         .andWhere("subsidiary.city LIKE :city", { city })
         .andWhere("departament.name LIKE :departament", { departament })
         .orderBy("user.name", "ASC")
+        .cache(true)
         .getMany();
 
       return users;
