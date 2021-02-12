@@ -31,6 +31,13 @@ class SendForgotPasswordService {
     if (!user) {
       throw new AppError("Usuário não existe.", 404);
     }
+    
+    if (!user.validated_account) {
+      throw new AppError(
+        "E-mail de usuário não validada até o momento. Valide seu e-mail de acesso antes.", 
+        403
+      );
+    }
 
     const {token} = await this.userTokensRepository.create({
       token: v4(), 
@@ -50,10 +57,7 @@ class SendForgotPasswordService {
         name: nameDefault,
         email: emailDefault,
       },
-      to: {
-        name: user.name,
-        email: user.email,
-      },
+      to: user.email,
       subject: "[Triunfo Digital] Recuperação de Senha",
       templateData: {
         file: pathForgotPasswordTemplate,

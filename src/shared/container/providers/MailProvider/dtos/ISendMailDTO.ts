@@ -6,7 +6,7 @@ interface IMailContact {
 }
 
 export default interface ISendMailDTO {
-  to: IMailContact;
+  to: string;
   from: IMailContact;
   subject: string;
   templateData: IParseMailTemplateDTO;

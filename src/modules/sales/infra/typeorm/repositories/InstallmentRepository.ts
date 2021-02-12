@@ -35,7 +35,9 @@ class InstallmentRespository implements IInstallmentRepository {
 
   async findById(id: string): Promise<Installment | undefined> {
     try {
-      const installment = await this.ormRepository.findOne(id);
+      const installment = await this.ormRepository.findOne(id, {
+        relations: ['sale']
+      });
       return installment;
     } catch (err) {
       throw new AppError(err.detail);

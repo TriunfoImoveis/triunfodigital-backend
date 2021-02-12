@@ -1,9 +1,10 @@
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
+import { format, parseISO } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import { Status } from '@modules/sales/infra/typeorm/entities/Sale';
-import { StatusInstallment } from '@modules/sales/infra/typeorm/entities/Installment';
+import SendEmailSaleService from './SendEmailSaleService';
 
 @injectable()
 class ValidSaleService {
@@ -14,7 +15,6 @@ class ValidSaleService {
 
   public async execute(id: string): Promise<void> {
     const sale = await this.salesRepository.findById(id);
-    
     if (!sale) {
       throw new AppError("Venda não existe.", 404);
     } else if (sale.status !== Status.NV) {
@@ -22,7 +22,7 @@ class ValidSaleService {
     } else if (!sale.payment_signal) {
       throw new AppError(
         "Confirme o pagamento do Sinal (ATO) antes de validar a venda.", 
-        400
+        402
       );
     } else if (!sale.installments.length) {
       throw new AppError(
@@ -50,8 +50,33 @@ class ValidSaleService {
     } else {
       var status = Status.PE;
     }
-
     await this.salesRepository.validSale(id, status);
+    
+    // Envia e-mail para os corretores da venda.
+    const nameSellers = sale.sale_has_sellers.map(seller => {
+      return seller.name;
+    });
+
+    const dateFormated = format(parseISO(sale.sale_date.toString()), 'dd/MM/yyyy');
+    
+    const sendEmailSaleService = container.resolve(SendEmailSaleService);
+    await sendEmailSaleService.execute({
+      file: "valid_sale.hbs",
+      subject: "[Triunfo Digital] Venda Validada",
+      to_users: sale.sale_has_sellers,
+      variables: {
+        type: sale.sale_type,
+        date: dateFormated,
+        enterprise: sale.realty.enterprise,
+        value: Number(sale.realty_ammount).toLocaleString(
+          'pt-BR', { 
+            style: 'currency', 
+            currency: 'BRL' 
+          }
+        ),
+        sellers: nameSellers,
+      }
+    });
   }
 }
 

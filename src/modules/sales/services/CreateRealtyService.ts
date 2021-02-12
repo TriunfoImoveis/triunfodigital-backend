@@ -1,10 +1,16 @@
+import { inject, injectable } from 'tsyringe';
+
 import AppError from '@shared/errors/AppError';
 import ICreateRealtyDTO from "@modules/sales/dtos/ICreateRealtyDTO";
 import Realty from "@modules/sales/infra/typeorm/entities/Realty";
 import RealtyRepository from "@modules/sales/infra/typeorm/repositories/RealtyRepository";
 
+@injectable()
 class CreateRealtyService {
-  constructor(private realtyRepository: RealtyRepository){}
+  constructor(
+    @inject('RealtiesRepository')
+    private realtyRepository: RealtyRepository,
+  ){}
 
   public async execute({
     enterprise,

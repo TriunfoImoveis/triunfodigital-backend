@@ -47,6 +47,7 @@ class UsersRepository implements IUserRepository {
           "admission_date",
           "goal",
           "password",
+          "validated_account",
         ],
         where: { email },
         relations: [
