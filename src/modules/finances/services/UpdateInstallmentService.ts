@@ -39,15 +39,16 @@ class UpdateInstallmentService {
     // Verificar se a venda foi totalmente paga.
     const {id} = checkInstallmentExists.sale;
     const sale = await this.salesRepository.findById(id);
-    
-    if (sale?.status === Status.PE) {
-      // retorna true se todas as parcelas estão com status PAGO.
-      const fullPayment = sale.installments.every((installment) => {
-        return installment.status === StatusInstallment.PAG;
-      });
+    if (sale) { 
+      if (sale.status === Status.PE) {
+        const fullPayment = sale.installments.every((installment) => {
+          // retorna true se todas as parcelas estão com status PAGO.
+          return installment.status === StatusInstallment.PAG;
+        });
 
-      if (fullPayment) {
-        await this.salesRepository.validSale(sale.id, Status.PT);
+        if (fullPayment) {
+          await this.salesRepository.validSale(sale.id, Status.PT);
+        }
       }
     }
   }
