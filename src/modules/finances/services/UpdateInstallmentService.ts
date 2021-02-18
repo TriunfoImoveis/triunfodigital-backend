@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
 
-import IInstallmentRepository from "@modules/sales/repositories/IInstallmentRepository";
+import IInstallmentRepository from "@modules/finances/repositories/IInstallmentRepository";
 import AppError from "@shared/errors/AppError";
-import { StatusInstallment } from "@modules/sales/infra/typeorm/entities/Installment";
+import { StatusInstallment } from "@modules/finances/infra/typeorm/entities/Installment";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import { Status } from "@modules/sales/infra/typeorm/entities/Sale";
 

@@ -6,7 +6,7 @@ import {
     JoinColumn, 
 } from "typeorm";
 
-import Sale from "./Sale";
+import Sale from "@modules/sales/infra/typeorm/entities/Sale";
 
 export enum StatusInstallment {
     PEN = "PENDENTE",

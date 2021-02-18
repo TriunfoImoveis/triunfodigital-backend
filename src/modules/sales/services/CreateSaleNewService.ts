@@ -5,7 +5,7 @@ import AppError from '@shared/errors/AppError';
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import Sale from '@modules/sales/infra/typeorm/entities/Sale';
-import ICreateInstallmentDTO from '@modules/sales/dtos/ICreateInstallmentDTO';
+import ICreateInstallmentDTO from '@modules/finances/dtos/ICreateInstallmentDTO';
 import CreateNotificationService from '@modules/notifications/services/CreateNotificationService';
 import SendEmailSaleService from './SendEmailSaleService';
 import IUserRepository from '@modules/users/repositories/IUserRepository';

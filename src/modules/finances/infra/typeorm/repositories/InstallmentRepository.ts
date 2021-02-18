@@ -1,16 +1,28 @@
 import { getRepository, Repository } from 'typeorm';
 
 import AppError from '@shared/errors/AppError';
-import ICreateInstallmentDTO from '@modules/sales/dtos/ICreateInstallmentDTO';
-import IInstallmentRepository from '@modules/sales/repositories/IInstallmentRepository';
-import Installment from '@modules/sales/infra/typeorm/entities/Installment';
-import IUpdateInstallmentDTO from '@modules/sales/dtos/IUpdateInstallmentDTO';
+import ICreateInstallmentDTO from '@modules/finances/dtos/ICreateInstallmentDTO';
+import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
+import Installment from '@modules/finances/infra/typeorm/entities/Installment';
+import IUpdateInstallmentDTO from '@modules/finances/dtos/IUpdateInstallmentDTO';
 
 class InstallmentRespository implements IInstallmentRepository {
   private ormRepository: Repository<Installment>;
 
   constructor() {
     this.ormRepository = getRepository(Installment);
+  }
+
+  async list(): Promise<Installment[]> {
+    try {
+      const listInstallments = await this.ormRepository.find({
+        where: {status: "PENDENTE"}
+      });
+
+      return listInstallments;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
   }
 
   async create(installments: ICreateInstallmentDTO[]): Promise<Installment[]> {

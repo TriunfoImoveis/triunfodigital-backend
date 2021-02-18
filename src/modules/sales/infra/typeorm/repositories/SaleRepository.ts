@@ -8,7 +8,7 @@ import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IRequestSaleDTO from "@modules/sales/dtos/IRequestSaleDTO";
 import INotValidSaleDTO from "@modules/sales/dtos/INotValidSaleDTO";
 import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
-import ICreateInstallmentDTO from "@modules/sales/dtos/ICreateInstallmentDTO";
+import ICreateInstallmentDTO from "@modules/finances/dtos/ICreateInstallmentDTO";
 
 class SaleRepository implements ISaleRepository {
   private ormRepository: Repository<Sale>;

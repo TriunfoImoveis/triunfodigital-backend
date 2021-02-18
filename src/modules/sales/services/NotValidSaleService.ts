@@ -5,8 +5,8 @@ import AppError from '@shared/errors/AppError';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import INotValidSaleDTO from '@modules/sales/dtos/INotValidSaleDTO';
 import { Status } from '@modules/sales/infra/typeorm/entities/Sale';
-import { StatusInstallment } from '@modules/sales/infra/typeorm/entities/Installment';
-import IInstallmentRepository from '@modules/sales/repositories/IInstallmentRepository';
+import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
+import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
 import SendEmailSaleService from './SendEmailSaleService';
 
 @injectable()
