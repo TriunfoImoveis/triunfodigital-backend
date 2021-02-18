@@ -1,11 +1,12 @@
 import { hash } from 'bcryptjs';
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
 import { add } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/User';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
+import SendValidEmailService from './SendValidEmailService';
 
 
 @injectable()
@@ -26,6 +27,7 @@ class CreateUserService {
     departament,
     subsidiary,
     office,
+    bank_data,
   }: ICreateUsersDTO): Promise<User> {
     const checkEmailExist = await this.usersRepository.findByEmail(email);
 
@@ -50,6 +52,7 @@ class CreateUserService {
       departament,
       subsidiary,
       office,
+      bank_data,
     });
 
     if (!user) {
@@ -58,6 +61,10 @@ class CreateUserService {
         400
       );
     }
+
+    // Enviar e-mail de validação de conta
+    const sendValidEmailService = container.resolve(SendValidEmailService);
+    await sendValidEmailService.execute(user.email);
 
     return user;
   }

@@ -1,11 +1,12 @@
 import {hash, compare} from 'bcryptjs';
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
 import { add } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 import User from '@modules/users/infra/typeorm/entities/User';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
+import SendValidEmailService from './SendValidEmailService';
 
 interface IRequestDTO {
   id: string;
@@ -44,19 +45,38 @@ class UpdateUserService {
 
     if (body.email) {
       const {email} = body;
-      const emailExists = await this.usersRepository.findByEmail(email);
-      if (emailExists) {
-        throw new AppError(
-          "Usuário com este e-mail já existe, tente outro e-mail.", 
-          400
-        );
-      }
+      // Verifica se o usuário está atualizando o e-mail dele.
+      if (email === user.email) {
+        delete body.email;
+      } else {
+        const emailExists = await this.usersRepository.findByEmail(email);
+        if (emailExists) {
+          throw new AppError(
+            "Usuário com este e-mail já existe, tente outro e-mail.", 
+            400
+          );
+        }
+        body.validated_account = false;
+        // Enviar e-mail de validação de conta
+        const sendValidEmailService = container.resolve(SendValidEmailService);
+        await sendValidEmailService.execute(user.email);
+      }  
     }
 
     if (body.admission_date) {
       body.admission_date = add(body.admission_date, {hours: 3});
     }
 
+    if (body.bank_data) {
+      // Se já existe conta bancária cadastrada, pega o id da conta bancária.
+      if (user.bank_data) {
+        body.bank_data.id = user.bank_data.id;
+      }
+      user.bank_data = body.bank_data;
+      await this.usersRepository.save(user);
+      delete body.bank_data;
+    }
+    
     const userUpdate = await this.usersRepository.update(id, body);
 
     return userUpdate;

@@ -5,6 +5,7 @@ import usersRouter from '@modules/users/infra/http/routes/user.routes';
 import passwordRouter from '@modules/users/infra/http/routes/password.routes';
 import sessionRouter from '@modules/users/infra/http/routes//session.routes';
 import rankingRouter from '@modules/users/infra/http/routes/ranking.routes';
+import validEmailRouter from '@modules/users/infra/http/routes/validEmail.routes';
 
 // ORGANIZATIONS
 import officeRouter from '@modules/organizations/infra/http/routes/office.routes';
@@ -33,6 +34,7 @@ routes.use('/users', usersRouter);
 routes.use('/password', passwordRouter);
 routes.use('/sessions', sessionRouter);
 routes.use('/ranking', rankingRouter);
+routes.use('/valid-email', validEmailRouter);
 
 // Module Organizations
 routes.use('/office', officeRouter);

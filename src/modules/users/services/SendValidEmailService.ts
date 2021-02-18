@@ -8,12 +8,8 @@ import IUserTokenRepository from "@modules/users/repositories/IUserTokenReposito
 import IMailProvider from "@shared/container/providers/MailProvider/models/IMailProvider";
 import mailConfig from "@config/mail";
 
-interface IRequest {
-  email: string;
-}
-
 @injectable()
-class SendForgotPasswordService {
+class SendValidEmailService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUserRepository,
@@ -25,7 +21,7 @@ class SendForgotPasswordService {
     private mailProvider: IMailProvider,
   ) {}
 
-  public async execute({email}: IRequest): Promise<void> {
+  public async execute(email: string): Promise<void> {
     const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
@@ -37,11 +33,11 @@ class SendForgotPasswordService {
       user_id: user.id
     });
 
-    const pathForgotPasswordTemplate = path.resolve(
+    const pathValidEmailTemplate = path.resolve(
       __dirname, 
       '..', 
       'views',
-      'forgot_password.hbs'
+      'valid_email.hbs'
     );
     
     const {nameDefault, emailDefault} = mailConfig.defaults.from;
@@ -54,16 +50,16 @@ class SendForgotPasswordService {
         name: user.name,
         email: user.email,
       },
-      subject: "[Triunfo Digital] Recuperação de Senha",
+      subject: "[Triunfo Digital] Validação de E-mail",
       templateData: {
-        file: pathForgotPasswordTemplate,
+        file: pathValidEmailTemplate,
         variables: {
           name: user.name,
-          link: `${process.env.APP_WEB_URL}/password/reset/${token}`,
+          link: `${process.env.APP_WEB_URL}/valid-email/${token}`,
         }
       }
     });
   }
 }
 
-export default SendForgotPasswordService;
+export default SendValidEmailService;

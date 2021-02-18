@@ -1,6 +1,7 @@
 import Departament from '@modules/organizations/infra/typeorm/entities/Departament';
 import Office from '@modules/organizations/infra/typeorm/entities/Office';
 import Subsidiary from '@modules/organizations/infra/typeorm/entities/Subsidiary';
+import BankData from '@modules/users/infra/typeorm/entities/BankData';
 
 export default interface IUpdateUserDTO {
   name?: string;
@@ -13,4 +14,6 @@ export default interface IUpdateUserDTO {
   departament?: Departament;
   subsidiary?: Subsidiary;
   office?: Office;
+  bank_data?: BankData;
+  validated_account?: Boolean;
 }
