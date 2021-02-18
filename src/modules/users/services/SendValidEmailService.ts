@@ -46,10 +46,7 @@ class SendValidEmailService {
         name: nameDefault,
         email: emailDefault,
       },
-      to: {
-        name: user.name,
-        email: user.email,
-      },
+      to: user.email,
       subject: "[Triunfo Digital] Validação de E-mail",
       templateData: {
         file: pathValidEmailTemplate,

@@ -18,8 +18,6 @@ import IBuilderRepository from '@modules/sales/repositories/IBuilderRepository';
 import BuildersRespository from '@modules/sales/infra/typeorm/repositories/BuildersRepository';
 import IClientRepository from '@modules/sales/repositories/IClientRepository';
 import ClientsRepository from '@modules/sales/infra/typeorm/repositories/ClientsRepository';
-import IInstallmentRepository from '@modules/sales/repositories/IInstallmentRepository';
-import InstallmentRespository from '@modules/sales/infra/typeorm/repositories/InstallmentRepository';
 import IMotiveRepository from '@modules/sales/repositories/IMotiveRepository';
 import MotiveRepository from '@modules/sales/infra/typeorm/repositories/MotiveRepository';
 import IOriginRepository from '@modules/sales/repositories/IOriginRepository';
@@ -32,6 +30,9 @@ import IRealtyRepository from '@modules/sales/repositories/IRealtyRepository';
 import RealtyRepository from '@modules/sales/infra/typeorm/repositories/RealtyRepository';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import SaleRepository from '@modules/sales/infra/typeorm/repositories/SaleRepository';
+
+import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
+import InstallmentRespository from '@modules/finances/infra/typeorm/repositories/InstallmentRepository';
 
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import NotificationsRepository from '@modules/notifications/infra/typeorm/repositories/NotificationsRepository';
@@ -75,10 +76,6 @@ container.registerSingleton<IClientRepository>(
   'ClientsRepository',
   ClientsRepository,
 );
-container.registerSingleton<IInstallmentRepository>(
-  'InstallmentsRepository',
-  InstallmentRespository,
-);
 container.registerSingleton<IMotiveRepository>(
   'MotivesRepository',
   MotiveRepository,
@@ -104,6 +101,13 @@ container.registerSingleton<ISaleRepository>(
   SaleRepository,
 );
 // SALE
+
+// FINANCE
+container.registerSingleton<IInstallmentRepository>(
+  'InstallmentsRepository',
+  InstallmentRespository,
+);
+// FINANCE
 
 // NOTIFICATION
 container.registerSingleton<INotificationsRepository>(

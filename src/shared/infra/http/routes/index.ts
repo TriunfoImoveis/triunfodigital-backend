@@ -22,7 +22,7 @@ import realtyRoutes from '@modules/sales/infra/http/routes/realty.routes';
 import saleRoutes from '@modules/sales/infra/http/routes/sale.routes';
 import paymentTypeRoutes from '@modules/sales/infra/http/routes/paymentType.routes';
 import motiveRoutes from '@modules/sales/infra/http/routes/motive.routes';
-import installmentRoutes from '@modules/sales/infra/http/routes/installment.routes';
+import installmentRoutes from '@modules/finances/infra/http/routes/installment.routes';
 
 // NOTIFICATION
 import notificationRouter from '@modules/notifications/infra/http/routes/notification.routes';
@@ -51,6 +51,8 @@ routes.use('/origin-sale', originRoutes);
 routes.use('/realty', realtyRoutes);
 routes.use('/motive', motiveRoutes);
 routes.use('/sale', saleRoutes);
+
+// Module Finances
 routes.use('/installment', installmentRoutes);
 
 // Module Notifications

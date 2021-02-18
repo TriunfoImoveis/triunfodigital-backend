@@ -4,9 +4,7 @@ import { container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import SaleRepository from '@modules/sales/infra/typeorm/repositories/SaleRepository';
-import RealtyRepository from '@modules/sales/infra/typeorm/repositories/RealtyRepository';
 import CreateRealtyService from '@modules/sales/services/CreateRealtyService';
-import ClientsRepository from '@modules/sales/infra/typeorm/repositories/ClientsRepository';
 import CreateClientService from '@modules/sales/services/CreateClientService';
 import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
 import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService';
@@ -15,6 +13,7 @@ import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
 import NotValidSaleService from '@modules/sales/services/NotValidSaleService';
 import UpdateSaleService from '@modules/sales/services/UpdateSaleService';
 import ValidSignalService from '@modules/sales/services/ValidSignalService';
+import ShowSaleService from '@modules/sales/services/ShowSaleService';
 
 class SaleController {
 
@@ -36,12 +35,10 @@ class SaleController {
 
 
   async show(request: Request, response: Response): Promise<Response> {
-    const saleRepository = new SaleRepository();
-    const sale = await saleRepository.findById(request.params.id);
-
-    if (!sale) {
-      throw new AppError('Sale not exists.');
-    }
+    const showSaleService = container.resolve(ShowSaleService);
+    const sale = await showSaleService.execute({
+      id: request.params.id
+    });
 
     return response.json(classToClass(sale));
   }
@@ -67,9 +64,7 @@ class SaleController {
       installments,
     } = request.body;
     
-    const realtyRepository = new RealtyRepository();
-    const createRealtyService = new CreateRealtyService(realtyRepository);
-
+    const createRealtyService = container.resolve(CreateRealtyService);
     const realtyId = await createRealtyService.execute({
       enterprise: realty.enterprise,
       unit: realty.unit,
@@ -79,9 +74,7 @@ class SaleController {
       property: realty.property,
     });
 
-    const clientRepository = new ClientsRepository();
-    const createClientService = new CreateClientService(clientRepository);
-
+    const createClientService = container.resolve(CreateClientService);
     const client_buyerId = await createClientService.execute({
       name: client_buyer.name,
       cpf: client_buyer.cpf,
@@ -140,9 +133,7 @@ class SaleController {
       installments,
     } = request.body;
 
-    const realtyRepository = new RealtyRepository();
-    const createRealtyService = new CreateRealtyService(realtyRepository);
-
+    const createRealtyService = container.resolve(CreateRealtyService);
     const realtyId = await createRealtyService.execute({
       enterprise: realty.enterprise,
       unit: realty.unit,
@@ -152,9 +143,7 @@ class SaleController {
       property: realty.property,
     });
 
-    const clientRepository = new ClientsRepository();
-    const createClientService = new CreateClientService(clientRepository);
-
+    const createClientService = container.resolve(CreateClientService);
     const client_buyerId = await createClientService.execute({
       name: client_buyer.name,
       cpf: client_buyer.cpf,
@@ -181,9 +170,7 @@ class SaleController {
       gender: client_seller.gender,
     });
 
-    const saleRepository = new SaleRepository();
-    const createSaleUsedService = new CreateSaleUsedService(saleRepository);
-
+    const createSaleUsedService = container.resolve(CreateSaleUsedService);
     const sale = await createSaleUsedService.execute({
       sale_type: SaleType.U,
       sale_date,

@@ -47,6 +47,7 @@ class UsersRepository implements IUserRepository {
           "admission_date",
           "goal",
           "password",
+          "validated_account",
         ],
         where: { email },
         relations: [
@@ -119,6 +120,7 @@ class UsersRepository implements IUserRepository {
         .andWhere("subsidiary.city LIKE :city", { city })
         .andWhere("departament.name LIKE :departament", { departament })
         .orderBy("user.name", "ASC")
+        .cache(true)
         .getMany();
 
       return users;

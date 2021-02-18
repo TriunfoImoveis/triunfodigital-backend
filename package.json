@@ -19,6 +19,7 @@
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "handlebars": "^4.7.6",
+    "ioredis": "^4.22.0",
     "jsonwebtoken": "^8.5.1",
     "mime": "^2.4.6",
     "mongodb": "^3.6.3",

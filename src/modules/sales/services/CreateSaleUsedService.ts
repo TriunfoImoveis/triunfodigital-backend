@@ -1,13 +1,24 @@
-import { add } from "date-fns";
+import { container, inject, injectable } from "tsyringe";
+import { add, format } from "date-fns";
 
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import AppError from "@shared/errors/AppError";
 import Sale from "@modules/sales/infra/typeorm/entities/Sale";
-import ICreateInstallmentDTO from "@modules/sales/dtos/ICreateInstallmentDTO";
+import ICreateInstallmentDTO from "@modules/finances/dtos/ICreateInstallmentDTO";
+import CreateNotificationService from "@modules/notifications/services/CreateNotificationService";
+import IUserRepository from "@modules/users/repositories/IUserRepository";
+import SendEmailSaleService from "./SendEmailSaleService";
 
+@injectable()
 class CreateSaleUsedService {
-  constructor(private saleRepository: ISaleRepository) {}
+  constructor(
+    @inject('SalesRepository')
+    private saleRepository: ISaleRepository,
+
+    @inject('UsersRepository')
+    private usersRepository: IUserRepository,
+  ) {}
 
   public async execute({
     sale_type,
@@ -70,14 +81,56 @@ class CreateSaleUsedService {
       pay_date_signal: ajusted_date_signal,
     }, installments);
 
-    if (!sale) {
+    if (sale) {
+      // Criar notificação.
+      const saleRegister = await this.saleRepository.findById(sale.id);
+      if (saleRegister) {
+        // const createNotificationService = container.resolve(CreateNotificationService);
+        // await createNotificationService.execute({
+        //   content: "Venda de imóvel USADO cadastrada.",
+        //   sale_id: sale.id,
+        //   type: 'CREATE',
+        // });
+
+        // Enviar e-mail para o Financeiro.
+        const users = await this.usersRepository.findUsers({
+          city: '%',
+          departament: '%',
+          name: '%',
+          office: 'Administrador',
+        });
+
+        const nameSellers = saleRegister.sale_has_sellers.map(seller => {
+          return seller.name;
+        });
+
+        const sendEmailSaleService = container.resolve(SendEmailSaleService);
+        await sendEmailSaleService.execute({
+          file: "register_sale.hbs",
+          subject: "[Triunfo Digital] Nova Venda Cadastrada",
+          to_users: users,
+          variables: {
+            type: sale.sale_type,
+            date: format(sale.sale_date, 'dd/MM/yyyy'),
+            enterprise: sale.realty.enterprise,
+            value: sale.realty_ammount.toLocaleString(
+              'pt-BR', { 
+                style: 'currency', 
+                currency: 'BRL' 
+              }
+            ),
+            sellers: nameSellers,
+          }
+        });
+      }
+
+      return sale;
+    } else {
       throw new AppError(
         "Erro durante a criação da venda, ckeck seus dados e tente novamente.",
         400
       );
     }
-
-    return sale;
   }
 }
 

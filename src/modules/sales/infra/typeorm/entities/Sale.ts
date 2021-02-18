@@ -12,9 +12,9 @@ import {
 
 import User from "@modules/users/infra/typeorm/entities/User";
 import Company from "@modules/organizations/infra/typeorm/entities/Company";
+import Installment from "@modules/finances/infra/typeorm/entities/Installment";
 import Builder from "./Builder";
 import Client from "./Client";
-import Installment from "./Installment";
 import Motive from "./Motive";
 import OriginSale from "./OriginSale";
 import PaymentType from "./PaymentType";

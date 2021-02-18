@@ -2,10 +2,10 @@ import { inject, injectable } from "tsyringe";
 import { add } from "date-fns";
 
 import AppError from "@shared/errors/AppError";
-import ICreateInstallmentDTO from "@modules/sales/dtos/ICreateInstallmentDTO";
-import IInstallmentRepository from "@modules/sales/repositories/IInstallmentRepository";
+import ICreateInstallmentDTO from "@modules/finances/dtos/ICreateInstallmentDTO";
+import IInstallmentRepository from "@modules/finances/repositories/IInstallmentRepository";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
-import Installment from "@modules/sales/infra/typeorm/entities/Installment";
+import Installment from "@modules/finances/infra/typeorm/entities/Installment";
 import { Status } from "@modules/sales/infra/typeorm/entities/Sale";
 
 interface IRequestDTO {

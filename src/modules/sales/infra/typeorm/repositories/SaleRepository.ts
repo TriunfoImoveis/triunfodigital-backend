@@ -8,7 +8,7 @@ import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IRequestSaleDTO from "@modules/sales/dtos/IRequestSaleDTO";
 import INotValidSaleDTO from "@modules/sales/dtos/INotValidSaleDTO";
 import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
-import ICreateInstallmentDTO from "@modules/sales/dtos/ICreateInstallmentDTO";
+import ICreateInstallmentDTO from "@modules/finances/dtos/ICreateInstallmentDTO";
 
 class SaleRepository implements ISaleRepository {
   private ormRepository: Repository<Sale>;
@@ -42,6 +42,7 @@ class SaleRepository implements ISaleRepository {
       .where("sale.status = :status", { status })
       .andWhere("sellers.name ILIKE :name", { name: name+"%" })
       .orderBy("sale.sale_date", "DESC")
+      .cache(true)
       .getMany();
 
       return sales;
@@ -232,6 +233,7 @@ class SaleRepository implements ISaleRepository {
           "sale.status IN (:...status)",
           { status: ["PENDENTE", "PAGO_TOTAL"] }
         )
+        .cache(true)
         .getMany();
 
       return sales;
@@ -265,6 +267,7 @@ class SaleRepository implements ISaleRepository {
           "sale.status IN (:...status)",
           { status: ["PENDENTE", "PAGO_TOTAL"] }
         )
+        .cache(true)
         .getMany();
 
       return sales;

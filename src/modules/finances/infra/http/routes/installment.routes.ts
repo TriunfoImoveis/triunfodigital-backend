@@ -2,11 +2,13 @@ import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 
 import ensuredAthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
-import InstallmentController from '@modules/sales/infra/http/controllers/InstallmentController';
+import InstallmentController from '@modules/finances/infra/http/controllers/InstallmentController';
 import validatorFields from '@shared/infra/http/validators/validatorFields';
 
 const installmentRoutes = Router();
-const installmentController = new InstallmentController(); 
+const installmentController = new InstallmentController();
+
+installmentRoutes.get('/', installmentController.list);
 
 installmentRoutes.use(ensuredAthenticated);
 

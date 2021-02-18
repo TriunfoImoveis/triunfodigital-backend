@@ -1,0 +1,64 @@
+<style>
+  .message-content {
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+    font-size: 18px;
+    line-height: 21px;
+  }
+
+  table {
+    border-collapse: collapse;
+    text-align: center;
+  }
+
+  th {
+    background-color: #ddd;
+  }
+
+  td {
+    border: 1px solid #ddd;
+  }
+
+  td, th {
+    padding: 8px;
+  }
+</style>
+
+<div class="message-content">
+  <h2>Que triste!</h2>
+  <p>
+    E com grande pesar que venho lhe informar que a sua venda <string>caiu</string>.
+  </p>
+  
+  <table>
+    <tr>
+      <th>Tipo de Imóvel</th>
+      <th>Data da Venda</th>
+      <th>Empreendimento</th>
+      <th>Valor</th>
+      <th>Corretores</th>
+    </tr>
+    <tr>
+      <td>{{type}}</td>
+      <td>{{date}}</td>
+      <td>{{enterprise}}</td>
+      <td>{{value}}</td>
+      <td>
+        <ul>
+          {{#each sellers}}
+            <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </td>
+    </tr>
+  </table>
+
+  <p>
+    Para mais detalhes sobre a venda, acesse o sistema Triunfo Digital clicando 
+    <a href="https://app.triunfodigital.com.br" target="_blank">aqui</a>.
+  </p>
+  <p>
+    Obrigado!<br />
+    <strong>Equipe Triunfo Digital</strong>
+  </p>
+</div>

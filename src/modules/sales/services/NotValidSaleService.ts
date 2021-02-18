@@ -1,11 +1,13 @@
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
+import { format, parseISO } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import INotValidSaleDTO from '@modules/sales/dtos/INotValidSaleDTO';
 import { Status } from '@modules/sales/infra/typeorm/entities/Sale';
-import { StatusInstallment } from '@modules/sales/infra/typeorm/entities/Installment';
-import IInstallmentRepository from '@modules/sales/repositories/IInstallmentRepository';
+import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
+import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
+import SendEmailSaleService from './SendEmailSaleService';
 
 @injectable()
 class NotValidSaleService {
@@ -46,6 +48,32 @@ class NotValidSaleService {
     }
     
     await this.salesRepository.notValidSale(data);
+
+    // Envia e-mail para os corretores da venda.
+    const nameSellers = sale.sale_has_sellers.map(seller => {
+      return seller.name;
+    });
+
+    const dateFormated = format(parseISO(sale.sale_date.toString()), 'dd/MM/yyyy');
+    
+    const sendEmailSaleService = container.resolve(SendEmailSaleService);
+    await sendEmailSaleService.execute({
+      file: "not_valid_sale.hbs",
+      subject: "[Triunfo Digital] Venda Validada",
+      to_users: sale.sale_has_sellers,
+      variables: {
+        type: sale.sale_type,
+        date: dateFormated,
+        enterprise: sale.realty.enterprise,
+        value: Number(sale.realty_ammount).toLocaleString(
+          'pt-BR', { 
+            style: 'currency', 
+            currency: 'BRL' 
+          }
+        ),
+        sellers: nameSellers,
+      }
+    });
   }
 }
 

@@ -35,10 +35,7 @@ class SESMailProvider implements IMailProvider {
           name: from.name,
           address: from.email,
         },
-        to: {
-          name: to.name,
-          address: to.email,
-        },
+        to,
         subject,
         html: await this.mailTemplateProvider.parse(templateData),
       });
