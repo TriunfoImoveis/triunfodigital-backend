@@ -16,7 +16,7 @@ class InstallmentRespository implements IInstallmentRepository {
   async list(): Promise<Installment[]> {
     try {
       const listInstallments = await this.ormRepository.find({
-        where: {status: "PENDENTE"}
+        cache: true
       });
 
       return listInstallments;

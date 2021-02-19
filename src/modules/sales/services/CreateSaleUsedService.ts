@@ -97,7 +97,7 @@ class CreateSaleUsedService {
           city: '%',
           departament: '%',
           name: '%',
-          office: 'Administrador',
+          office: 'Gerente',
         });
 
         const nameSellers = saleRegister.sale_has_sellers.map(seller => {
