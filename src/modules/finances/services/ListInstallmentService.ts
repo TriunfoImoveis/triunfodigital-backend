@@ -16,12 +16,10 @@ class ListInstallmentService {
     const listInstallments = await this.installmentsRepository.list();
 
     listInstallments.filter((installment) => {
-      if ((installment.status !== StatusInstallment.PAG) && (installment.status !== StatusInstallment.CAI)) {
+      if (installment.status === StatusInstallment.PEN) {
         const dateFormated = parseISO(installment.due_date.toString());
         if (isPast(dateFormated)) {
           installment.status = StatusInstallment.VEN;
-        } else if (isFuture(dateFormated)) {
-          installment.status = StatusInstallment.PEN;
         }
       }
     });
