@@ -9,7 +9,7 @@ import CreateClientService from '@modules/sales/services/CreateClientService';
 import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
 import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService';
 import { SaleType, Status } from '@modules/sales/infra/typeorm/entities/Sale';
-import ValidSaleService from '@modules/sales/services/ValidSaleServivce';
+import ValidSaleService from '@modules/sales/services/ValidSaleService';
 import NotValidSaleService from '@modules/sales/services/NotValidSaleService';
 import UpdateSaleService from '@modules/sales/services/UpdateSaleService';
 import ValidSignalService from '@modules/sales/services/ValidSignalService';

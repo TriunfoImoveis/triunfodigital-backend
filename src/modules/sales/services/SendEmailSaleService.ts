@@ -1,9 +1,7 @@
-import { inject, injectable } from "tsyringe";
 import path from 'path';
 
-import IMailProvider from "@shared/container/providers/MailProvider/models/IMailProvider";
-import mailConfig from "@config/mail";
 import User from "@modules/users/infra/typeorm/entities/User";
+import mailQueue from "@shared/container/providers/JobProvider/implementations/Queue";
 
 interface IRequestDTO {
   to_users: User[];
@@ -14,12 +12,8 @@ interface IRequestDTO {
   }
 }
 
-@injectable()
 class SendEmailSaleService {
-  constructor(
-    @inject('MailProvider')
-    private mailProvider: IMailProvider,
-  ) {}
+  constructor() {}
 
   public async execute({subject, file, to_users, variables}: IRequestDTO): Promise<void> {
     let listEmails: string[] = [];
@@ -30,26 +24,19 @@ class SendEmailSaleService {
     });
 
     if (listEmails.length > 0) {
-      const emails = listEmails.toLocaleString();
-      const pathValidEmailTemplate = path.resolve(
+      const pathSaleTemplate = path.resolve(
         __dirname, 
         '..', 
         'views',
         file
       );
-      
-      const {nameDefault, emailDefault} = mailConfig.defaults.from;
-      await this.mailProvider.sendMail({
-        from: {
-          name: nameDefault,
-          email: emailDefault,
-        },
-        to: emails,
+
+      // Adicionar job RegisterSaleJob na fila
+      await mailQueue.add('RegisterSaleJob', {
+        to_users: listEmails.toString(),
         subject,
-        templateData: {
-          file: pathValidEmailTemplate,
-          variables
-        }
+        file: pathSaleTemplate,
+        variables,
       });
     }
   }
