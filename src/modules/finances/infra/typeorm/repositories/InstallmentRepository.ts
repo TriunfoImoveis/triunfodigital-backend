@@ -5,6 +5,7 @@ import ICreateInstallmentDTO from '@modules/finances/dtos/ICreateInstallmentDTO'
 import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
 import Installment from '@modules/finances/infra/typeorm/entities/Installment';
 import IUpdateInstallmentDTO from '@modules/finances/dtos/IUpdateInstallmentDTO';
+import IRequestInstallmentDTO from '@modules/finances/dtos/IRequestInstallmentDTO';
 
 class InstallmentRespository implements IInstallmentRepository {
   private ormRepository: Repository<Installment>;
@@ -13,11 +14,20 @@ class InstallmentRespository implements IInstallmentRepository {
     this.ormRepository = getRepository(Installment);
   }
 
-  async list(): Promise<Installment[]> {
+  async list(data: IRequestInstallmentDTO): Promise<Installment[]> {
     try {
-      const listInstallments = await this.ormRepository.find({
-        cache: true
-      });
+      const {buyer_name, city, status} = data;
+      const listInstallments = await this.ormRepository.createQueryBuilder("i")
+        .select()
+        .innerJoinAndSelect("i.sale", "sale")
+        .innerJoinAndSelect("sale.client_buyer", "buyer")
+        .innerJoinAndSelect("sale.realty", "realty")
+        .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
+        .innerJoinAndSelect("sellers.subsidiary", "sub", "sub.city = :city", {city})
+        .where("i.status = :status", {status})
+        .andWhere("buyer.name ILIKE :buyer_name", {buyer_name: buyer_name+"%"})
+        .cache(true)
+        .getMany();
 
       return listInstallments;
     } catch (err) {

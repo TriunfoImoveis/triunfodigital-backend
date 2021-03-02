@@ -3,7 +3,7 @@ import { container } from "tsyringe"
 import SendEmailJob from '@shared/container/providers/JobProvider/implementations/SendEmailJob';
 
 export default {
-  key: "ValidSaleJob",
+  key: "ValidationSaleJob",
   async handle(data: any): Promise<void> {
     const sendEmailJob = container.resolve(SendEmailJob);
     await sendEmailJob.run({

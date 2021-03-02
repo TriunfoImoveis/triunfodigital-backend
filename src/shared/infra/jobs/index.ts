@@ -4,4 +4,7 @@ export { default as ConfirmationUserEmailJob} from '@modules/users/infra/jobs/Co
 
 // Module Sale
 export { default as RegisterSaleJob } from '@modules/sales/infra/jobs/RegisterSaleJob';
-export { default as ValidSaleJob } from '@modules/sales/infra/jobs/ValidSaleJob';
+export { default as ValidationSaleJob } from '@modules/sales/infra/jobs/ValidationSaleJob';
+
+// Module Finace
+export { default as CheckInstallmentJob } from '@modules/finances/infra/jobs/CheckInstallmentJob';

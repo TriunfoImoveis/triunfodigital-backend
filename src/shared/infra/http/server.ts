@@ -16,6 +16,7 @@ import uploadConfig from '@config/upload';
 import '@shared/infra/typeorm';
 import '@shared/container';
 import '@shared/container/providers';
+import CronJobs from '@shared/infra/jobs/CronJobs';
 
 dotenv.config();
 
@@ -28,7 +29,7 @@ class App {
     this.routes();
     this.middlewares();
     this.execute();
-    this.sockets();
+    this.cronJobs();
   }
 
   routes() {
@@ -57,19 +58,6 @@ class App {
     });
   }
 
-  private async sockets() {
-    // const server: http.Server = http.createServer(this.app);
-    // const sio: io.Server = new io.Server(server, {transports: ["websocket", "polling"]});
-    
-    // sio.on('connection', (socket: io.Socket) => {
-    //   console.log('connection');
-
-    //   socket.on('disconnect', () => {
-    //       console.log('client disconnected');
-    //   })
-    // });
-  }
-
   execute() {
     if (process.env.NODE_ENV === 'develop') {
       this.app.listen(3335, () => {
@@ -80,6 +68,10 @@ class App {
         console.log('Server started on ::PORT 3333!');
       });
     }
+  }
+
+  cronJobs() {
+    new CronJobs();
   }
 }
 

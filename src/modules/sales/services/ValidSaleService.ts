@@ -78,21 +78,22 @@ class ValidSaleService {
       const dateFormated = format(parseISO(sale.sale_date.toString()), 'dd/MM/yyyy');
 
       // Adicionar job ValidSaleJob na fila
-      await mailQueue.add('ValidSaleJob', {
-        to_users: listEmails.toString(),
-        subject: "[Triunfo Digital] Venda Validada",
-        file: pathSaleTemplate,
-        variables: {
-          type: sale.sale_type,
-          date: dateFormated,
-          enterprise: sale.realty.enterprise,
-          value: Number(sale.realty_ammount).toLocaleString(
-            'pt-BR', { 
-              style: 'currency', 
-              currency: 'BRL' 
-            }
-          ),
-          sellers: nameSellers,
+      await mailQueue.add('ValidSaleJob', 
+        {
+          to_users: listEmails.toString(),
+          subject: "[Triunfo Digital] Venda Validada",
+          file: pathSaleTemplate,
+          variables: {
+            type: sale.sale_type,
+            date: dateFormated,
+            enterprise: sale.realty.enterprise,
+            value: Number(sale.realty_ammount).toLocaleString(
+              'pt-BR', { 
+                style: 'currency', 
+                currency: 'BRL' 
+              }
+            ),
+            sellers: nameSellers,
         }
       });
     }

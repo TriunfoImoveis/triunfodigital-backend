@@ -1,0 +1,76 @@
+<style>
+  .message-content {
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+    font-size: 18px;
+    line-height: 21px;
+  }
+
+  table {
+    border-collapse: collapse;
+    text-align: center;
+  }
+
+  th {
+    background-color: #ddd;
+  }
+
+  td {
+    border: 1px solid #ddd;
+  }
+
+  td, th {
+    padding: 8px;
+  }
+</style>
+
+<div class="message-content">
+  <h2>Parcelas Vencidas!</h2>
+  <p>
+    <strong>AVISO!</strong> 
+    Existem parcelas de vendas com pagamentos atrasados.
+    Confira abaixo todas elas.
+  </p>
+  
+  {{#each installmentsForCities}}
+  <h3>Filial {{this.city}}</h3>
+  <table>
+    <tr>
+      <th>Data de Vencimento</th>
+      <th>Descrição</th>
+      <th>Nome do Cliente</th>
+      <th>Valor</th>
+      <th>Status</th>
+    </tr>
+    {{#each this.installmentsLate}}
+    <tr>
+      <td>{{this.due_date}}</td>
+      <td>
+        Parcela nº {{this.installment_number}} - 
+        {{#with this.sale}}
+          {{realty.enterprise}}
+      </td>
+      <td>
+          {{client_buyer.name}}
+        {{/with}}
+      </td>
+      <td>R$ {{this.value}}</td>
+      <td>{{this.status}}</td>
+    </tr>
+    {{else}}
+    <tr>
+      <td colspan="5">Sem Parcelas Vencidas no Momento!</td>
+    </tr>
+    {{/each}}
+  </table>
+  {{/each}}
+
+  <p>
+    Para mais detalhes sobre a venda, acesse o sistema Triunfo Digital clicando 
+    <a href="https://app.triunfodigital.com.br" target="_blank">aqui</a>
+  </p>
+  <p>
+    Obrigado!<br />
+    <strong>Equipe Triunfo Digital</strong>
+  </p>
+</div>

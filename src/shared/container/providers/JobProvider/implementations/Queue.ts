@@ -1,24 +1,20 @@
 import Queue from 'bull';
-import redisConfig from '@config/redis';
 
 import * as jobs from '@shared/infra/jobs';
-import ISendEmailJobDTO from '@shared/container/providers/JobProvider/dtos/ISendEmailJobDTO';
 import AppError from '@shared/errors/AppError';
+import redisConfig from '@config/redis';
 
-const queues = Object.values(jobs).map(job => ({
-  bull: new Queue(job.key, {
-    redis: {
-      host: 'localhost',
-      port: 6379,
-    }
-  }),
-  name: job.key,
-  handle: job.handle,
-}));
+const queues = Object.values(jobs).map(job => (
+  {
+    bull: new Queue(job.key, { redis: redisConfig }),
+    name: job.key,
+    handle: job.handle,
+  }
+));
 
 export default {
   queues,
-  add(name: string, data: ISendEmailJobDTO) {
+  add(name: string, data: any) {
     const queue = this.queues.find(queue => queue.name === name);
 
     if (!queue) {

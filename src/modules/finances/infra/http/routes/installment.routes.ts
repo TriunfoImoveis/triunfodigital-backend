@@ -4,13 +4,25 @@ import { celebrate, Joi, Segments } from 'celebrate';
 import ensuredAthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 import InstallmentController from '@modules/finances/infra/http/controllers/InstallmentController';
 import validatorFields from '@shared/infra/http/validators/validatorFields';
+import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
 
 const installmentRoutes = Router();
 const installmentController = new InstallmentController();
 
-installmentRoutes.get('/', installmentController.list);
-
 installmentRoutes.use(ensuredAthenticated);
+
+installmentRoutes.get('/', celebrate({
+  [Segments.QUERY]: {
+    buyer_name: Joi.string().default(''),
+    city: Joi.string().required(),
+    status: Joi.string().valid(
+      "PENDENTE",
+      "VENCIDO",
+      "PAGO",
+      "CAIU"
+    ).required(),
+  }
+}), installmentController.list);
 
 installmentRoutes.post('/:id', celebrate({
   [Segments.PARAMS]: {
