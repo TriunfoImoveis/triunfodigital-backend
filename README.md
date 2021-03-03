@@ -4,13 +4,13 @@
 
 ## Modulo de Vendas
 - [X] Ao cadastrar ou validar uma venda, enviar um e-mail em segundo plano com a lib Bull.
-- [ ] Agendar jobs para toda madrugada verificar se existem parcelas vencidas.
+- [X] Agendar jobs para toda madrugada verificar se existem parcelas vencidas.
 - [ ]Exportar relatorio de vendas em excel.
 Libs: Excel4Node; SheetJS;
 Exportar todos os dados das vendas para o Excel.
 
 ## Modulo de Finanças
-- [ ] Envio de notificação/E-mail em caso de vencimento de parcelas
+- [X] Envio de notificação/E-mail em caso de vencimento de parcelas
 
 
 ### Criação de Contas Fixas/Variaveis

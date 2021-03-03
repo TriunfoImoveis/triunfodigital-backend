@@ -40,6 +40,7 @@
       <th>Descrição</th>
       <th>Nome do Cliente</th>
       <th>Valor</th>
+      <th>Corretores</th>
       <th>Status</th>
     </tr>
     {{#each this.installmentsLate}}
@@ -47,13 +48,20 @@
       <td>{{this.due_date}}</td>
       <td>
         Parcela nº {{this.installment_number}} - 
-        {{#with this.sale}}
-          {{realty.enterprise}}
+      {{#with this.sale}}
+        {{realty.enterprise}}
       </td>
       <td>
           {{client_buyer.name}}
-        {{/with}}
       </td>
+      <td>
+        <ul>
+          {{#each sale_has_sellers}}
+            <li>{{this.name}}</li>
+          {{/each}}
+        </ul>
+      </td>
+      {{/with}}
       <td>R$ {{this.value}}</td>
       <td>{{this.status}}</td>
     </tr>
