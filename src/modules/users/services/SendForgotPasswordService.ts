@@ -6,6 +6,8 @@ import IUserRepository from "@modules/users/repositories/IUserRepository";
 import AppError from "@shared/errors/AppError";
 import IUserTokenRepository from "@modules/users/repositories/IUserTokenRepository";
 import mailQueue from "@shared/container/providers/JobProvider/implementations/Queue";
+import mailConfig from "@config/mail";
+import IMailProvider from "@shared/container/providers/MailProvider/models/IMailProvider";
 
 interface IRequest {
   email: string;
@@ -19,6 +21,9 @@ class SendForgotPasswordService {
 
     @inject('UserTokensRepository')
     private userTokensRepository: IUserTokenRepository,
+
+    @inject('MailProvider')
+    private mailProvider: IMailProvider,
   ) {}
 
   public async execute({email}: IRequest): Promise<void> {
@@ -48,13 +53,30 @@ class SendForgotPasswordService {
     );
 
     // Adicionar job ForgotPasswordJob na fila
-    await mailQueue.add('ForgotPasswordJob', {
-      to_users: user.email,
+    // await mailQueue.add('ForgotPasswordJob', {
+    //   to_users: user.email,
+    //   subject: "[Triunfo Digital] Recuperação de Senha",
+    //   file: pathForgotPasswordTemplate,
+    //   variables: {
+    //     name: user.name,
+    //     link: `${process.env.APP_WEB_URL}/password/reset/${token}`
+    //   }
+    // });
+
+    const {nameDefault, emailDefault} = mailConfig.defaults.from;
+    await this.mailProvider.sendMail({
+      from: {
+        name: nameDefault,
+        email: emailDefault,
+      },
+      to: user.email,
       subject: "[Triunfo Digital] Recuperação de Senha",
-      file: pathForgotPasswordTemplate,
-      variables: {
-        name: user.name,
-        link: `${process.env.APP_WEB_URL}/password/reset/${token}`
+      templateData: {
+        file: pathForgotPasswordTemplate,
+        variables: {
+          name: user.name,
+          link: `${process.env.APP_WEB_URL}/password/reset/${token}`,
+        }
       }
     });
   }
