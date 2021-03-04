@@ -20,7 +20,7 @@ export default {
     if (!queue) {
       throw new AppError('Não há jobs com esta key name.');
     }
-
+    console.log(queue.name);
     return queue.bull.add(data);
   },
   process() {
