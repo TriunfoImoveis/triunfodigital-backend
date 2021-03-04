@@ -1,3 +1,7 @@
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
 interface IRedisConfig {
   host: string;
   port: number | undefined;
