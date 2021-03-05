@@ -12,19 +12,34 @@ class SendEmailJob {
   ) {}
 
   public async run(data: ISendEmailJobDTO): Promise<void> {
-    const { nameDefault, emailDefault } = mailConfig.defaults.from;
-    await this.mailProvider.sendMail({
-      from: {
-        name: nameDefault,
-        email: emailDefault,
-      },
-      to: data.to_users,
-      subject: data.subject,
-      templateData: {
-        file: data.file,
-        variables: data.variables,
+    const {
+      to_users,
+      subject,
+      file,
+      variables,
+    } = data;
+    let listEmails: string[] = [];
+    to_users.forEach(user => {
+      if (user.validated_account) {
+        listEmails.push(user.email);
       }
     });
+
+    if (listEmails.length > 0) {
+      const { nameDefault, emailDefault } = mailConfig.defaults.from;
+      await this.mailProvider.sendMail({
+        from: {
+          name: nameDefault,
+          email: emailDefault,
+        },
+        to: listEmails.toString(),
+        subject: subject,
+        templateData: {
+          file: file,
+          variables: variables,
+        }
+      });
+    }
   }
 }
 

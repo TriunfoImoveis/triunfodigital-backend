@@ -49,48 +49,48 @@ class NotValidSaleService {
     await this.salesRepository.notValidSale(data);
 
     // Envia e-mail para os corretores da venda.
-    let listEmails: string[] = [];
-    sale.sale_has_sellers.map(user => {
-      if (user.validated_account) {
-        listEmails.push(user.email);
-      }
-    });
+    // let listEmails: string[] = [];
+    // sale.sale_has_sellers.map(user => {
+    //   if (user.validated_account) {
+    //     listEmails.push(user.email);
+    //   }
+    // });
 
     // Verifica se existem e-mails confirmados e faz o processo de envio dos e-mails
-    if (listEmails.length > 0) {
-      const pathSaleTemplate = path.resolve(
-        __dirname, 
-        '..', 
-        'views',
-        'not_valid_sale.hbs'
-      );
+    // if (listEmails.length > 0) {
+    //   const pathSaleTemplate = path.resolve(
+    //     __dirname, 
+    //     '..', 
+    //     'views',
+    //     'not_valid_sale.hbs'
+    //   );
 
       // Envia e-mail para os corretores da venda.
-      const nameSellers = sale.sale_has_sellers.map(seller => {
-        return seller.name;
-      });
+      // const nameSellers = sale.sale_has_sellers.map(seller => {
+      //   return seller.name;
+      // });
 
-      const dateFormated = format(parseISO(sale.sale_date.toString()), 'dd/MM/yyyy');
+      // const dateFormated = format(parseISO(sale.sale_date.toString()), 'dd/MM/yyyy');
     
       // Adicionar job ValidSaleJob na fila
-      await mailQueue.add('ValidationSaleJob', {
-        to_users: listEmails.toString(),
-        subject: "[Triunfo Digital] Venda Validada",
-        file: pathSaleTemplate,
-        variables: {
-          type: sale.sale_type,
-          date: dateFormated,
-          enterprise: sale.realty.enterprise,
-          value: Number(sale.realty_ammount).toLocaleString(
-            'pt-BR', { 
-              style: 'currency', 
-              currency: 'BRL' 
-            }
-          ),
-          sellers: nameSellers,
-        }
-      });
-    }
+    //   await mailQueue.add('ValidationSaleJob', {
+    //     to_users: listEmails.toString(),
+    //     subject: "[Triunfo Digital] Venda Validada",
+    //     file: pathSaleTemplate,
+    //     variables: {
+    //       type: sale.sale_type,
+    //       date: dateFormated,
+    //       enterprise: sale.realty.enterprise,
+    //       value: Number(sale.realty_ammount).toLocaleString(
+    //         'pt-BR', { 
+    //           style: 'currency', 
+    //           currency: 'BRL' 
+    //         }
+    //       ),
+    //       sellers: nameSellers,
+    //     }
+    //   });
+    // }
   }
 }
 

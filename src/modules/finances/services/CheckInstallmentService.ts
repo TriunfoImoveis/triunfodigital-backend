@@ -1,11 +1,12 @@
-import { inject, injectable } from 'tsyringe';
-import { format, isFuture, isPast, parseISO, toDate } from 'date-fns';
+import { container, inject, injectable } from 'tsyringe';
+import { isPast, parseISO } from 'date-fns';
 import path from 'path';
 
 import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
 import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
 import mailQueue from "@shared/container/providers/JobProvider/implementations/Queue";
 import IUserRepository from '@modules/users/repositories/IUserRepository';
+import SendEmailJob from '@shared/container/providers/JobProvider/implementations/SendEmailJob';
 
 @injectable()
 class CheckInstallmentService {
@@ -72,21 +73,27 @@ class CheckInstallmentService {
           'installments_late.hbs'
         );
 
-        const emails = users.map(user => {
-          return user.email;
+        const sendEmailJob = container.resolve(SendEmailJob);
+        await sendEmailJob.run({
+          to_users: users,
+          subject: "[Triunfo Digital] Parcelas Vencidas",
+          file: pathInstallmentTemplate,
+          variables: {
+            installmentsForCities
+          }
         });
         
         // Adicionar job ForgotPasswordJob na fila
-        await mailQueue.add('CheckInstallmentJob', 
-          {
-            to_users: emails.toString(),
-            subject: "[Triunfo Digital] Parcelas Vencidas",
-            file: pathInstallmentTemplate,
-            variables: {
-              installmentsForCities
-            }
-          }
-        );
+        // await mailQueue.add('CheckInstallmentJob', 
+        //   {
+        //     to_users: emails.toString(),
+        //     subject: "[Triunfo Digital] Parcelas Vencidas",
+        //     file: pathInstallmentTemplate,
+        //     variables: {
+        //       installmentsForCities
+        //     }
+        //   }
+        // );
       }
     }
   }

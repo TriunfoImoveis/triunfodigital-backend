@@ -1,4 +1,4 @@
-import { inject, injectable } from "tsyringe";
+import { container, inject, injectable } from "tsyringe";
 import path from 'path';
 import { v4 } from "uuid";
 
@@ -6,8 +6,8 @@ import IUserRepository from "@modules/users/repositories/IUserRepository";
 import AppError from "@shared/errors/AppError";
 import IUserTokenRepository from "@modules/users/repositories/IUserTokenRepository";
 import mailQueue from "@shared/container/providers/JobProvider/implementations/Queue";
-import mailConfig from "@config/mail";
 import IMailProvider from "@shared/container/providers/MailProvider/models/IMailProvider";
+import SendEmailJob from "@shared/container/providers/JobProvider/implementations/SendEmailJob";
 
 interface IRequest {
   email: string;
@@ -35,7 +35,7 @@ class SendForgotPasswordService {
     
     if (!user.validated_account) {
       throw new AppError(
-        "E-mail de usuário não validada até o momento. Valide seu e-mail de acesso antes.", 
+        "E-mail de usuário não validada até o momento. Valide seu e-mail de acesso.", 
         403
       );
     }
@@ -52,6 +52,19 @@ class SendForgotPasswordService {
       'forgot_password.hbs'
     );
 
+    const listUsers = [user];
+
+    const sendEmailJob = container.resolve(SendEmailJob);
+    await sendEmailJob.run({
+      to_users: listUsers,
+      subject: "[Triunfo Digital] Recuperação de Senha",
+      file: pathForgotPasswordTemplate,
+      variables: {
+        name: user.name,
+        link: `${process.env.APP_WEB_URL}/password/reset/${token}`,
+      }
+    });
+
     // Adicionar job ForgotPasswordJob na fila
     // await mailQueue.add('ForgotPasswordJob', {
     //   to_users: user.email,
@@ -62,23 +75,6 @@ class SendForgotPasswordService {
     //     link: `${process.env.APP_WEB_URL}/password/reset/${token}`
     //   }
     // });
-
-    const {nameDefault, emailDefault} = mailConfig.defaults.from;
-    await this.mailProvider.sendMail({
-      from: {
-        name: nameDefault,
-        email: emailDefault,
-      },
-      to: user.email,
-      subject: "[Triunfo Digital] Recuperação de Senha",
-      templateData: {
-        file: pathForgotPasswordTemplate,
-        variables: {
-          name: user.name,
-          link: `${process.env.APP_WEB_URL}/password/reset/${token}`,
-        }
-      }
-    });
   }
 }
 
