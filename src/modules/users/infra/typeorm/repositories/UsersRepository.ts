@@ -53,6 +53,7 @@ class UsersRepository implements IUserRepository {
         relations: [
           "office",
           "subsidiary",
+          "bank_data",
         ]
       });
 

@@ -7,8 +7,14 @@ import ListInstallmentService from '@modules/finances/services/ListInstallmentSe
 
 class InstallmentController {
   async list(request: Request, response: Response): Promise<Response> {
+    const { buyer_name, city, status } = request.query;
+
     const listInstallmentService = container.resolve(ListInstallmentService);
-    const listInstallments = await listInstallmentService.execute();
+    const listInstallments = await listInstallmentService.execute({
+      buyer_name: buyer_name as string,
+      city: city as string,
+      status: status as string,
+    });
 
     return response.json(listInstallments);
   }

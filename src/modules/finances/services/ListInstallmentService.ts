@@ -1,8 +1,9 @@
 import { inject, injectable } from 'tsyringe';
+import { isFuture, isPast, parseISO } from 'date-fns';
 
-import AppError from '@shared/errors/AppError';
 import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
-import Installment from '@modules/finances/infra/typeorm/entities/Installment';
+import Installment, { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
+import IRequestInstallmentDTO from '@modules/finances/dtos/IRequestInstallmentDTO';
 
 @injectable()
 class ListInstallmentService {
@@ -11,9 +12,45 @@ class ListInstallmentService {
     private installmentsRepository: IInstallmentRepository,
   ) {}
 
-  public async execute(): Promise<Installment[]> {
-    const listInstallments = this.installmentsRepository.list();
+  public async execute({
+    buyer_name,
+    city, 
+    status
+  }: IRequestInstallmentDTO): Promise<Installment[]> {
+    var statusFilter: string;
+    if (status === StatusInstallment.VEN) {
+      statusFilter = StatusInstallment.PEN;
+    } else {
+      statusFilter = status;
+    }
+    
+    const listInstallments = await this.installmentsRepository.list({
+      buyer_name,
+      city,
+      status: statusFilter,
+    });
+    
+    if (status === StatusInstallment.PEN) {
+      const installments = listInstallments.filter((installment) => {
+        const dateFormated = parseISO(installment.due_date.toString());
+        if (isFuture(dateFormated)) {
+          return installment;
+        }
+      });
 
+      return installments;
+    } else if (status === StatusInstallment.VEN) {
+      const installments = listInstallments.filter((installment) => {
+        const dateFormated = parseISO(installment.due_date.toString());
+        if (isPast(dateFormated)) {
+          installment.status = StatusInstallment.VEN;
+          return installment;
+        }
+      });
+
+      return installments;
+    }
+    
     return listInstallments;
   }
 }

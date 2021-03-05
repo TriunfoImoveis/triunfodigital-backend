@@ -97,31 +97,34 @@ class CreateSaleUsedService {
           city: '%',
           departament: '%',
           name: '%',
-          office: 'Administrador',
+          office: 'Gerente',
         });
 
-        const nameSellers = saleRegister.sale_has_sellers.map(seller => {
-          return seller.name;
-        });
+        // Só envia os e-mails se houver usuário Gerente.
+        if (users.length > 0) {
+          const nameSellers = saleRegister.sale_has_sellers.map(seller => {
+            return seller.name;
+          });
 
-        const sendEmailSaleService = container.resolve(SendEmailSaleService);
-        await sendEmailSaleService.execute({
-          file: "register_sale.hbs",
-          subject: "[Triunfo Digital] Nova Venda Cadastrada",
-          to_users: users,
-          variables: {
-            type: sale.sale_type,
-            date: format(sale.sale_date, 'dd/MM/yyyy'),
-            enterprise: sale.realty.enterprise,
-            value: sale.realty_ammount.toLocaleString(
-              'pt-BR', { 
-                style: 'currency', 
-                currency: 'BRL' 
-              }
-            ),
-            sellers: nameSellers,
-          }
-        });
+          const sendEmailSaleService = container.resolve(SendEmailSaleService);
+          await sendEmailSaleService.execute({
+            file: "register_sale.hbs",
+            subject: "[Triunfo Digital] Nova Venda Cadastrada",
+            to_users: users,
+            variables: {
+              type: sale.sale_type,
+              date: format(sale.sale_date, 'dd/MM/yyyy'),
+              enterprise: sale.realty.enterprise,
+              value: sale.realty_ammount.toLocaleString(
+                'pt-BR', { 
+                  style: 'currency', 
+                  currency: 'BRL' 
+                }
+              ),
+              sellers: nameSellers,
+            }
+          });
+        }
       }
 
       return sale;
