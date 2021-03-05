@@ -5,7 +5,7 @@ import CheckInstallmentService from "@modules/finances/services/CheckInstallment
 
 class CronJobs {
   constructor() {
-    new CronJob('0 0 6 * * Mon-Fri', async () => {
+    new CronJob('0 30 1 * * Mon-Fri', async () => {
       await this.run();
       }, null, true, 'America/Fortaleza'
     );

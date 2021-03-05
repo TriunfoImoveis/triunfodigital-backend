@@ -1,5 +1,6 @@
 import { add, format } from 'date-fns';
 import { container, inject, injectable } from 'tsyringe';
+import path from 'path';
 
 import AppError from '@shared/errors/AppError';
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
@@ -9,6 +10,7 @@ import ICreateInstallmentDTO from '@modules/finances/dtos/ICreateInstallmentDTO'
 import CreateNotificationService from '@modules/notifications/services/CreateNotificationService';
 import SendEmailSaleService from './SendEmailSaleService';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
+import SendEmailJob from '@shared/container/providers/JobProvider/implementations/SendEmailJob';
 
 @injectable()
 class CreateSaleNewService {
@@ -104,23 +106,30 @@ class CreateSaleNewService {
             return seller.name;
           });
 
-          const sendEmailSaleService = container.resolve(SendEmailSaleService);
-          await sendEmailSaleService.execute({
-            file: "register_sale.hbs",
-            subject: "[Triunfo Digital] Nova Venda Cadastrada",
+          const pathSaleTemplate = path.resolve(
+            __dirname, 
+            '..', 
+            'views',
+            'register_sale.hbs'
+          );
+
+          const sendEmailJob = container.resolve(SendEmailJob);
+          await sendEmailJob.run({
             to_users: users,
+            subject: "[Triunfo Digital] Nova Venda Cadastrada",
+            file: pathSaleTemplate,
             variables: {
-              type: sale.sale_type,
-              date: format(sale.sale_date, 'dd/MM/yyyy'),
-              enterprise: sale.realty.enterprise,
-              value: sale.realty_ammount.toLocaleString(
-                'pt-BR', { 
-                  style: 'currency', 
-                  currency: 'BRL' 
-                }
-              ),
-              sellers: nameSellers,
-            }
+                type: sale.sale_type,
+                date: format(sale.sale_date, 'dd/MM/yyyy'),
+                enterprise: sale.realty.enterprise,
+                value: sale.realty_ammount.toLocaleString(
+                  'pt-BR', { 
+                    style: 'currency', 
+                    currency: 'BRL' 
+                  }
+                ),
+                sellers: nameSellers,
+              }
           });
         }
       }

@@ -1,5 +1,6 @@
 import { container, inject, injectable } from "tsyringe";
 import { add, format } from "date-fns";
+import path from 'path';
 
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
@@ -9,6 +10,7 @@ import ICreateInstallmentDTO from "@modules/finances/dtos/ICreateInstallmentDTO"
 import CreateNotificationService from "@modules/notifications/services/CreateNotificationService";
 import IUserRepository from "@modules/users/repositories/IUserRepository";
 import SendEmailSaleService from "./SendEmailSaleService";
+import SendEmailJob from "@shared/container/providers/JobProvider/implementations/SendEmailJob";
 
 @injectable()
 class CreateSaleUsedService {
@@ -106,11 +108,18 @@ class CreateSaleUsedService {
             return seller.name;
           });
 
-          const sendEmailSaleService = container.resolve(SendEmailSaleService);
-          await sendEmailSaleService.execute({
-            file: "register_sale.hbs",
-            subject: "[Triunfo Digital] Nova Venda Cadastrada",
+          const pathSaleTemplate = path.resolve(
+            __dirname, 
+            '..', 
+            'views',
+            'register_sale.hbs'
+          );
+
+          const sendEmailJob = container.resolve(SendEmailJob);
+          await sendEmailJob.run({
             to_users: users,
+            subject: "[Triunfo Digital] Nova Venda Cadastrada",
+            file: pathSaleTemplate,
             variables: {
               type: sale.sale_type,
               date: format(sale.sale_date, 'dd/MM/yyyy'),
@@ -122,7 +131,7 @@ class CreateSaleUsedService {
                 }
               ),
               sellers: nameSellers,
-            }
+            }    
           });
         }
       }
