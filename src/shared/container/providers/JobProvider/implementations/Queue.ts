@@ -17,16 +17,14 @@ export default {
   add(name: string, data: any) {
     const queue = this.queues.find(queue => queue.name === name);
 
-    if (!queue) {
-      throw new AppError('Não há jobs com esta key name.');
+    if (queue) {
+      return queue.bull.add(data);
     }
-    console.log(queue.name);
-    return queue.bull.add(data);
   },
   process() {
     return this.queues.forEach(queue => {
       queue.bull.process(queue.handle);
-
+      console.log(queue);
       queue.bull.on('failed', (job, err) => {
         console.log('Job failed', queue.name, job.data);
         console.log(err);

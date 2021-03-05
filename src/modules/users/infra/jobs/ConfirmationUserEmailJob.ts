@@ -5,7 +5,6 @@ import SendEmailJob from '@shared/container/providers/JobProvider/implementation
 export default {
   key: "ConfirmationUserEmailJob",
   async handle(data: any): Promise<void> {
-    console.log(data);
     const sendEmailJob = container.resolve(SendEmailJob);
     await sendEmailJob.run({
       to_users: data.data.to_users,
