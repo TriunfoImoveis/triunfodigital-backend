@@ -26,8 +26,9 @@ class InstallmentRespository implements IInstallmentRepository {
         .innerJoinAndSelect("sellers.subsidiary", "sub", "sub.city = :city", {city})
         .where("i.status = :status", {status})
         .andWhere("buyer.name ILIKE :buyer_name", {buyer_name: buyer_name+"%"})
-        .cache(true)
-        .getMany();
+        .andWhere("sale.status IN (:...status_sale)", {
+          status_sale: ["PENDENTE", "PAGO_TOTAL", "CAIU"]
+        }).cache(true).getMany();
 
       return listInstallments;
     } catch (err) {
