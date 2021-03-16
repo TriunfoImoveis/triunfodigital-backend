@@ -14,22 +14,21 @@ import NotValidSaleService from '@modules/sales/services/NotValidSaleService';
 import UpdateSaleService from '@modules/sales/services/UpdateSaleService';
 import ValidSignalService from '@modules/sales/services/ValidSignalService';
 import ShowSaleService from '@modules/sales/services/ShowSaleService';
+import ExportSaleService from '@modules/sales/services/ExportSaleService';
+import ListSaleService from '@modules/sales/services/ListSaleService';
 
 class SaleController {
 
   async index(request: Request, response: Response): Promise<Response> {
     const {name, city, status} = request.query;
 
-    if (typeof name != "string") {
-      throw new AppError("Name not is valid string");
-    } else if (typeof city != "string") {
-      throw new AppError("city not is valid string");
-    }if (typeof status != "string") {
-      throw new AppError("Name not is valid string");
-    }
-
-    const saleRepository = new SaleRepository();
-    const sales = await saleRepository.findAll({name, city, status});
+    const listSaleService = container.resolve(ListSaleService);
+    const sales = await listSaleService.execute({
+      name: name as string, 
+      city: city as string, 
+      status: status as string,
+    });
+    
     return response.json(classToClass(sales));
   }
 
@@ -236,6 +235,13 @@ class SaleController {
     );
 
     return response.status(204).send();
+  }
+
+  async exportExcel(request: Request, response: Response): Promise<Response> {
+    const exportSaleService = container.resolve(ExportSaleService);
+    await exportSaleService.execute();
+
+    return response.send("Arquivo exportado para Excel.");
   }
 }
 
