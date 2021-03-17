@@ -60,10 +60,8 @@ class ExportSaleService {
     const workSheet = xlsx.utils.aoa_to_sheet(workSheetData);
     workSheet["!autofilter"] = {ref: "A1:S1"};
     xlsx.utils.book_append_sheet(workBook, workSheet, "sales");
-    xlsx.writeFile(
-      workBook,
-      reports.uploadsFolder,
-    );
+
+    await this.storagePrivider.saveReportFile(workBook);
   }
 }
 

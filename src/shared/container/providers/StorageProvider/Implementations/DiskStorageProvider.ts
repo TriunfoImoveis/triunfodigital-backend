@@ -1,9 +1,26 @@
 import fs from 'fs';
 import path from 'path';
 import uploadConfig from '@config/upload';
+import reportConfig from '@config/reports';
+import xlsx, { WorkBook } from 'xlsx';
 import IStorageProvider from '../models/IStorageProvider';
 
 class DiskStorageProvider implements IStorageProvider {
+
+  public async saveReportFile(workBook: WorkBook): Promise<void> {
+    return new Promise((resolve, reject) => {
+      resolve(
+        xlsx.writeFile(
+          workBook,
+          path.resolve(
+            reportConfig.tmpFolder,
+            'sales.xlsx'
+          )
+        )
+      )
+      reject('error');
+    })
+  }
   public async saveFile(file: string): Promise<string> {
     await fs.promises.rename(
       path.resolve(uploadConfig.tmpFolder, file),
