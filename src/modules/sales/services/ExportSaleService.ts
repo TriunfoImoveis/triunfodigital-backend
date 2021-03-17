@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
 import * as xlsx from 'xlsx';
-import path from 'path';
 
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IStorageProvider from "@shared/container/providers/StorageProvider/models/IStorageProvider";
+import reports from "@config/reports";
 
 @injectable()
 class ExportSaleService {
@@ -30,7 +30,7 @@ class ExportSaleService {
       const subsidiary = sale.sale_has_sellers.reduce((seller) => {
         return seller;
       });
-      
+
       const directors = sale.users_directors.map((director) => {
         return director.name;
       });
@@ -42,7 +42,7 @@ class ExportSaleService {
       const sellers = sale.sale_has_sellers.map((seller) => {
         return seller.name;
       });
-      
+
       return [
         subsidiary.subsidiary.city, sale.sale_type, sale.sale_date, sale.realty_ammount,
         sale.percentage_sale, sale.commission, sale.bonus, sale.payment_type.name,
@@ -51,7 +51,7 @@ class ExportSaleService {
         captivators.toString(), sellers.toString(), sale.status
       ]
     });
-    
+
     const workBook = xlsx.utils.book_new();
     const workSheetData = [
       workSheetColumnNames,
@@ -61,16 +61,8 @@ class ExportSaleService {
     workSheet["!autofilter"] = {ref: "A1:S1"};
     xlsx.utils.book_append_sheet(workBook, workSheet, "sales");
     xlsx.writeFile(
-      workBook, 
-      path.resolve(
-        __dirname, 
-        '..', 
-        '..',
-        '..',
-        '..',
-        'tmp',
-        'sales.xlsx'
-      )
+      workBook,
+      reports.uploadsFolder,
     );
   }
 }
