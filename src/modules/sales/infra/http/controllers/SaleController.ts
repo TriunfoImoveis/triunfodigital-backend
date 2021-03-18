@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import { classToClass } from 'class-transformer';
 import { container } from 'tsyringe';
 
-import AppError from '@shared/errors/AppError';
-import SaleRepository from '@modules/sales/infra/typeorm/repositories/SaleRepository';
 import CreateRealtyService from '@modules/sales/services/CreateRealtyService';
 import CreateClientService from '@modules/sales/services/CreateClientService';
 import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
@@ -239,9 +237,9 @@ class SaleController {
 
   async exportExcel(request: Request, response: Response): Promise<Response> {
     const exportSaleService = container.resolve(ExportSaleService);
-    await exportSaleService.execute();
+    const link_url = await exportSaleService.execute();
 
-    return response.send("Arquivo exportado para Excel.");
+    return response.status(201).json(link_url);
   }
 }
 

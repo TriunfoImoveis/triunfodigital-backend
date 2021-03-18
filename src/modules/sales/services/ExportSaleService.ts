@@ -1,9 +1,14 @@
 import { inject, injectable } from "tsyringe";
 import * as xlsx from 'xlsx';
+import path from 'path';
 
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IStorageProvider from "@shared/container/providers/StorageProvider/models/IStorageProvider";
-import reports from "@config/reports";
+import reportConfig from '@config/reports';
+
+interface IResponseDTO {
+  link_url: string;
+}
 
 @injectable()
 class ExportSaleService {
@@ -15,7 +20,7 @@ class ExportSaleService {
     private storagePrivider: IStorageProvider,
   ) {}
 
-  public async execute(): Promise<void> {
+  public async execute(): Promise<IResponseDTO | undefined> {
     const sales = await this.salesRepository.findAllWithoutFilters();
 
     const workSheetColumnNames = [
@@ -59,9 +64,30 @@ class ExportSaleService {
     ];
     const workSheet = xlsx.utils.aoa_to_sheet(workSheetData);
     workSheet["!autofilter"] = {ref: "A1:S1"};
-    xlsx.utils.book_append_sheet(workBook, workSheet, "sales");
 
-    await this.storagePrivider.saveReportFile(workBook);
+    const fileName = 'sales';
+    const originalPath = path.resolve(reportConfig.tmpFolder, `${fileName}.xlsx`);
+
+    xlsx.utils.book_append_sheet(workBook, workSheet, fileName);
+    xlsx.writeFile(
+      workBook,
+      originalPath
+    );
+    
+    await this.storagePrivider.saveReportFile(originalPath);
+
+    switch (reportConfig.driver) {
+      case 'disk':
+        return {
+          link_url: originalPath
+        };
+      case 's3':
+        return {
+          link_url: `https://${reportConfig.config.aws.bucket}.s3.amazonaws.com/${fileName}`
+        };
+      default:
+        return undefined;
+    }
   }
 }
 
