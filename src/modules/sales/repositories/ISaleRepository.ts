@@ -7,6 +7,7 @@ import ICreateInstallmentDTO from "@modules/finances/dtos/ICreateInstallmentDTO"
 import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
 
 export default interface ISaleRepository {
+  findAllWithoutFilters(): Promise<Sale[]>;
   findAll(data: IRequestSaleDTO): Promise<Sale[]>;
   findById(id: string): Promise<Sale | undefined>;
 

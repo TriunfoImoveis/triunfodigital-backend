@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import { classToClass } from 'class-transformer';
 import { container } from 'tsyringe';
 
-import AppError from '@shared/errors/AppError';
-import SaleRepository from '@modules/sales/infra/typeorm/repositories/SaleRepository';
 import CreateRealtyService from '@modules/sales/services/CreateRealtyService';
 import CreateClientService from '@modules/sales/services/CreateClientService';
 import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
@@ -14,22 +12,21 @@ import NotValidSaleService from '@modules/sales/services/NotValidSaleService';
 import UpdateSaleService from '@modules/sales/services/UpdateSaleService';
 import ValidSignalService from '@modules/sales/services/ValidSignalService';
 import ShowSaleService from '@modules/sales/services/ShowSaleService';
+import ExportSaleService from '@modules/sales/services/ExportSaleService';
+import ListSaleService from '@modules/sales/services/ListSaleService';
 
 class SaleController {
 
   async index(request: Request, response: Response): Promise<Response> {
     const {name, city, status} = request.query;
 
-    if (typeof name != "string") {
-      throw new AppError("Name not is valid string");
-    } else if (typeof city != "string") {
-      throw new AppError("city not is valid string");
-    }if (typeof status != "string") {
-      throw new AppError("Name not is valid string");
-    }
-
-    const saleRepository = new SaleRepository();
-    const sales = await saleRepository.findAll({name, city, status});
+    const listSaleService = container.resolve(ListSaleService);
+    const sales = await listSaleService.execute({
+      name: name as string, 
+      city: city as string, 
+      status: status as string,
+    });
+    
     return response.json(classToClass(sales));
   }
 
@@ -236,6 +233,13 @@ class SaleController {
     );
 
     return response.status(204).send();
+  }
+
+  async exportExcel(request: Request, response: Response): Promise<Response> {
+    const exportSaleService = container.resolve(ExportSaleService);
+    const link_url = await exportSaleService.execute();
+
+    return response.status(201).json(link_url);
   }
 }
 

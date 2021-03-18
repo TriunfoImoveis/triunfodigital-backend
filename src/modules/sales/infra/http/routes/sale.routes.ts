@@ -12,12 +12,16 @@ const saleController = new SaleController();
 saleRoutes.get('/', celebrate({
   [Segments.QUERY]: {
     name: Joi.string().default(''),
-    city: Joi.string().required(),
+    city: Joi.string().default('').valid(
+      'São Luís', 'Fortaleza', 'Teresina'
+    ),
     status: Joi.string().valid(
       'NAO_VALIDADO', 'CAIU', 'PENDENTE', 'PAGO_TOTAL'
     ).required(),
   }
 }), saleController.index);
+
+saleRoutes.get('/export/excel', saleController.exportExcel);
 
 saleRoutes.post('/new', celebrate({
   [Segments.BODY]: {

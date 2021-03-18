@@ -3,7 +3,9 @@ import path from 'path';
 import mime from 'mime';
 import aws, { S3 } from 'aws-sdk';
 import uploadConfig from '@config/upload';
-import IStorageProvider from '../models/IStorageProvider';
+import reportConfig from '@config/reports';
+
+import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 
 class S3StorageProvider implements IStorageProvider {
   private client: S3;
@@ -12,6 +14,28 @@ class S3StorageProvider implements IStorageProvider {
     this.client = new aws.S3({
       region: 'us-east-1',
     });
+  }
+  public async saveReportFile(filePath: string): Promise<void> {
+    const ContentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+
+    if (!ContentType) {
+      throw new Error('File not Found');
+    }
+    const fileContent = await fs.promises.readFile(filePath);
+
+    await this.client
+      .putObject({
+        Bucket: reportConfig.config.aws.bucket,
+        Key: 'sales',
+        ACL: 'public-read',
+        Body: fileContent,
+        ContentType,
+      })
+      .promise();
+    
+    await fs.promises.unlink(filePath);
+
+    return undefined;
   }
 
   public async saveFile(file: string): Promise<string> {
@@ -47,5 +71,7 @@ class S3StorageProvider implements IStorageProvider {
       .promise();
   }
 }
+
+
 
 export default S3StorageProvider;
