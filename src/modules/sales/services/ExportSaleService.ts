@@ -48,11 +48,14 @@ class ExportSaleService {
         return seller.name;
       });
 
+      const builder = sale.builder ? sale.builder.name : null;
+      const coordinator = sale.user_coordinator ? sale.user_coordinator.name : null;
+
       return [
         subsidiary.subsidiary.city, sale.sale_type, sale.sale_date, sale.realty_ammount,
         sale.percentage_sale, sale.commission, sale.bonus, sale.payment_type.name,
         sale.value_signal, sale.pay_date_signal, sale.origin.name, sale.realty.enterprise,
-        sale.builder?.name, sale.client_buyer.name, directors.toString(), sale.user_coordinator?.name,
+        builder, sale.client_buyer.name, directors.toString(), coordinator,
         captivators.toString(), sellers.toString(), sale.status
       ]
     });
