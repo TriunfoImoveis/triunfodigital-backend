@@ -1,6 +1,7 @@
 import { container } from 'tsyringe';
 
 import uploadConfig from '@config/upload';
+import reportConfig from '@config/reports';
 import mailConfig from '@config/mail';
 
 import IStorageProvider from './StorageProvider/models/IStorageProvider';
@@ -38,6 +39,25 @@ switch (uploadConfig.driver) {
     break;
   }
 }
+switch (reportConfig.driver) {
+  case 's3': {
+    container.registerSingleton<IStorageProvider>(
+      'StorageProvider',
+      providers.s3,
+    );
+    break;
+  }
+  case 'disk': {
+    container.registerSingleton<IStorageProvider>(
+      'StorageProvider',
+      providers.disk,
+    );
+    break;
+  }
+  default: {
+    break;
+  }
+}
 
 container.registerSingleton<IMailTemplateProvider>(
   'MailTemplateProvider',
@@ -46,7 +66,7 @@ container.registerSingleton<IMailTemplateProvider>(
 
 container.registerInstance<IMailProvider>(
   'MailProvider',
-  mailConfig.driver === 'ethereal' 
-    ? container.resolve(EtherealMailProvider) 
+  mailConfig.driver === 'ethereal'
+    ? container.resolve(EtherealMailProvider)
     : container.resolve(SESMailProvider),
 );
