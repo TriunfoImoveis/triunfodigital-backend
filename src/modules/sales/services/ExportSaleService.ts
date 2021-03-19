@@ -54,31 +54,46 @@ class ExportSaleService {
 
       const sale_date = format(parseISO(sale.sale_date.toString()), 'dd/MM/yyyy');
       const pay_date_signal = format(parseISO(sale.pay_date_signal.toString()), 'dd/MM/yyyy');
-      // const realty_ammount = sale.realty_ammount.toLocaleString(
-      //   'pt-BR', 
-      //   { 
-      //     style: 'currency', 
-      //     currency: 'BRL' 
-      //   }
-      // );
-      // const value_signal = sale.value_signal.toLocaleString(
-      //   'pt-BR', 
-      //   { 
-      //     style: 'currency', 
-      //     currency: 'BRL' 
-      //   }
-      // );
+      const percentage_sale = sale.percentage_sale.toString().replace(".", ",");
+      const realty_ammount = Number(sale.realty_ammount).toLocaleString(
+        'pt-BR', 
+        { 
+          style: 'currency', 
+          currency: 'BRL' 
+        }
+      );
+      const commission = Number(sale.commission).toLocaleString(
+        'pt-BR', 
+        { 
+          style: 'currency', 
+          currency: 'BRL' 
+        }
+      );
+      const value_signal = Number(sale.value_signal).toLocaleString(
+        'pt-BR', 
+        { 
+          style: 'currency', 
+          currency: 'BRL' 
+        }
+      );
+      const bonus = Number(sale.bonus).toLocaleString(
+        'pt-BR', 
+        { 
+          style: 'currency', 
+          currency: 'BRL' 
+        }
+      );
 
       const sales = [
         subsidiary.subsidiary.city, 
         sale.sale_type, 
         sale_date, 
-        sale.realty_ammount,
-        sale.percentage_sale, 
-        sale.commission, 
-        sale.bonus, 
+        realty_ammount,
+        percentage_sale, 
+        commission, 
+        bonus, 
         sale.payment_type.name,
-        sale.value_signal, 
+        value_signal, 
         pay_date_signal, 
         sale.origin.name, 
         sale.realty.enterprise,
