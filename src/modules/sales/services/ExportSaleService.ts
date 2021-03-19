@@ -1,6 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import * as xlsx from 'xlsx';
 import path from 'path';
+import {format, parseISO} from "date-fns";
 
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IStorageProvider from "@shared/container/providers/StorageProvider/models/IStorageProvider";
@@ -51,13 +52,46 @@ class ExportSaleService {
       const builder = sale.builder ? sale.builder.name : null;
       const coordinator = sale.user_coordinator ? sale.user_coordinator.name : null;
 
-      return [
-        subsidiary.subsidiary.city, sale.sale_type, sale.sale_date, sale.realty_ammount,
-        sale.percentage_sale, sale.commission, sale.bonus, sale.payment_type.name,
-        sale.value_signal, sale.pay_date_signal, sale.origin.name, sale.realty.enterprise,
-        builder, sale.client_buyer.name, directors.toString(), coordinator,
-        captivators.toString(), sellers.toString(), sale.status
+      const sale_date = format(parseISO(sale.sale_date.toString()), 'dd/MM/yyyy');
+      const pay_date_signal = format(parseISO(sale.pay_date_signal.toString()), 'dd/MM/yyyy');
+      // const realty_ammount = sale.realty_ammount.toLocaleString(
+      //   'pt-BR', 
+      //   { 
+      //     style: 'currency', 
+      //     currency: 'BRL' 
+      //   }
+      // );
+      // const value_signal = sale.value_signal.toLocaleString(
+      //   'pt-BR', 
+      //   { 
+      //     style: 'currency', 
+      //     currency: 'BRL' 
+      //   }
+      // );
+
+      const sales = [
+        subsidiary.subsidiary.city, 
+        sale.sale_type, 
+        sale_date, 
+        sale.realty_ammount,
+        sale.percentage_sale, 
+        sale.commission, 
+        sale.bonus, 
+        sale.payment_type.name,
+        sale.value_signal, 
+        pay_date_signal, 
+        sale.origin.name, 
+        sale.realty.enterprise,
+        builder, 
+        sale.client_buyer.name, 
+        directors.toString(), 
+        coordinator,
+        captivators.toString(), 
+        sellers.toString(), 
+        sale.status
       ]
+
+      return sales;
     });
 
     const workBook = xlsx.utils.book_new();
