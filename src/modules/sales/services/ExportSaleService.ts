@@ -53,7 +53,7 @@ class ExportSaleService {
       const coordinator = sale.user_coordinator ? sale.user_coordinator.name : null;
 
       const sale_date = format(parseISO(sale.sale_date.toString()), 'dd/MM/yyyy');
-      const pay_date_signal = format(parseISO(sale.pay_date_signal.toString()), 'dd/MM/yyyy');
+      const pay_date_signal = sale.pay_date_signal ? format(parseISO(sale.pay_date_signal.toString()), 'dd/MM/yyyy') : null;
       const percentage_sale = sale.percentage_sale.toString().replace(".", ",");
       const realty_ammount = Number(sale.realty_ammount).toLocaleString(
         'pt-BR', 
@@ -69,13 +69,13 @@ class ExportSaleService {
           currency: 'BRL' 
         }
       );
-      const value_signal = Number(sale.value_signal).toLocaleString(
+      const value_signal = sale.value_signal ? Number(sale.value_signal).toLocaleString(
         'pt-BR', 
         { 
           style: 'currency', 
           currency: 'BRL' 
         }
-      );
+      ) : null;
       const bonus = sale.bonus ? Number(sale.bonus).toLocaleString(
         'pt-BR', 
         { 
