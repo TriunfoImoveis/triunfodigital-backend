@@ -55,34 +55,10 @@ class ExportSaleService {
       const sale_date = format(parseISO(sale.sale_date.toString()), 'dd/MM/yyyy');
       const pay_date_signal = sale.pay_date_signal ? format(parseISO(sale.pay_date_signal.toString()), 'dd/MM/yyyy') : null;
       const percentage_sale = sale.percentage_sale.toString().replace(".", ",");
-      const realty_ammount = Number(sale.realty_ammount).toLocaleString(
-        'pt-BR', 
-        { 
-          style: 'currency', 
-          currency: 'BRL' 
-        }
-      );
-      const commission = Number(sale.commission).toLocaleString(
-        'pt-BR', 
-        { 
-          style: 'currency', 
-          currency: 'BRL' 
-        }
-      );
-      const value_signal = sale.value_signal ? Number(sale.value_signal).toLocaleString(
-        'pt-BR', 
-        { 
-          style: 'currency', 
-          currency: 'BRL' 
-        }
-      ) : null;
-      const bonus = sale.bonus ? Number(sale.bonus).toLocaleString(
-        'pt-BR', 
-        { 
-          style: 'currency', 
-          currency: 'BRL' 
-        }
-      ) : null;
+      const realty_ammount = sale.realty_ammount.toString().replace(".", ",");
+      const commission = sale.commission.toString().replace(".", ",");
+      const value_signal = sale.value_signal ? sale.value_signal.toString().replace(".", ",") : null;
+      const bonus = sale.bonus ? sale.bonus.toString().replace(".", ",") : null;
 
       const sales = [
         subsidiary.subsidiary.city, 
