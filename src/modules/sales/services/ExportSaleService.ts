@@ -76,13 +76,13 @@ class ExportSaleService {
           currency: 'BRL' 
         }
       );
-      const bonus = Number(sale.bonus).toLocaleString(
+      const bonus = sale.bonus ? Number(sale.bonus).toLocaleString(
         'pt-BR', 
         { 
           style: 'currency', 
           currency: 'BRL' 
         }
-      );
+      ) : null;
 
       const sales = [
         subsidiary.subsidiary.city, 
