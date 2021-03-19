@@ -361,6 +361,12 @@ saleRoutes.put('/:id', celebrate({
       .messages(validatorFields({name: "'valor do sinal'"})),
     pay_date_signal: Joi.date().iso()
       .messages(validatorFields({name: "'data de pagamento do sinal'"})),
+    status: Joi.string().valid(
+      'PENDENTE', 'PAGO_TOTAL'
+    ).messages(validatorFields({
+      name: "'status'",
+      ref: "[PENDENTE, PAGO_TOTAL]"
+    })),
   }
 }), saleController.update);
 

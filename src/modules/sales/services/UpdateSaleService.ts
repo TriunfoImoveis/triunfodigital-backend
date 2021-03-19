@@ -6,6 +6,7 @@ import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
 import AppError from "@shared/errors/AppError";
 import IRealtyRepository from "@modules/sales/repositories/IRealtyRepository";
 import IClientRepository from "@modules/sales/repositories/IClientRepository";
+import { Status } from "../infra/typeorm/entities/Sale";
 
 interface IRequestDTO {
   id: string;
@@ -29,6 +30,10 @@ class UpdateSaleService {
     const saleExists = await this.salesRepository.findById(id);
     if (!saleExists) {
       throw new AppError("Venda não existe.", 404);
+    }
+
+    if ((saleExists.status === Status.NV) || (saleExists.status === Status.CA)) {
+      throw new AppError(`Venda com o Status de ${saleExists.status} não pode ser atualizada.`, 400);
     }
     
     // Atualizar o imóvel
