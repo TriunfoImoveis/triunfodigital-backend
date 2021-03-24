@@ -5,7 +5,7 @@ import AppError from "@shared/errors/AppError";
 import ICreateInstallmentDTO from "@modules/finances/dtos/ICreateInstallmentDTO";
 import IInstallmentRepository from "@modules/finances/repositories/IInstallmentRepository";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
-import Installment from "@modules/finances/infra/typeorm/entities/Installment";
+import Installment, { StatusInstallment } from "@modules/finances/infra/typeorm/entities/Installment";
 import { Status } from "@modules/sales/infra/typeorm/entities/Sale";
 
 interface IRequestDTO {
@@ -28,9 +28,10 @@ class CreateInstallmentService {
 
     if (!sale) {
       throw new AppError("Venda não existe.", 404);
-    } else if (sale.status !== Status.NV) {
-      throw new AppError("Venda já validada.", 400);
+    } else if ((sale.status === Status.CA) || (sale.status === Status.PT)) {
+      throw new AppError("Impossivel alterar parcelas dessa venda.", 400);
     }
+
     // Add a venda em cada parcela e somar o total das parcelas.
     var totalValueInstallments = 0;
     installments.map(
@@ -52,6 +53,13 @@ class CreateInstallmentService {
     }
 
     if (sale.installments.length !== 0) {
+      // Verifica se existe alguma parcela paga e impede de atualizar as parcelas.
+      const check_installments = sale.installments.some(
+        installment => installment.status === StatusInstallment.PAG
+      );
+      if (check_installments) {
+        throw new AppError("Existem parcelas pagas, impossivel mudar forma de pagamento.", 400);
+      }
       await this.installmentsRepository.delete(sale.installments);
     }
 
