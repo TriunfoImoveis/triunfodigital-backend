@@ -1,11 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import * as xlsx from 'xlsx';
-import path from 'path';
 import {format, parseISO} from "date-fns";
 
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IStorageProvider from "@shared/container/providers/StorageProvider/models/IStorageProvider";
-import reportConfig from '@config/reports';
 
 interface IResponseDTO {
   link_url: string;
@@ -59,7 +56,7 @@ class ExportSaleService {
       const commission = sale.commission.toString().replace(".", ",");
       const value_signal = sale.value_signal ? sale.value_signal.toString().replace(".", ",") : null;
       const bonus = sale.bonus ? sale.bonus.toString().replace(".", ",") : null;
-
+      
       const sales = [
         subsidiary.subsidiary.city, 
         sale.sale_type, 
@@ -85,37 +82,22 @@ class ExportSaleService {
       return sales;
     });
 
-    const workBook = xlsx.utils.book_new();
     const workSheetData = [
       workSheetColumnNames,
       ... data
     ];
-    const workSheet = xlsx.utils.aoa_to_sheet(workSheetData);
-    workSheet["!autofilter"] = {ref: "A1:S1"};
-
-    const fileName = 'sales';
-    const originalPath = path.resolve(reportConfig.tmpFolder, `${fileName}.xlsx`);
-
-    xlsx.utils.book_append_sheet(workBook, workSheet, fileName);
-    xlsx.writeFile(
-      workBook,
-      originalPath
-    );
     
-    await this.storagePrivider.saveReportFile(originalPath);
+    const filePath = await this.storagePrivider.saveReportFile(
+      { 
+        workSheetData, 
+        fileName: 'sales',
+        refCol: "A1:S1"
+      }
+    );
 
-    switch (reportConfig.driver) {
-      case 'disk':
-        return {
-          link_url: originalPath
-        };
-      case 's3':
-        return {
-          link_url: `https://${reportConfig.config.aws.bucket}.s3.amazonaws.com/${fileName}`
-        };
-      default:
-        return undefined;
-    }
+    return {
+      link_url: filePath
+    };
   }
 }
 
