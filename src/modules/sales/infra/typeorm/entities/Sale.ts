@@ -59,6 +59,9 @@ class Sale {
   @Column({ type: 'enum', enum: Status, default: Status.NV })
   status: Status;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  observation: string;
+
   @Column({ type: 'varchar', length: 150, nullable: true })
   another_motive: string;
 

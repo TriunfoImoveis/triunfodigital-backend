@@ -58,6 +58,7 @@ class SaleController {
       users_sellers,
       value_signal,
       pay_date_signal,
+      observation,
       installments,
     } = request.body;
     
@@ -103,6 +104,7 @@ class SaleController {
       users_sellers,
       value_signal,
       pay_date_signal,
+      observation,
     }, installments);
 
     return response.json(sale);
@@ -128,6 +130,7 @@ class SaleController {
       value_signal,
       pay_date_signal,
       installments,
+      observation,
     } = request.body;
 
     const createRealtyService = container.resolve(CreateRealtyService);
@@ -186,6 +189,7 @@ class SaleController {
       users_sellers,
       value_signal,
       pay_date_signal,
+      observation,
     }, installments);
 
     return response.json(sale);

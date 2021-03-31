@@ -23,4 +23,5 @@ export default interface ICreateSaleUsedDTO {
   users_sellers: User[];
   value_signal: number;
   pay_date_signal: Date;
+  observation?: string;
 }
