@@ -95,6 +95,7 @@ saleRoutes.post('/new', celebrate({
       .messages(validatorFields({name: "'valor do sinal'"})),
     pay_date_signal: Joi.date().iso().required()
       .messages(validatorFields({name: "'data de pagamento do sinal'"})),
+    observation: Joi.string().messages(validatorFields({name: "'observação'"})),
     installments: Joi.array().items(
       Joi.object({
         installment_number: Joi.number().integer().positive().required()
@@ -211,6 +212,7 @@ saleRoutes.post('/used', celebrate({
       .messages(validatorFields({name: "'valor do sinal'"})),
     pay_date_signal: Joi.date().iso().required()
       .messages(validatorFields({name: "'data de pagamento do sinal'"})),
+    observation: Joi.string().messages(validatorFields({name: "'observação'"})),
     installments: Joi.array().items(
       Joi.object({
         installment_number: Joi.number().integer().positive().required()
@@ -361,6 +363,7 @@ saleRoutes.put('/:id', celebrate({
       .messages(validatorFields({name: "'valor do sinal'"})),
     pay_date_signal: Joi.date().iso()
       .messages(validatorFields({name: "'data de pagamento do sinal'"})),
+    observation: Joi.string().messages(validatorFields({name: "'observação'"})),
     status: Joi.string().valid(
       'PENDENTE', 'PAGO_TOTAL'
     ).messages(validatorFields({

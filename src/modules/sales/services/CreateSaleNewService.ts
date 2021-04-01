@@ -39,6 +39,7 @@ class CreateSaleNewService {
     users_sellers,
     value_signal,
     pay_date_signal,
+    observation,
   }: ICreateSaleNewDTO, installments: ICreateInstallmentDTO[]): Promise<Sale> {
 
     var totalValueInstallments = 0;
@@ -79,6 +80,7 @@ class CreateSaleNewService {
       users_sellers,
       value_signal,
       pay_date_signal: ajusted_date_signal,
+      observation,
     }, installments);
 
     if (sale) {
