@@ -15,7 +15,7 @@ rankingRouter.get('/', celebrate({
     type: Joi.string().valid('ANUAL', 'MENSAL').default('ANUAL'),
     month: Joi.when('type', {
       is: 'MENSAL', 
-      then: Joi.number().min(1).max(12).required().messages(
+      then: Joi.number().min(1).max(12).default(new Date().getMonth() + 1).messages(
         validatorFields({name: "'Mês'", min: 1, max: 12})
       ),
     }),
