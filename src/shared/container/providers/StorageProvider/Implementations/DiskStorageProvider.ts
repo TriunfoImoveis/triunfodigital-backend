@@ -16,6 +16,7 @@ class DiskStorageProvider implements IStorageProvider {
 
     const worksheet = workbook.addWorksheet(fileName);
     worksheet.columns = workSheetData.headers;
+    worksheet.getRow(1).font = {bold: true};
     worksheet.addRows(workSheetData.data);
     worksheet.autoFilter = refCol ? refCol : undefined;
 
