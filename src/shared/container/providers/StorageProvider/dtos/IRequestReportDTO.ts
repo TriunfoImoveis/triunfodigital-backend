@@ -1,5 +1,14 @@
+interface ISheetVariables {
+  headers: {
+    [key: string]: any;
+  }[];
+  data: {
+    [key: string]: any;
+  }[];
+}
+
 export default interface IRequestReportDTO {
-  workSheetData: (string | null)[][];
+  workSheetData: ISheetVariables;
   fileName: string;
-  refCol: string | undefined;
+  refCol?: string;
 }

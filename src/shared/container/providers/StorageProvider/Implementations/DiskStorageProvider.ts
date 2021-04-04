@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import * as xlsx from 'xlsx';
+import ExcelJS from 'exceljs';
 
 import uploadConfig from '@config/upload';
 import reportConfig from '@config/reports';
@@ -10,21 +10,19 @@ import IRequestReportDTO from '@shared/container/providers/StorageProvider/dtos/
 class DiskStorageProvider implements IStorageProvider {
 
   public async saveReportFile({workSheetData, fileName, refCol}: IRequestReportDTO): Promise<string> {
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = "Equipe Triunfo Digital";
+    workbook.created = new Date();
+
+    const worksheet = workbook.addWorksheet(fileName);
+    worksheet.columns = workSheetData.headers;
+    worksheet.addRows(workSheetData.data);
+    worksheet.autoFilter = refCol ? refCol : undefined;
+
     const filePath = path.resolve(reportConfig.tmpFolder, `${fileName}.xlsx`);
-
-    const workBook = xlsx.utils.book_new();
-    const workSheet = xlsx.utils.aoa_to_sheet(workSheetData);
-    if (refCol) {
-      workSheet["!autofilter"] = {ref: refCol};
-    }
-
-    xlsx.utils.book_append_sheet(workBook, workSheet, fileName);
-    xlsx.writeFile(
-      workBook,
-      filePath
-    );
+    await workbook.xlsx.writeFile(filePath);
     
-    return path.resolve(reportConfig.tmpFolder, `${fileName}.xlsx`);
+    return filePath;
   }
 
   public async saveFile(file: string): Promise<string> {
