@@ -59,41 +59,24 @@ class ExportSaleService {
       const sellers = sale.sale_has_sellers.map((seller) => {
         return seller.name;
       });
-
-      const builder = sale.builder ? sale.builder.name : null;
-      const coordinator = sale.user_coordinator ? sale.user_coordinator.name : null;
       
-      const sale_date = parseISO(sale.sale_date.toString());
-
-      const pay_date_signal = sale.pay_date_signal 
-        ? parseISO(sale.pay_date_signal.toString()) 
-        : null;
-
-      const realty_ammount = Number(sale.realty_ammount);
-
-      const commission = Number(sale.commission);
-
-      const value_signal = sale.value_signal ? Number(sale.value_signal) : null;
-
-      const bonus = sale.bonus ? Number(sale.bonus) : null;
-
       const sales = {
         subsidiary: subsidiary.subsidiary.city,
         sale_type: sale.sale_type,
-        sale_date: sale_date,
-        sale_value: realty_ammount,
-        sale_percentage: sale.percentage_sale,
-        commission: commission,
-        bonus: bonus,
+        sale_date: parseISO(sale.sale_date.toString()),
+        sale_value: Number(sale.realty_ammount),
+        sale_percentage: sale.percentage_sale/100,
+        commission: Number(sale.commission),
+        bonus: sale.bonus ? Number(sale.bonus) : null,
         payment_type: sale.payment_type.name,
-        value_signal: value_signal,
-        pay_date_signal: pay_date_signal,
+        value_signal: sale.value_signal ? Number(sale.value_signal) : null,
+        pay_date_signal: sale.pay_date_signal ? parseISO(sale.pay_date_signal.toString()) : null,
         origin: sale.origin.name,
         realty: sale.realty.enterprise,
-        builder: builder,
+        builder: sale.builder ? sale.builder.name : null,
         client_buyer: sale.client_buyer.name,
         directors: directors.toString(),
-        coordinator: coordinator,
+        coordinator: sale.user_coordinator ? sale.user_coordinator.name : null,
         captivators: captivators.toString(),
         sellers: sellers.toString(),
         status: sale.status
