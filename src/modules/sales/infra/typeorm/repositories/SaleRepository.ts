@@ -25,6 +25,7 @@ class SaleRepository implements ISaleRepository {
       .leftJoinAndSelect("sale.company", "company")
       .innerJoinAndSelect("sale.payment_type", "payment")
       .innerJoinAndSelect("sale.realty", "realty")
+      .innerJoinAndSelect("realty.property", "property")
       .leftJoinAndSelect("sale.builder", "builder")
       .innerJoinAndSelect("sale.client_buyer", "client_buyer")
       .leftJoinAndSelect("sale.client_seller", "client_seller")
