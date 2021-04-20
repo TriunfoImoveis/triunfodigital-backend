@@ -33,7 +33,9 @@ class ExportSaleService {
       { header: 'VALOR DO SINAL', key: 'value_signal', width: 15, style: {numFmt: '"R$"#,##0.00;[Red]\-"R$"#,##0.00'} },
       { header: 'DATA PAG. SINAL', key: 'pay_date_signal', width: 15, style: {numFmt: 'dd/mm/yyyy'} },
       { header: 'ORIGEM', key: 'origin', width: 15 },
+      { header: 'TIPO DE IMOVEL', key: 'property_type', width: 15 },
       { header: 'IMOVEL', key: 'realty', width: 15 },
+      { header: 'BAIRRO', key: 'neighborhood', width: 20 },
       { header: 'CONSTRUTORA', key: 'builder', width: 15 },
       { header: 'CLIENTE COMPRADOR', key: 'client_buyer', width: 20 },
       { header: 'DIRETORES', key: 'directors', width: 20 },
@@ -59,7 +61,7 @@ class ExportSaleService {
       const sellers = sale.sale_has_sellers.map((seller) => {
         return seller.name;
       });
-      
+
       const sales = {
         subsidiary: subsidiary.subsidiary.city,
         sale_type: sale.sale_type,
@@ -72,7 +74,9 @@ class ExportSaleService {
         value_signal: sale.value_signal ? Number(sale.value_signal) : null,
         pay_date_signal: sale.pay_date_signal ? parseISO(sale.pay_date_signal.toString()) : null,
         origin: sale.origin.name,
+        property_type: sale.realty.property.name,
         realty: sale.realty.enterprise,
+        neighborhood: sale.realty.neighborhood,
         builder: sale.builder ? sale.builder.name : null,
         client_buyer: sale.client_buyer.name,
         directors: directors.toString(),
@@ -92,7 +96,7 @@ class ExportSaleService {
           data: data
         }, 
         fileName: 'sales',
-        refCol: "A1:S1"
+        refCol: "A1:U1"
       }
     );
 
