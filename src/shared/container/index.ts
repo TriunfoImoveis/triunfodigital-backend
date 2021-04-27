@@ -33,6 +33,8 @@ import SaleRepository from '@modules/sales/infra/typeorm/repositories/SaleReposi
 
 import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
 import InstallmentRespository from '@modules/finances/infra/typeorm/repositories/InstallmentRepository';
+import IRevenueRepository from '@modules/finances/repositories/IRevenueRepository';
+import RevenueRepository from '@modules/finances/infra/typeorm/repositories/RevenueRepository';
 
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import NotificationsRepository from '@modules/notifications/infra/typeorm/repositories/NotificationsRepository';
@@ -106,6 +108,10 @@ container.registerSingleton<ISaleRepository>(
 container.registerSingleton<IInstallmentRepository>(
   'InstallmentsRepository',
   InstallmentRespository,
+);
+container.registerSingleton<IRevenueRepository>(
+  'RevenueRepository',
+  RevenueRepository,
 );
 // FINANCE
 
