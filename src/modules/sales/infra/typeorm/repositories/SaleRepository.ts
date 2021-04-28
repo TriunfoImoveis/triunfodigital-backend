@@ -50,20 +50,20 @@ class SaleRepository implements ISaleRepository {
       console.log(data);
       const sales = await this.ormRepository.createQueryBuilder("sale")
       .select()
-      .innerJoinAndSelect("sale.origin", "origin")
+      .leftJoinAndSelect("sale.origin", "origin")
       .leftJoinAndSelect("sale.company", "company")
-      .innerJoinAndSelect("sale.payment_type", "payment")
-      .innerJoinAndSelect("sale.realty", "realty")
+      .leftJoinAndSelect("sale.payment_type", "payment")
+      .leftJoinAndSelect("sale.realty", "realty")
       .leftJoinAndSelect("sale.builder", "builder")
-      .innerJoinAndSelect("sale.client_buyer", "client_buyer")
+      .leftJoinAndSelect("sale.client_buyer", "client_buyer")
       .leftJoinAndSelect("sale.client_seller", "client_seller")
-      .innerJoinAndSelect("sale.users_directors", "directors")
+      .leftJoinAndSelect("sale.users_directors", "directors")
       .leftJoinAndSelect("sale.user_coordinator", "coordinator")
       .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
-      .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
+      .leftJoinAndSelect("sale.sale_has_sellers", "sellers")
       .leftJoinAndSelect("sale.motive", "motive")
       .leftJoinAndSelect("sale.installments", "installments")
-      .innerJoinAndSelect(
+      .leftJoinAndSelect(
         "sellers.subsidiary", "subsidiary", "subsidiary.city LIKE :city", {city: city+'%'}
       )
       .where("sale.status = :status", {status})
