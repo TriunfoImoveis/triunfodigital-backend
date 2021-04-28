@@ -47,30 +47,31 @@ class SaleRepository implements ISaleRepository {
   async findAll(data: IRequestSaleDTO): Promise<Sale[]> {
     try {
       const {name, city, status} = data;
-      console.log(data);
+
       const sales = await this.ormRepository.createQueryBuilder("sale")
       .select()
-      .leftJoinAndSelect("sale.origin", "origin")
+      .innerJoinAndSelect("sale.origin", "origin")
       .leftJoinAndSelect("sale.company", "company")
-      .leftJoinAndSelect("sale.payment_type", "payment")
-      .leftJoinAndSelect("sale.realty", "realty")
+      .innerJoinAndSelect("sale.payment_type", "payment")
+      .innerJoinAndSelect("sale.realty", "realty")
       .leftJoinAndSelect("sale.builder", "builder")
-      .leftJoinAndSelect("sale.client_buyer", "client_buyer")
+      .innerJoinAndSelect("sale.client_buyer", "client_buyer")
       .leftJoinAndSelect("sale.client_seller", "client_seller")
-      .leftJoinAndSelect("sale.users_directors", "directors")
+      .innerJoinAndSelect("sale.users_directors", "directors")
       .leftJoinAndSelect("sale.user_coordinator", "coordinator")
       .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
-      .leftJoinAndSelect("sale.sale_has_sellers", "sellers")
+      .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
       .leftJoinAndSelect("sale.motive", "motive")
       .leftJoinAndSelect("sale.installments", "installments")
-      .leftJoinAndSelect(
+      .innerJoinAndSelect(
         "sellers.subsidiary", "subsidiary", "subsidiary.city LIKE :city", {city: city+'%'}
       )
       .where("sale.status = :status", {status})
       .andWhere("sellers.name ILIKE :name", { name: name+"%" })
       .orderBy("sale.sale_date", "DESC")
+      .cache(true)
       .getMany();
-      sales.forEach((sale) => {console.log(sale.id)});
+      
       return sales;
     } catch (err) {
       throw new AppError(err.detail);
