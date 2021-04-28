@@ -47,7 +47,7 @@ class SaleRepository implements ISaleRepository {
   async findAll(data: IRequestSaleDTO): Promise<Sale[]> {
     try {
       const {name, city, status} = data;
-
+      console.log(data);
       const sales = await this.ormRepository.createQueryBuilder("sale")
       .select()
       .innerJoinAndSelect("sale.origin", "origin")
