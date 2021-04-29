@@ -6,6 +6,7 @@ import AppError from '@shared/errors/AppError';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import { Status } from '@modules/sales/infra/typeorm/entities/Sale';
 import mailQueue from "@shared/container/providers/JobProvider/implementations/Queue";
+import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
 
 @injectable()
 class ValidSaleService {
@@ -45,12 +46,18 @@ class ValidSaleService {
       }
     }
 
-    // Define o status da venda conforme a quantidade de parcelas.
-    if (sale.installments.length === 1) {
+    // Verificar se a venda foi totalmente paga.
+    // Define o status da venda conforme o status das parcelas.
+    const fullPayment = sale.installments.every((installment) => {
+      // retorna true se todas as parcelas estão com status PAGO.
+      return installment.status === StatusInstallment.PAG;
+    });
+    if (fullPayment) {
       var status = Status.PT;
     } else {
       var status = Status.PE;
     }
+
     await this.salesRepository.validSale(id, status);
     
 
