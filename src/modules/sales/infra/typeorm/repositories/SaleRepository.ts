@@ -71,7 +71,7 @@ class SaleRepository implements ISaleRepository {
       .orderBy("sale.sale_date", "DESC")
       .cache(true)
       .getMany();
-
+      
       return sales;
     } catch (err) {
       throw new AppError(err.detail);
