@@ -37,7 +37,7 @@ class SaleRepository implements ISaleRepository {
       .leftJoinAndSelect("sale.installments", "installments")
       .innerJoinAndSelect("sellers.subsidiary", "subsidiary")
       .getMany();
-
+      
       return sales;
     } catch (err) {
       throw new AppError(err.detail);
@@ -69,7 +69,6 @@ class SaleRepository implements ISaleRepository {
       .where("sale.status = :status", {status})
       .andWhere("sellers.name ILIKE :name", { name: name+"%" })
       .orderBy("sale.sale_date", "DESC")
-      .cache(true)
       .getMany();
       
       return sales;
