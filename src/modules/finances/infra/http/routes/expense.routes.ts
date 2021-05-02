@@ -56,4 +56,49 @@ expenseRoutes.post('/', celebrate({
   }
 }), expenseController.create);
 
+expenseRoutes.get('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid().required(),
+  },
+}), expenseController.show);
+
+expenseRoutes.put('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid().required(),
+  },
+  [Segments.BODY]: {
+    expense_type: Joi.string().valid(
+      "FIXA",
+      "VARIAVEL",
+    ).messages(validatorFields({
+      name: "Tipo de Despesa", 
+      ref: "[FIXA ou VARIAVEL]"
+    })),
+    description: Joi.string().messages(validatorFields({
+      name: "Descrição"
+    })),
+    due_date: Joi.date().iso().messages(validatorFields({
+      name: "'Data de Vencimento'"
+    })),
+    value: Joi.number().positive().messages(validatorFields({
+      name: "'Valor'"
+    })),
+    group: Joi.string().uuid().messages(validatorFields({
+      name: "Grupo"
+    })),
+    subsidiary: Joi.string().uuid().messages(validatorFields({
+      name: "'Filial'"
+    })),
+    user: Joi.string().uuid().optional().messages(validatorFields({
+      name: "Usuário"
+    }))
+  }
+}), expenseController.update);
+
+expenseRoutes.delete('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid().required(),
+  }
+}), expenseController.delete);
+
 export default expenseRoutes;
