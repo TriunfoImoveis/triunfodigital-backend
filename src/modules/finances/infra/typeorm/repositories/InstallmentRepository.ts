@@ -14,7 +14,7 @@ class InstallmentRespository implements IInstallmentRepository {
     this.ormRepository = getRepository(Installment);
   }
 
-  async list(data: IRequestInstallmentDTO): Promise<Installment[]> {
+  async listFilters(data: IRequestInstallmentDTO): Promise<Installment[]> {
     try {
       const {buyer_name, city, status} = data;
       const listInstallments = await this.ormRepository.createQueryBuilder("i")
@@ -23,12 +23,12 @@ class InstallmentRespository implements IInstallmentRepository {
         .innerJoinAndSelect("sale.client_buyer", "buyer")
         .innerJoinAndSelect("sale.realty", "realty")
         .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
-        .innerJoinAndSelect("sellers.subsidiary", "sub", "sub.city = :city", {city})
-        .where("i.status = :status", {status})
+        .innerJoinAndSelect("sellers.subsidiary", "subsidiary")
+        .where("subsidiary.city ILIKE :city", {city: city+"%"})
+        .andWhere("i.status IN (:...status)", {status: status})
         .andWhere("buyer.name ILIKE :buyer_name", {buyer_name: buyer_name+"%"})
-        .andWhere("sale.status IN (:...status_sale)", {
-          status_sale: ["PENDENTE", "PAGO_TOTAL", "CAIU"]
-        }).getMany();
+        .andWhere("sale.status IN (:...status_sale)", {status_sale: ["PENDENTE", "PAGO_TOTAL", "CAIU"]})
+        .getMany();
 
       return listInstallments;
     } catch (err) {

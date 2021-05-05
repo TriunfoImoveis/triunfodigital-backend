@@ -17,14 +17,17 @@ class ListInstallmentService {
     city, 
     status
   }: IRequestInstallmentDTO): Promise<Installment[]> {
-    var statusFilter: string;
-    if (status === StatusInstallment.VEN) {
-      statusFilter = StatusInstallment.PEN;
+    
+    var statusFilter: any;
+    if (!status) {
+      statusFilter = [StatusInstallment.PEN, StatusInstallment.PAG, StatusInstallment.CAI]
+    } else if (status === StatusInstallment.VEN) {
+      statusFilter = [StatusInstallment.PEN];
     } else {
-      statusFilter = status;
+      statusFilter = [status];
     }
     
-    const listInstallments = await this.installmentsRepository.list({
+    const listInstallments = await this.installmentsRepository.listFilters({
       buyer_name,
       city,
       status: statusFilter,
@@ -49,6 +52,13 @@ class ListInstallmentService {
       });
 
       return installments;
+    } else {
+      listInstallments.filter((installment) => {
+        const dateFormated = parseISO(installment.due_date.toString());
+        if ((installment.status === StatusInstallment.PEN) && (isPast(dateFormated))) {
+          installment.status = StatusInstallment.VEN;
+        }
+      });
     }
     
     return listInstallments;

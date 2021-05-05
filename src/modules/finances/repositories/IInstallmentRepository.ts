@@ -4,7 +4,7 @@ import IUpdateInstallmentDTO from '@modules/finances/dtos/IUpdateInstallmentDTO'
 import IRequestInstallmentDTO from '@modules/finances/dtos/IRequestInstallmentDTO';
 
 export default interface IInstallmentRepository {
-  list(data: IRequestInstallmentDTO): Promise<Installment[]>;
+  listFilters(data: IRequestInstallmentDTO): Promise<Installment[]>;
   findById(id: string): Promise<Installment | undefined>;
   create(instalments: ICreateInstallmentDTO[]): Promise<Installment[]>;
   delete(installments: Installment[]): Promise<void>;

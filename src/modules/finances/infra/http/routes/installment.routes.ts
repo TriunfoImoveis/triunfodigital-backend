@@ -14,13 +14,13 @@ installmentRoutes.use(ensuredAthenticated);
 installmentRoutes.get('/', celebrate({
   [Segments.QUERY]: {
     buyer_name: Joi.string().default(''),
-    city: Joi.string().required(),
+    city: Joi.string().default(''),
     status: Joi.string().valid(
       "PENDENTE",
       "VENCIDO",
       "PAGO",
       "CAIU"
-    ).required(),
+    ),
   }
 }), installmentController.list);
 
