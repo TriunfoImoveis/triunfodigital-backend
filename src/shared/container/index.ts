@@ -35,6 +35,8 @@ import IInstallmentRepository from '@modules/finances/repositories/IInstallmentR
 import InstallmentRespository from '@modules/finances/infra/typeorm/repositories/InstallmentRepository';
 import IRevenueRepository from '@modules/finances/repositories/IRevenueRepository';
 import RevenueRepository from '@modules/finances/infra/typeorm/repositories/RevenueRepository';
+import IExpenseRepository from '@modules/finances/repositories/IExpenseRepository';
+import ExpenseRepository from '@modules/finances/infra/typeorm/repositories/ExpenseRepository';
 
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import NotificationsRepository from '@modules/notifications/infra/typeorm/repositories/NotificationsRepository';
@@ -112,6 +114,10 @@ container.registerSingleton<IInstallmentRepository>(
 container.registerSingleton<IRevenueRepository>(
   'RevenueRepository',
   RevenueRepository,
+);
+container.registerSingleton<IExpenseRepository>(
+  'ExpenseRepository',
+  ExpenseRepository,
 );
 // FINANCE
 
