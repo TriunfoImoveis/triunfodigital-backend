@@ -7,7 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
   ManyToMany,
-  OneToOne,
+  OneToMany,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 
@@ -66,8 +66,8 @@ class User {
   @JoinColumn({ name: 'office_id' })
   office: Office;
  
-  @OneToOne(type => BankData, bank_data => bank_data.user, {cascade: true})
-  bank_data: BankData;
+  @OneToMany(type => BankData, bank_data => bank_data.user, {cascade: true})
+  bank_data: BankData[];
 
   @ManyToMany(type => Sale, sale => sale.sale_has_sellers)
   sales: Sale[];
