@@ -46,4 +46,59 @@ revenueRoutes.post('/', celebrate({
   }
 }), revenueController.create);
 
+revenueRoutes.get('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid().required(),
+  }
+}), revenueController.show);
+
+revenueRoutes.put('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid().required(),
+  },
+  [Segments.BODY]: {
+    revenue_type: Joi.string().valid(
+      "CREDITO",
+      "DESPACHANTE",
+    ).messages(validatorFields({
+      name: "'Tipo de Receita'", 
+      ref: "[CREDITO ou DESPACHANTE]"
+    })),
+    description: Joi.string().messages(validatorFields({
+      name: "'Descrição'"
+    })),
+    due_date: Joi.date().iso().messages(validatorFields({
+      name: "'Data de Vencimento'"
+    })),
+    value_integral: Joi.number().positive().messages(validatorFields({
+      name: "'Valor Bruto'"
+    })),
+    tax_rate: Joi.number().positive().messages(validatorFields({
+      name: "'Taxa de Imposto'"
+    })),
+    invoice_value: Joi.number().positive().messages(validatorFields({
+      name: "'Valor da Nota'"
+    })),
+    client: Joi.string().min(3).messages(validatorFields({
+      name: "'Cliente'",
+      min: 3
+    })),
+    subsidiary: Joi.string().uuid().messages(validatorFields({
+      name: "'Filial'"
+    })),
+  }
+}), revenueController.update);
+
+revenueRoutes.patch('/paid/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid().required(),
+  },
+  [Segments.BODY]: {
+    pay_date: Joi.date().iso().required().messages(validatorFields({
+      name: "'Data de Pagamento'"
+    })),
+    bank_data: Joi.string().uuid().required(),
+  }
+}), revenueController.paid);
+
 export default revenueRoutes;

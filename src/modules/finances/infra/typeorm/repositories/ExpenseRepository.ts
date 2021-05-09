@@ -15,7 +15,7 @@ class ExpenseRepository implements IExpenseRepository {
 
   async findById(id: string): Promise<Expense | undefined> {
     try {
-      const expense = await this.ormRepository.findOne(id);
+      const expense = await this.ormRepository.findOne(id, {relations: ["group", "subsidiary"]});
 
       return expense;
     } catch (err) {
@@ -25,7 +25,7 @@ class ExpenseRepository implements IExpenseRepository {
 
   async list(): Promise<Expense[]> {
     try {
-      const expenses = await this.ormRepository.find();
+      const expenses = await this.ormRepository.find({relations: ["group", "subsidiary"]});
       return expenses;
     }  catch (err) {
       throw new AppError(err.detail);
