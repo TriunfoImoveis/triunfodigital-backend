@@ -25,10 +25,10 @@ class CheckInstallmentService {
     const installmentsForCities = await Promise.all(
       cities.map(async (city) => {
         // Busca todas as pascelas pendentes em cada filial por vez.
-        const installments = await this.installmentsRepository.list({
+        const installments = await this.installmentsRepository.listFilters({
           buyer_name: '',
           city,
-          status: StatusInstallment.PEN,
+          status: [StatusInstallment.PEN],
         });
 
         // Verifica cada parcela se está vencida e as retorna.

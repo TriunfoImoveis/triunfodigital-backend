@@ -16,4 +16,5 @@ export default interface IUpdateUserDTO {
   office?: Office;
   bank_data?: BankData;
   validated_account?: boolean;
+  active?: boolean;
 }
