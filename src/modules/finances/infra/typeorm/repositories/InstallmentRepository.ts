@@ -28,6 +28,7 @@ class InstallmentRespository implements IInstallmentRepository {
         .andWhere("i.status IN (:...status)", {status: status})
         .andWhere("buyer.name ILIKE :buyer_name", {buyer_name: buyer_name+"%"})
         .andWhere("sale.status IN (:...status_sale)", {status_sale: ["PENDENTE", "PAGO_TOTAL", "CAIU"]})
+        .orderBy("due_date", "DESC")
         .getMany();
 
       return listInstallments;

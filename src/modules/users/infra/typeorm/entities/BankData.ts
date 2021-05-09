@@ -2,7 +2,7 @@ import {
   Column, 
   Entity, 
   JoinColumn, 
-  OneToOne, 
+  ManyToOne,
   PrimaryGeneratedColumn 
 } from "typeorm";
 
@@ -31,7 +31,7 @@ class BankData {
   @Column({ type: 'varchar', length: 10 })
   account: string;
 
-  @OneToOne(type => User, user => user.bank_data, {
+  @ManyToOne(type => User, user => user.bank_data, {
     nullable: false, 
     onUpdate: "CASCADE", 
     onDelete: "CASCADE"
