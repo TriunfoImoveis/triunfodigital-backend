@@ -31,8 +31,8 @@ expenseRoutes.post('/', celebrate({
     })),
     repeat: Joi.when('expense_type', {
       is: "FIXA", 
-      then: Joi.number().min(1).max(12).required().messages(
-        validatorFields({name: "'Repetição'", min: 1, max: 12})
+      then: Joi.number().min(1).max(50).required().messages(
+        validatorFields({name: "'Repetição'", min: 1, max: 50})
       ),
     }),
     description: Joi.string().required().messages(validatorFields({

@@ -30,7 +30,7 @@ revenueRoutes.post('/', celebrate({
     value_integral: Joi.number().positive().required().messages(validatorFields({
       name: "'Valor Bruto'"
     })),
-    tax_rate: Joi.number().positive().required().messages(validatorFields({
+    tax_rate: Joi.number().positive().default(0).messages(validatorFields({
       name: "'Taxa de Imposto'"
     })),
     invoice_value: Joi.number().positive().messages(validatorFields({
