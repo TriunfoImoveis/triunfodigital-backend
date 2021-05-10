@@ -97,7 +97,9 @@ revenueRoutes.patch('/paid/:id', celebrate({
     pay_date: Joi.date().iso().required().messages(validatorFields({
       name: "'Data de Pagamento'"
     })),
-    bank_data: Joi.string().uuid().required(),
+    bank_data: Joi.string().uuid().required().messages(validatorFields({
+      name: "'Dado Bancário de Entrada'"
+    })),
   }
 }), revenueController.paid);
 
