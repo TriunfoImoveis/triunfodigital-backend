@@ -101,4 +101,21 @@ expenseRoutes.delete('/:id', celebrate({
   }
 }), expenseController.delete);
 
+expenseRoutes.patch('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid().required(),
+  },
+  [Segments.BODY]: {
+    pay_date: Joi.date().iso().required().messages(validatorFields({
+      name: "'Data de Pagamento'"
+    })),
+    value_paid: Joi.number().positive().required().messages(validatorFields({
+      name: "'Valor Pago'"
+    })),
+    bank_data: Joi.string().uuid().required().messages(validatorFields({
+      name: "'Dado Bancário de Saída'"
+    })),
+  }
+}), expenseController.paid)
+
 export default expenseRoutes;

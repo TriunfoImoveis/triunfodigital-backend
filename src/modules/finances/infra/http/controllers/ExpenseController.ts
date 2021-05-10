@@ -7,6 +7,7 @@ import CreateExpenseService from "@modules/finances/services/CreateExpenseServic
 import UpdateExpenseService from "@modules/finances/services/UpdateExpenseService";
 import DeleteExpenseService from "@modules/finances/services/DeleteExpenseService";
 import ShowExpenseService from "@modules/finances/services/ShowExpenseService";
+import PaidExpenseService from "@modules/finances/services/PaidExpenseService";
 
 
 class ExpenseController {
@@ -80,6 +81,16 @@ class ExpenseController {
 
     const deleteExpenseService = container.resolve(DeleteExpenseService);
     await deleteExpenseService.execute(id);
+
+    return response.status(204).send();
+  }
+
+  async paid(request: Request, response: Response): Promise<Response> {
+    const paidExpenseService = container.resolve(PaidExpenseService);
+    paidExpenseService.execute({
+      id: request.params.id,
+      data: request.body,
+    });
 
     return response.status(204).send();
   }

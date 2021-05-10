@@ -15,7 +15,7 @@ class RevenueRepository implements IRevenueRepository {
 
   async list(): Promise<Revenue[]> {
     try {
-      const revenues = await this.ormRepository.find({relations: ["subsidiary"]});
+      const revenues = await this.ormRepository.find({relations: ["subsidiary", "bank_data"]});
       return revenues;
     } catch (err) {
       throw new AppError(err.detail);
@@ -24,7 +24,7 @@ class RevenueRepository implements IRevenueRepository {
 
   async findById(id: string): Promise<Revenue | undefined> {
     try {
-      const revenue = await this.ormRepository.findOne(id, {relations: ["subsidiary"]});
+      const revenue = await this.ormRepository.findOne(id, {relations: ["subsidiary", "bank_data"]});
       return revenue;
     } catch (err) {
       throw new AppError(err.detail);
