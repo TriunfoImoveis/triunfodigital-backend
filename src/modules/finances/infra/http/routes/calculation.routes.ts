@@ -23,6 +23,8 @@ calculationRoutes.post('/', celebrate({
   [Segments.BODY]: {
     installment: Joi.string().uuid().required().messages(validatorFields({name: "'parcela'"})),
     calculator_type: Joi.string().messages(validatorFields({name: "'tipo de calculadora'"})),
+    note_value: Joi.number().positive().required().messages(validatorFields({name: "'Valor da NF'"})),
+    tax_rate: Joi.number().positive().required().messages(validatorFields({name: "'taxa de imposto'"})),
     division_pl: Joi.object({
       division_type: Joi.string().uuid().required().messages(validatorFields({name: "'tipo de divisão'"})),
       percentage: Joi.number().positive().required().messages(validatorFields({name: "'porcentagem'"})),
