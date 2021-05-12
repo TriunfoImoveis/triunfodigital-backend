@@ -24,6 +24,7 @@ class InstallmentRespository implements IInstallmentRepository {
         .innerJoinAndSelect("sale.realty", "realty")
         .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
         .innerJoinAndSelect("sellers.subsidiary", "subsidiary")
+        .leftJoinAndSelect("i.calculation", "calculation")
         .where("subsidiary.city ILIKE :city", {city: city+"%"})
         .andWhere("i.status IN (:...status)", {status: status})
         .andWhere("buyer.name ILIKE :buyer_name", {buyer_name: buyer_name+"%"})
