@@ -69,9 +69,11 @@ class UpdateUserService {
 
     if (body.bank_data) {
       // Se já existe conta bancária cadastrada, pega o id da conta bancária.
-      if (user.bank_data) {
-        body.bank_data.id = user.bank_data.id;
-      }
+      // if (user.bank_data.length !== 0) {
+      //   user.bank_data.forEach((bank_data) => {
+      //     body.bank_data.id = bank_data.id;
+      //   });
+      // }
       user.bank_data = body.bank_data;
       await this.usersRepository.save(user);
       delete body.bank_data;

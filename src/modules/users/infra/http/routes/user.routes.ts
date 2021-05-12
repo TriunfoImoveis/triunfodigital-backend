@@ -57,20 +57,22 @@ usersRouter.post(
         .messages(validatorFields({name: "'filial'"})),
       office: Joi.string().uuid().required()
         .messages(validatorFields({name: "'cargo'"})),
-      bank_data: Joi.object({
-        bank_name: Joi.string().required()
-          .messages(validatorFields({name: "'Instituição Financeira'"})),
-        agency: Joi.string().required()
-          .messages(validatorFields({name: "'Agência'"})),
-        account: Joi.string().required()
-          .messages(validatorFields({name: "'Número da Conta'"})),
-        account_type: Joi.string().required().valid(
-          'CORRENTE', 'POUPANCA', 'SALARIO',
-        ).messages(validatorFields({
-          name: "'Tipo da Conta'", 
-          ref: "[CORRENTE, POUPANCA, SALARIO]"
-        })),
-      }).messages(validatorFields({name: "'Dados Bancários'"})),
+      bank_data: Joi.array().items(
+        Joi.object({
+          bank_name: Joi.string().required()
+            .messages(validatorFields({name: "'Instituição Financeira'"})),
+          agency: Joi.string().required()
+            .messages(validatorFields({name: "'Agência'"})),
+          account: Joi.string().required()
+            .messages(validatorFields({name: "'Número da Conta'"})),
+          account_type: Joi.string().required().valid(
+            'CORRENTE', 'POUPANCA', 'SALARIO',
+          ).messages(validatorFields({
+            name: "'Tipo da Conta'",
+            ref: "[CORRENTE, POUPANCA, SALARIO]",
+          })),
+        }),
+      ).min(1).messages(validatorFields({name: "'Dados Bancários'", min: 1}))
     },
   }),
   usersController.create,
@@ -120,20 +122,22 @@ usersRouter.put(
         .messages(validatorFields({name: "'filial'"})),
       office: Joi.string().uuid()
         .messages(validatorFields({name: "'cargo'"})),
-      bank_data: Joi.object({
-        bank_name: Joi.string().required()
-          .messages(validatorFields({name: "'Instituição Financeira'"})),
-        agency: Joi.string().required()
-          .messages(validatorFields({name: "'Agência'"})),
-        account: Joi.string().required()
-          .messages(validatorFields({name: "'Número da Conta'"})),
-        account_type: Joi.string().required().valid(
-          'CORRENTE', 'POUPANCA', 'SALARIO',
-        ).messages(validatorFields({
-          name: "'Tipo da Conta'",
-          ref: "[CORRENTE, POUPANCA, SALARIO]",
-        })),
-      }).messages(validatorFields({name: "'Dados Bancários'"})),
+      bank_data: Joi.array().items(
+        Joi.object({
+          bank_name: Joi.string().required()
+            .messages(validatorFields({name: "'Instituição Financeira'"})),
+          agency: Joi.string().required()
+            .messages(validatorFields({name: "'Agência'"})),
+          account: Joi.string().required()
+            .messages(validatorFields({name: "'Número da Conta'"})),
+          account_type: Joi.string().required().valid(
+            'CORRENTE', 'POUPANCA', 'SALARIO',
+          ).messages(validatorFields({
+            name: "'Tipo da Conta'",
+            ref: "[CORRENTE, POUPANCA, SALARIO]",
+          })),
+        }),
+      ).min(1).messages(validatorFields({name: "'Dados Bancários'", min: 1}))
     },
   }),
   usersController.update,

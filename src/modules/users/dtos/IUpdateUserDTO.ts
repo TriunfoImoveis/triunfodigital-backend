@@ -14,7 +14,7 @@ export default interface IUpdateUserDTO {
   departament?: Departament;
   subsidiary?: Subsidiary;
   office?: Office;
-  bank_data?: BankData;
+  bank_data?: BankData[];
   validated_account?: boolean;
   active?: boolean;
 }
