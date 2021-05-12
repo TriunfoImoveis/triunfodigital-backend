@@ -3,10 +3,12 @@ import {
     Entity, 
     ManyToOne, 
     PrimaryGeneratedColumn,
-    JoinColumn, 
+    JoinColumn,
+    OneToOne, 
 } from "typeorm";
 
 import Sale from "@modules/sales/infra/typeorm/entities/Sale";
+import Calculator from "./Calculator";
 
 export enum StatusInstallment {
     PEN = "PENDENTE",
@@ -45,6 +47,9 @@ class Installment {
     })
     @JoinColumn({ name: 'sale_id' })
     sale: Sale;
+
+    @OneToOne(type => Calculator, calculator => calculator.installment)
+    calculation: Calculator;
 }
 
 export default Installment;

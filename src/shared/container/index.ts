@@ -37,9 +37,14 @@ import IRevenueRepository from '@modules/finances/repositories/IRevenueRepositor
 import RevenueRepository from '@modules/finances/infra/typeorm/repositories/RevenueRepository';
 import IExpenseRepository from '@modules/finances/repositories/IExpenseRepository';
 import ExpenseRepository from '@modules/finances/infra/typeorm/repositories/ExpenseRepository';
+import ICalculatorRepository from '@modules/finances/repositories/ICalculatorRepository';
+import CalculatorRepository from '@modules/finances/infra/typeorm/repositories/CalculatorRepository';
+import IDivisionRepository from '@modules/finances/repositories/IDivisionRepository';
+import DivisiionRepository from '@modules/finances/infra/typeorm/repositories/DivisionRepository';
 
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import NotificationsRepository from '@modules/notifications/infra/typeorm/repositories/NotificationsRepository';
+
 
 // USER
 container.registerSingleton<IUsersRepository>(
@@ -118,6 +123,14 @@ container.registerSingleton<IRevenueRepository>(
 container.registerSingleton<IExpenseRepository>(
   'ExpenseRepository',
   ExpenseRepository,
+);
+container.registerSingleton<ICalculatorRepository>(
+  'CalculatorRepository',
+  CalculatorRepository,
+);
+container.registerSingleton<IDivisionRepository>(
+  'DivisionRepository',
+  DivisiionRepository,
 );
 // FINANCE
 

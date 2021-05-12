@@ -14,5 +14,5 @@ export default interface ICreateUsersDTO {
   departament: Departament;
   subsidiary: Subsidiary;
   office: Office;
-  bank_data?: BankData;
+  bank_data?: BankData[];
 }

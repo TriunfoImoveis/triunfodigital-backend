@@ -42,6 +42,12 @@ installmentRoutes.post('/:id', celebrate({
   }
 }), installmentController.create);
 
+installmentRoutes.get('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().uuid().required(),
+  }
+}), installmentController.show);
+
 installmentRoutes.patch('/paid/:id', celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),

@@ -27,9 +27,11 @@ import motiveRoutes from '@modules/sales/infra/http/routes/motive.routes';
 import installmentRoutes from '@modules/finances/infra/http/routes/installment.routes';
 import revenueRoutes from '@modules/finances/infra/http/routes/revenue.routes';
 import expenseRoutes from '@modules/finances/infra/http/routes/expense.routes';
+import calculationRoutes from '@modules/finances/infra/http/routes/calculation.routes';
 
 // NOTIFICATION
 import notificationRouter from '@modules/notifications/infra/http/routes/notification.routes';
+
 
 const routes = Router();
 
@@ -60,6 +62,7 @@ routes.use('/sale', saleRoutes);
 routes.use('/installment', installmentRoutes);
 routes.use('/revenue', revenueRoutes);
 routes.use('/expense', expenseRoutes);
+routes.use('/calculator', calculationRoutes);
 
 // Module Notifications
 routes.use('/notification', notificationRouter);
