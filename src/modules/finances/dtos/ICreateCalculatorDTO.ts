@@ -3,8 +3,9 @@ import Division from "@modules/finances/infra/typeorm/entities/Division";
 export default interface ICreateCalculatorDTO {
   installment: string;
   calculator_type?: string;
-  note_value: number;
-  tax_rate: number;
+  note_value?: number;
+  tax_rate?: number;
+  balance: number;
   division_pl: Division;
   division_lucro: Division;
   division_tax: Division;
