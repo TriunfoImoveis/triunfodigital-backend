@@ -27,6 +27,9 @@ class Calculator {
   @Column({ type: 'decimal', precision: 4, scale: 2,  nullable: true })
   tax_rate: number;
 
+  @Column({ type: 'decimal', precision: 14, scale: 2,  nullable: true })
+  balance: number;
+
   @OneToOne(type => Division, {nullable: false, eager: true})
   @JoinColumn({ name: 'division_pl' })
   division_pl: Division;
