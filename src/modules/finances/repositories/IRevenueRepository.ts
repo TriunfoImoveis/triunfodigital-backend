@@ -4,8 +4,8 @@ import IUpdateRevenueDTO from "@modules/finances/dtos/IUpdateRevenueDTO";
 import IResponseRevenueDTO from "@modules/finances/dtos/IResponseRevenueDTO";
 
 export default interface IRevenueRepository {
-  list(): Promise<IResponseRevenueDTO[]>;
-  findById(id: string): Promise<IResponseRevenueDTO | undefined>;
+  list(): Promise<Revenue[]>;
+  findById(id: string): Promise<Revenue | undefined>;
   create(data: ICreateRevenueDTO): Promise<Revenue>;
   update(id: string, daata: IUpdateRevenueDTO): Promise<void>;
 }

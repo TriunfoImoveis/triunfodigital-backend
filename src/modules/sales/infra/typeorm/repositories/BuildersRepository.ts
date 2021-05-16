@@ -27,7 +27,6 @@ class BuildersRespository implements IBuilderRepository {
         order: {
           name: "ASC",
         },
-        cache: true,
       });
 
       return builders;

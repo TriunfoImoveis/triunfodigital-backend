@@ -5,7 +5,6 @@ import Revenue from "@modules/finances/infra/typeorm/entities/Revenue";
 import AppError from "@shared/errors/AppError";
 import ICreateRevenueDTO from "@modules/finances/dtos/ICreateRevenueDTO";
 import IUpdateRevenueDTO from "@modules/finances/dtos/IUpdateRevenueDTO";
-import IResponseRevenueDTO from "@modules/finances/dtos/IResponseRevenueDTO";
 
 class RevenueRepository implements IRevenueRepository {
   private ormRepository: Repository<Revenue>;
@@ -14,7 +13,7 @@ class RevenueRepository implements IRevenueRepository {
     this.ormRepository = getRepository(Revenue);
   }
 
-  async list(): Promise<IResponseRevenueDTO[]> {
+  async list(): Promise<Revenue[]> {
     try {
       const revenues = await this.ormRepository.find({relations: ["subsidiary", "bank_data"]});
       return revenues;
@@ -23,7 +22,7 @@ class RevenueRepository implements IRevenueRepository {
     }
   }
 
-  async findById(id: string): Promise<IResponseRevenueDTO | undefined> {
+  async findById(id: string): Promise<Revenue | undefined> {
     try {
       const revenue = await this.ormRepository.findOne(id, {relations: ["subsidiary", "bank_data"]});
       return revenue;

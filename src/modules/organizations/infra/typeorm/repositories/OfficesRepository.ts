@@ -19,7 +19,6 @@ class OfficesRepository implements IOfficeRepository {
         where: {
           active: true,
         },
-        cache: true,
       });
       return office;
     } catch (err) {

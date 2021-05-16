@@ -18,7 +18,6 @@ class MotiveRepository implements IMotiveRepository {
         order: {
           description: "ASC",
         },
-        cache: true,
       });
 
       return motives;

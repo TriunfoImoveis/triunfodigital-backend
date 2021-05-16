@@ -259,7 +259,6 @@ class SaleRepository implements ISaleRepository {
           "sale.status IN (:...status)",
           { status: ["PENDENTE", "PAGO_TOTAL"] }
         )
-        .cache(true)
         .getMany();
 
       return sales;
@@ -293,7 +292,6 @@ class SaleRepository implements ISaleRepository {
           "sale.status IN (:...status)",
           { status: ["PENDENTE", "PAGO_TOTAL"] }
         )
-        .cache(true)
         .getMany();
 
       return sales;
