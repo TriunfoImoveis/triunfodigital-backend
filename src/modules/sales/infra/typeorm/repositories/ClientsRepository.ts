@@ -65,7 +65,6 @@ class ClientsRepository implements IClientRepository {
         where: {
           active: true,
         },
-        cache: true,
       });
 
       return clients;

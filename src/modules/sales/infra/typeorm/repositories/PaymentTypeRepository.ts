@@ -17,7 +17,6 @@ class PaymentTypeRepository implements IPaymentTypeRepository {
       const payment_types = await this.ormRepository.find({
         where: { type },
         order: { name: "ASC" },
-        cache: true,
       });
 
       return payment_types;

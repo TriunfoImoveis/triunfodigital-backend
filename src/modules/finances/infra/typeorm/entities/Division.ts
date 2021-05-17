@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn 
 } from "typeorm";
 
+import Calculator from "./Calculator";
 import DivisionType from "./DivisionType";
 
 @Entity('divisions')
@@ -22,6 +23,10 @@ class Division {
   @ManyToOne(type => DivisionType, {nullable: false, eager: true, onUpdate: "CASCADE", onDelete: "RESTRICT"})
   @JoinColumn({ name: 'division_type' })
   division_type: DivisionType;
+
+  @ManyToOne(type => Calculator, {nullable: false, onUpdate: "CASCADE", onDelete: "CASCADE"})
+  @JoinColumn({ name: 'calculation_id' })
+  calculation: Calculator;
 }
 
 export default Division;

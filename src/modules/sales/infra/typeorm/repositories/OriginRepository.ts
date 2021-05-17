@@ -21,7 +21,6 @@ class OriginsRepository implements IOriginRepository {
         order: {
           name: "ASC",
         },
-        cache: true,
       });
 
       return origins;

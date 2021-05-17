@@ -41,7 +41,6 @@ class SubsidiaryRepository implements ISubsidiaryRepository {
         where: {
           active: true,
         },
-        cache: true,
       });
       return subsidiary;
     } catch (err) {

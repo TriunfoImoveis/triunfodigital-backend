@@ -20,7 +20,6 @@ class CompanyRepository implements ICompanyRepository {
       const companies = await this.ormRepository.find({
         where: {active: true},
         order: {name: "ASC"},
-        cache: true,
       });
 
       return companies;

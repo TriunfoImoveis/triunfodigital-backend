@@ -16,7 +16,7 @@ class ListRevenueService {
   public async execute(): Promise<IResponseRevenueDTO[]> {
     const listRevenue = await this.revenueRepository.list();
 
-    listRevenue.forEach((revenue) => {
+    listRevenue.map((revenue) => {
       const value_liquid = calculate_tax_rate(revenue.value_integral, revenue.tax_rate);
       revenue.value_liquid = value_liquid;
 

@@ -18,7 +18,6 @@ class PropertiesRepository implements IPropertyRepository {
         order: {
           name: "ASC",
         },
-        cache: true,
       });
 
       return properties;
