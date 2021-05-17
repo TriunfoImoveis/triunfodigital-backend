@@ -24,11 +24,23 @@ class Calculator {
   @Column({ type: 'varchar', length: 150, nullable: true })
   calculator_type: string;
 
+  @Column({ type: 'varchar', length: 150, nullable: true })
+  note_number: string;
+
   @Column({ type: 'decimal', precision: 14, scale: 2,  nullable: true })
   note_value: number;
 
   @Column({ type: 'decimal', precision: 4, scale: 2,  nullable: true })
-  tax_rate: number;
+  tax_rate_nf: number;
+
+  @Column({ type: 'decimal', precision: 4, scale: 2,  nullable: true })
+  tax_iss_nf: number;
+
+  @Column({ type: 'decimal', precision: 14, scale: 2,  nullable: true })
+  value_iss: number;
+
+  @Column({ type: 'decimal', precision: 4, scale: 2,  nullable: true })
+  tax_collection: number;
 }
 
 export default Calculator;
