@@ -17,9 +17,6 @@ class ListRevenueService {
     const listRevenue = await this.revenueRepository.list();
 
     listRevenue.map((revenue) => {
-      const value_liquid = calculate_tax_rate(revenue.value_integral, revenue.tax_rate);
-      revenue.value_liquid = value_liquid;
-
       // Colocar status de Vencido
       if (revenue.status == RevenueStatus.PEND) {
         const dueDateFormated = parseISO(revenue.due_date.toString());
@@ -27,6 +24,11 @@ class ListRevenueService {
           revenue.status = RevenueStatus.VENC;
         }
       }
+
+      // Calculo do valor liquido.
+      const value_liquid = calculate_tax_rate(revenue.value_integral, revenue.tax_rate);
+      const responseRevenue: IResponseRevenueDTO = revenue;
+      responseRevenue.value_liquid = value_liquid;
     });
   
     return listRevenue;
