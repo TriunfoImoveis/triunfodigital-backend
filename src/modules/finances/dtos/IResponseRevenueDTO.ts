@@ -14,5 +14,5 @@ export default interface IResponseRevenueDTO {
     pay_date?: Date;
     bank_data?: BankData;
     status: RevenueStatus;
-    value_liquid: number;
+    value_liquid?: number;
 }

@@ -19,10 +19,11 @@ class ShowRevenueService {
     if (!revenue) {
       throw new AppError("Essa receita não existe.", 404);
     }
-
     const value_liquid = calculate_tax_rate(revenue.value_integral, revenue.tax_rate);
-    revenue.value_liquid = value_liquid;
-    return revenue;
+    
+    const responseRevenue: IResponseRevenueDTO = revenue;
+    responseRevenue.value_liquid = value_liquid;
+    return responseRevenue;
   }
 }
 
