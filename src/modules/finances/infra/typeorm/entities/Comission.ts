@@ -40,7 +40,7 @@ class Comission {
   @Column({ type: 'decimal', precision: 14, scale: 2,  nullable: false })
   comission_liquid: number;
 
-  @ManyToOne(type => Calculator, {nullable: false, onUpdate: "CASCADE", onDelete: "CASCADE"})
+  @ManyToOne(type => Calculator, comission => comission.participants, {nullable: false, onUpdate: "CASCADE", onDelete: "CASCADE"})
   @JoinColumn({ name: 'calculation_id' })
   calculation: Calculator;
 

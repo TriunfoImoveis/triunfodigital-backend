@@ -2,10 +2,12 @@ import {
   Column, 
   Entity, 
   JoinColumn, 
+  OneToMany, 
   OneToOne, 
   PrimaryGeneratedColumn 
 } from "typeorm";
 
+import Comission from "./Comission";
 import Division from "./Division";
 import Installment from "./Installment";
 
@@ -41,6 +43,12 @@ class Calculator {
 
   @Column({ type: 'decimal', precision: 4, scale: 2,  nullable: true })
   tax_collection: number;
+  
+  @OneToMany(type => Division, division => division.calculation)
+  divisions: Division[];
+
+  @OneToMany(type => Comission, comission => comission.calculation)
+  participants: Comission[];
 }
 
 export default Calculator;
