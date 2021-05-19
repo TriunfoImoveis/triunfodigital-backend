@@ -24,7 +24,7 @@ class Division {
   @JoinColumn({ name: 'division_type' })
   division_type: DivisionType;
 
-  @ManyToOne(type => Calculator, {nullable: false, onUpdate: "CASCADE", onDelete: "CASCADE"})
+  @ManyToOne(type => Calculator, division => division.divisions, {nullable: false, onUpdate: "CASCADE", onDelete: "CASCADE"})
   @JoinColumn({ name: 'calculation_id' })
   calculation: Calculator;
 }

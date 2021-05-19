@@ -1,15 +1,17 @@
 import Division from "@modules/finances/infra/typeorm/entities/Division";
+import Comission from "@modules/finances/infra/typeorm/entities/Comission";
+import Installment from "@modules/finances/infra/typeorm/entities/Installment";
 
 export default interface ICreateCalculatorDTO {
-  installment: string;
+  installment: Installment;
   calculator_type?: string;
-  note_value?: number;
-  tax_rate?: number;
   balance: number;
-  division_pl: Division;
-  division_lucro: Division;
-  division_tax: Division;
-  division_other_one?: Division;
-  division_other_two?: Division;
-  division_other_three?: Division;
+  note_number?: string;
+  note_value?: number;
+  tax_rate_nf?: number;
+  tax_iss_nf?: number;
+  value_iss?: number;
+  tax_collection?: number;
+  divisions: Division[];
+  participants: Comission[];
 }
