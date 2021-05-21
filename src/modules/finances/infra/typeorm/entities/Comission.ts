@@ -31,10 +31,10 @@ class Comission {
   @Column({ type: 'decimal', precision: 14, scale: 2,  nullable: false })
   comission_integral: number;
 
-  @Column({ type: 'decimal', precision: 4, scale: 2,  nullable: false })
+  @Column({ type: 'decimal', precision: 4, scale: 2,  nullable: true })
   tax_percentage: number;
 
-  @Column({ type: 'decimal', precision: 14, scale: 2,  nullable: false })
+  @Column({ type: 'decimal', precision: 14, scale: 2,  nullable: true })
   tax_value: number;
 
   @Column({ type: 'decimal', precision: 14, scale: 2,  nullable: false })
