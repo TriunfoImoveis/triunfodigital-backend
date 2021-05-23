@@ -25,6 +25,8 @@ class InstallmentRespository implements IInstallmentRepository {
         .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
         .innerJoinAndSelect("sellers.subsidiary", "subsidiary")
         .leftJoinAndSelect("i.calculation", "calculation")
+        .leftJoinAndSelect("calculation.divisions", "divisions")
+        .leftJoinAndSelect("divisions.division_type", "division_type")
         .where("subsidiary.city ILIKE :city", {city: city+"%"})
         .andWhere("i.status IN (:...status)", {status: status})
         .andWhere("buyer.name ILIKE :buyer_name", {buyer_name: buyer_name+"%"})
@@ -61,7 +63,7 @@ class InstallmentRespository implements IInstallmentRepository {
   async findById(id: string): Promise<Installment | undefined> {
     try {
       const installment = await this.ormRepository.findOne(id, {
-        relations: ['sale', 'calculation']
+        relations: ['sale']
       });
       return installment;
     } catch (err) {

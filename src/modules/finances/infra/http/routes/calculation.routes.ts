@@ -30,6 +30,7 @@ calculationRoutes.post('/', celebrate({
     tax_iss_nf: Joi.number().positive().messages(validatorFields({name: "'taxa de imposto ISS da NF'"})),
     value_iss: Joi.number().positive().messages(validatorFields({name: "'debito ISS'"})),
     tax_collection: Joi.number().positive().messages(validatorFields({name: "'recolhimento de imposto'"})),
+    bank_data: Joi.string().uuid().required().messages(validatorFields({name: "'dado bancário de entrada'"})),
     divisions: Joi.array().items(
       Joi.object({
         division_type: Joi.string().uuid().required().messages(validatorFields({name: "'tipo de divisão'"})),

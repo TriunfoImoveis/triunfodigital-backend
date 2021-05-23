@@ -2,6 +2,7 @@ import {
   Column, 
   Entity, 
   JoinColumn, 
+  ManyToOne, 
   OneToMany, 
   OneToOne, 
   PrimaryGeneratedColumn 
@@ -10,6 +11,7 @@ import {
 import Comission from "./Comission";
 import Division from "./Division";
 import Installment from "./Installment";
+import BankData from "@modules/users/infra/typeorm/entities/BankData";
 
 @Entity('calculations')
 class Calculator {
@@ -43,11 +45,15 @@ class Calculator {
 
   @Column({ type: 'decimal', precision: 4, scale: 2,  nullable: true })
   tax_collection: number;
+
+  @ManyToOne(type => BankData, {nullable: true, eager: true})
+  @JoinColumn({name: 'bank_data_id'})
+  bank_data: BankData;
   
-  @OneToMany(type => Division, division => division.calculation)
+  @OneToMany(type => Division, division => division.calculation, {eager: true})
   divisions: Division[];
 
-  @OneToMany(type => Comission, comission => comission.calculation)
+  @OneToMany(type => Comission, comission => comission.calculation, {eager: true})
   participants: Comission[];
 }
 
