@@ -8,6 +8,7 @@ import UpdateExpenseService from "@modules/finances/services/UpdateExpenseServic
 import DeleteExpenseService from "@modules/finances/services/DeleteExpenseService";
 import ShowExpenseService from "@modules/finances/services/ShowExpenseService";
 import PaidExpenseService from "@modules/finances/services/PaidExpenseService";
+import ExportExpenseService from "@modules/finances/services/ExportExpenseService";
 
 
 class ExpenseController {
@@ -93,6 +94,12 @@ class ExpenseController {
     });
 
     return response.status(204).send();
+  }
+
+  async exportExcel(request: Request, response: Response): Promise<Response> {
+    const exportExpenseService = container.resolve(ExportExpenseService);
+    const filePath = await exportExpenseService.execute();
+    return response.json(filePath).status(201);
   }
 }
 

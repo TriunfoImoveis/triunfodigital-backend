@@ -101,7 +101,7 @@ expenseRoutes.delete('/:id', celebrate({
   }
 }), expenseController.delete);
 
-expenseRoutes.patch('/:id', celebrate({
+expenseRoutes.patch('/paid/:id', celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid().required(),
   },
@@ -117,5 +117,7 @@ expenseRoutes.patch('/:id', celebrate({
     })),
   }
 }), expenseController.paid)
+
+expenseRoutes.get('/export/excel', expenseController.exportExcel);
 
 export default expenseRoutes;

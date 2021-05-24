@@ -1,6 +1,6 @@
 import Subsidiary from "@modules/organizations/infra/typeorm/entities/Subsidiary";
 import User from "@modules/users/infra/typeorm/entities/User";
-import { ExpenseType } from "@modules/finances/infra/typeorm/entities/Expense";
+import { ExpenseStatus, ExpenseType } from "@modules/finances/infra/typeorm/entities/Expense";
 import GroupExpense from "@modules/finances/infra/typeorm/entities/GroupExpense";
 import BankData from "@modules/users/infra/typeorm/entities/BankData";
 
@@ -15,4 +15,5 @@ export default interface IUpdateExpenseDTO {
   pay_date?: Date;
   value_paid?: number;
   bank_data?: BankData;
+  status?: ExpenseStatus;
 }

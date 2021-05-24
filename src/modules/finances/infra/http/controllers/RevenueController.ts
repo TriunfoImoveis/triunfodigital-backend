@@ -6,6 +6,7 @@ import CreateRevenueService from "@modules/finances/services/CreateRevenueServic
 import UpdateRevenueService from "@modules/finances/services/UpdateRevenueService";
 import ShowRevenueService from "@modules/finances/services/ShowRevenueService";
 import PaidRevenueService from "@modules/finances/services/PaidRevenueService";
+import ExportRevenueService from "@modules/finances/services/ExportRevenueService";
 
 class RevenueController {
   async list(request: Request, response: Response): Promise<Response> {
@@ -65,6 +66,12 @@ class RevenueController {
     });
 
     return response.status(204).send();
+  }
+
+  async exportExcel(request: Request, response: Response): Promise<Response> {
+    const exportRevenueService = container.resolve(ExportRevenueService);
+    const filePath = await exportRevenueService.execute();
+    return response.json(filePath).status(201);
   }
 }
 

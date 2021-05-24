@@ -4,7 +4,7 @@ import { add } from "date-fns";
 import IUpdateRevenueDTO from "@modules/finances/dtos/IUpdateRevenueDTO";
 import IRevenueRepository from "@modules/finances/repositories/IRevenueRepository";
 import AppError from "@shared/errors/AppError";
-import { RevenueStatus } from "../infra/typeorm/entities/Revenue";
+import { RevenueStatus } from "@modules/finances/infra/typeorm/entities/Revenue";
 
 interface IRequestDTO {
   id: string;
@@ -22,7 +22,11 @@ class PaidRevenueService {
     const revenueExists = await this.revenueRepository.findById(id);
 
     if (!revenueExists) {
-      throw new AppError("Essa receita não existe.", 404);
+      throw new AppError("Receita não existe.", 404);
+    } else if (revenueExists.status === RevenueStatus.CANC) {
+      throw new AppError("Receita está com status de CANCELADO.", 400);
+    } else if (revenueExists.status === RevenueStatus.PAGO) {
+      throw new AppError("Receita já está com status de PAGO.", 400);
     }
 
     if (data.pay_date) {
