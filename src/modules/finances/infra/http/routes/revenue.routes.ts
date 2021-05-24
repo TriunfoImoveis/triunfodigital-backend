@@ -103,4 +103,6 @@ revenueRoutes.patch('/paid/:id', celebrate({
   }
 }), revenueController.paid);
 
+revenueRoutes.get('/export/excel', revenueController.exportExcel);
+
 export default revenueRoutes;

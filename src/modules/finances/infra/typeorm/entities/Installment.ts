@@ -48,7 +48,7 @@ class Installment {
     @JoinColumn({ name: 'sale_id' })
     sale: Sale;
 
-    @OneToOne(type => Calculator, calculator => calculator.installment)
+    @OneToOne(type => Calculator, calculator => calculator.installment, {eager: true})
     calculation: Calculator;
 }
 

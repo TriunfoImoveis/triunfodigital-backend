@@ -54,4 +54,6 @@ installmentRoutes.patch('/paid/:id', celebrate({
   }
 }), installmentController.update);
 
+installmentRoutes.get('/export/excel', installmentController.exportExcel);
+
 export default installmentRoutes;
