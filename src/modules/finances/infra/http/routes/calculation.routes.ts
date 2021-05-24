@@ -27,7 +27,7 @@ calculationRoutes.post('/', celebrate({
     note_number: Joi.string().alphanum().messages(validatorFields({name: "'número da NF'"})),
     note_value: Joi.number().positive().messages(validatorFields({name: "'valor da NF'"})),
     tax_rate_nf: Joi.number().positive().messages(validatorFields({name: "'taxa total de imposto da NF'"})),
-    tax_iss_nf: Joi.number().positive().messages(validatorFields({name: "'taxa de imposto ISS da NF'"})),
+    tax_iss_nf: Joi.number().min(0).messages(validatorFields({name: "'taxa de imposto ISS da NF'"})),
     value_iss: Joi.number().positive().messages(validatorFields({name: "'debito ISS'"})),
     tax_collection: Joi.number().positive().messages(validatorFields({name: "'recolhimento de imposto'"})),
     bank_data: Joi.string().uuid().required().messages(validatorFields({name: "'dado bancário de entrada'"})),
@@ -37,7 +37,7 @@ calculationRoutes.post('/', celebrate({
         percentage: Joi.number().positive().required().messages(validatorFields({name: "'porcentagem'"})),
         value: Joi.number().positive().required().messages(validatorFields({name: "'valor'"}))
       }).required(),
-    ).length(6).required().messages(validatorFields({name: "'divisões'", max: 6})),
+    ).min(1).max(6).required().messages(validatorFields({name: "'divisões'", min: 1, max: 6})),
     participants: Joi.array().items(
       Joi.object({
         participant_type: Joi.string().valid(
