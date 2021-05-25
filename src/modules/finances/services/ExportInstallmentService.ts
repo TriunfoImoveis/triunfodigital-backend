@@ -45,7 +45,7 @@ class ExportInstallmentService {
         return seller.name;
       });
 
-      const description = `${i.installment_number}º Parcela - ${i.sale.realty.enterprise}`;
+      const description = `${i.installment_number}º Parcela / ${i.sale.realty.enterprise} - ${i.sale.realty.unit}`;
 
       return {
         subsidiary: subsidiary.subsidiary.city,
