@@ -32,7 +32,8 @@ class UpdateSaleService {
       throw new AppError("Venda não existe.", 404);
     }
 
-    if ((saleExists.status === Status.PT) || (saleExists.status === Status.CA)) {
+    // if ((saleExists.status === Status.PT) || (saleExists.status === Status.CA)) {
+    if (saleExists.status === Status.CA) {
       throw new AppError(`Venda com o Status de ${saleExists.status} não pode ser atualizada.`, 400);
     }
     

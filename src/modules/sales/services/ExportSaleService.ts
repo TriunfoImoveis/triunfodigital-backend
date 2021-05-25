@@ -34,9 +34,10 @@ class ExportSaleService {
       { header: 'DATA PAG. SINAL', key: 'pay_date_signal', width: 15, style: {numFmt: 'dd/mm/yyyy'} },
       { header: 'ORIGEM', key: 'origin', width: 15 },
       { header: 'TIPO DE IMOVEL', key: 'property_type', width: 15 },
-      { header: 'IMOVEL', key: 'realty', width: 15 },
+      { header: 'IMOVEL / UNIDADE', key: 'realty', width: 20 },
       { header: 'BAIRRO', key: 'neighborhood', width: 20 },
       { header: 'CONSTRUTORA', key: 'builder', width: 15 },
+      { header: 'CLIENTE VENDEDOR', key: 'client_seller', width: 20 },
       { header: 'CLIENTE COMPRADOR', key: 'client_buyer', width: 20 },
       { header: 'DIRETORES', key: 'directors', width: 20 },
       { header: 'COORDENADOR', key: 'coordinator', width: 20 },
@@ -75,9 +76,10 @@ class ExportSaleService {
         pay_date_signal: sale.pay_date_signal ? parseISO(sale.pay_date_signal.toString()) : null,
         origin: sale.origin.name,
         property_type: sale.realty.property.name,
-        realty: sale.realty.enterprise,
+        realty: `${sale.realty.enterprise} - ${sale.realty.unit}`,
         neighborhood: sale.realty.neighborhood,
         builder: sale.builder ? sale.builder.name : null,
+        client_seller: sale.client_seller ? sale.client_seller.name : null,
         client_buyer: sale.client_buyer.name,
         directors: directors.toString(),
         coordinator: sale.user_coordinator ? sale.user_coordinator.name : null,
@@ -96,7 +98,7 @@ class ExportSaleService {
           data: data
         }, 
         fileName: 'sales',
-        refCol: "A1:U1"
+        refCol: "A1:V1"
       }
     );
 
