@@ -19,7 +19,8 @@ installmentRoutes.get('/', celebrate({
       "PENDENTE",
       "VENCIDO",
       "PAGO",
-      "CAIU"
+      "CAIU",
+      "LIQUIDADA",
     ),
   }
 }), installmentController.list);

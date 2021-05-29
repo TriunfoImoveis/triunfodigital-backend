@@ -16,4 +16,5 @@ export default interface ICreateCalculatorDTO {
   bank_data: BankData;
   divisions: Division[];
   participants: Comission[];
+  pay_date: Date;
 }

@@ -24,7 +24,7 @@ class UpdateInstallmentService {
       (checkInstallmentExists.status !== StatusInstallment.PEN) && 
       (checkInstallmentExists.status !== StatusInstallment.VEN)
     ) {
-      throw new AppError("Parcela Paga ou Caiu não pode ser validada.", 400);
+      throw new AppError("Parcela Paga, Liquidada ou Caiu não pode ser validada.", 400);
     }
     
     const current_date = new Date();
@@ -42,8 +42,8 @@ class UpdateInstallmentService {
     if (sale) { 
       if (sale.status === Status.PE) {
         const fullPayment = sale.installments.every((installment) => {
-          // retorna true se todas as parcelas estão com status PAGO.
-          return installment.status === StatusInstallment.PAG;
+          // retorna true se todas as parcelas estão com status PAGO ou LIQUIDADA.
+          return (installment.status === StatusInstallment.PAG) || (installment.status === StatusInstallment.LIQ);
         });
 
         if (fullPayment) {

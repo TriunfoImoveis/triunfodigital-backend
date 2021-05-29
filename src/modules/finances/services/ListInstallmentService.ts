@@ -20,7 +20,7 @@ class ListInstallmentService {
     
     var statusFilter: any;
     if (!status) {
-      statusFilter = [StatusInstallment.PEN, StatusInstallment.PAG, StatusInstallment.CAI]
+      statusFilter = [StatusInstallment.PEN, StatusInstallment.PAG, StatusInstallment.CAI, StatusInstallment.LIQ]
     } else if (status === StatusInstallment.VEN) {
       statusFilter = [StatusInstallment.PEN];
     } else {

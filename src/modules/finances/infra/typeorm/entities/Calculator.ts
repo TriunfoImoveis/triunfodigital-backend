@@ -1,5 +1,6 @@
 import { 
   Column, 
+  CreateDateColumn, 
   Entity, 
   JoinColumn, 
   ManyToOne, 
@@ -46,6 +47,9 @@ class Calculator {
   @Column({ type: 'decimal', precision: 4, scale: 2,  nullable: true })
   tax_collection: number;
 
+  @Column({ type: "date", nullable: true})
+  pay_date: Date;
+
   @ManyToOne(type => BankData, {nullable: true, eager: true})
   @JoinColumn({name: 'bank_data_id'})
   bank_data: BankData;
@@ -55,6 +59,9 @@ class Calculator {
 
   @OneToMany(type => Comission, comission => comission.calculation, {eager: true})
   participants: Comission[];
+
+  @CreateDateColumn({nullable: true})
+  created_at: Date;
 }
 
 export default Calculator;

@@ -23,19 +23,13 @@ class CreateCalculationService {
     const installmentExists = await this.installmentsRepository.findById(String(installment));
     if (!installmentExists) {
       throw new AppError("Parcela não existe.", 404);
-    } else if (installmentExists.calculation) {
-      throw new AppError("Parcela já calculada.", 400);
+    } else if ((installmentExists.status === StatusInstallment.LIQ) || (installmentExists.status !== StatusInstallment.PAG)) {
+      throw new AppError("Parcela não está com status de PAGO ou já foi LIQUIDADA.", 400);
     }
     
     const calculation = await this.calculatorRepository.create(data);
 
-    await this.installmentsRepository.update(
-      installmentExists.id,
-      {
-        pay_date: new Date(),
-        status: StatusInstallment.PAG,
-      }
-    );
+    await this.installmentsRepository.update(installmentExists.id, {status: StatusInstallment.LIQ});
 
     return calculation;
   }
