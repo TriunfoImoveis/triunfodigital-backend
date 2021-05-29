@@ -42,8 +42,8 @@ class UpdateInstallmentService {
     if (sale) { 
       if (sale.status === Status.PE) {
         const fullPayment = sale.installments.every((installment) => {
-          // retorna true se todas as parcelas estão com status PAGO.
-          return installment.status === StatusInstallment.PAG;
+          // retorna true se todas as parcelas estão com status PAGO ou LIQUIDADA.
+          return (installment.status === StatusInstallment.PAG) || (installment.status === StatusInstallment.LIQ);
         });
 
         if (fullPayment) {

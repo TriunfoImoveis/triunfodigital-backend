@@ -51,6 +51,7 @@ calculationRoutes.post('/', celebrate({
         user: Joi.string().uuid().messages(validatorFields({name: "'usuário participante'"})),
       }).required(),
     ).min(3).required().messages(validatorFields({name: "'comissões dos participantes'", min: 3})),
+    pay_date: Joi.date().iso().default(new Date()).messages(validatorFields({name: "'data de pagamento'"})),
   }
 }), calculationController.createCalculation);
 
