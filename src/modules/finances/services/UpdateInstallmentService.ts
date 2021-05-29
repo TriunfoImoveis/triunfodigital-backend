@@ -24,7 +24,7 @@ class UpdateInstallmentService {
       (checkInstallmentExists.status !== StatusInstallment.PEN) && 
       (checkInstallmentExists.status !== StatusInstallment.VEN)
     ) {
-      throw new AppError("Parcela Paga ou Caiu não pode ser validada.", 400);
+      throw new AppError("Parcela Paga, Liquidada ou Caiu não pode ser validada.", 400);
     }
     
     const current_date = new Date();
