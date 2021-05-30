@@ -41,6 +41,8 @@ import ICalculatorRepository from '@modules/finances/repositories/ICalculatorRep
 import CalculatorRepository from '@modules/finances/infra/typeorm/repositories/CalculatorRepository';
 import IDivisionRepository from '@modules/finances/repositories/IDivisionRepository';
 import DivisiionRepository from '@modules/finances/infra/typeorm/repositories/DivisionRepository';
+import IComissionRepository from '@modules/finances/repositories/IComissionRepository';
+import ComissionRepository from '@modules/finances/infra/typeorm/repositories/ComissionRepository';
 
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import NotificationsRepository from '@modules/notifications/infra/typeorm/repositories/NotificationsRepository';
@@ -131,6 +133,10 @@ container.registerSingleton<ICalculatorRepository>(
 container.registerSingleton<IDivisionRepository>(
   'DivisionRepository',
   DivisiionRepository,
+);
+container.registerSingleton<IComissionRepository>(
+  'ComissionRepository',
+  ComissionRepository,
 );
 // FINANCE
 
