@@ -5,7 +5,7 @@ import CreateInstallmentService from '@modules/finances/services/CreateInstallme
 import UpdateInstallmentService from '@modules/finances/services/UpdateInstallmentService';
 import ListInstallmentService from '@modules/finances/services/ListInstallmentService';
 import ShowInstallmentService from '@modules/finances/services/ShowInstallmentService';
-import ExportInstallmentService from '@modules/finances/services/ExportInstallmentService';
+import ExportCommissionService from '@modules/finances/services/ExportCommissionService';
 
 class InstallmentController {
   async list(request: Request, response: Response): Promise<Response> {
@@ -48,8 +48,8 @@ class InstallmentController {
   }
 
   async exportExcel(request: Request, response: Response): Promise<Response> {
-    const exportInstallmentService = container.resolve(ExportInstallmentService);
-    const filePath = await exportInstallmentService.execute();
+    const exportCommissionService = container.resolve(ExportCommissionService);
+    const filePath = await exportCommissionService.execute();
 
     return response.json(filePath).status(201);
   }
