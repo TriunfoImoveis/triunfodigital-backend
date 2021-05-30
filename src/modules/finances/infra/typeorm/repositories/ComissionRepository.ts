@@ -25,7 +25,7 @@ class ComissionRepository implements IComissionRepository {
         .innerJoinAndSelect("sale.realty", "realty")
         .where("comission.participant_type <> :participant", {participant: "EMPRESA"})
         .getMany();
-      console.log(commissions);
+        
       return commissions;
     } catch (err) {
       throw new AppError(err.detail);
