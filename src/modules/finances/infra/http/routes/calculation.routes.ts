@@ -25,11 +25,11 @@ calculationRoutes.post('/', celebrate({
     calculator_type: Joi.string().messages(validatorFields({name: "'tipo de calculadora'"})),
     balance: Joi.number().positive().required().messages(validatorFields({name: "'saldo'"})),
     note_number: Joi.string().alphanum().messages(validatorFields({name: "'número da NF'"})),
-    note_value: Joi.number().positive().messages(validatorFields({name: "'valor da NF'"})),
-    tax_rate_nf: Joi.number().positive().messages(validatorFields({name: "'taxa total de imposto da NF'"})),
+    note_value: Joi.number().min(0).messages(validatorFields({name: "'valor da NF'"})),
+    tax_rate_nf: Joi.number().min(0).messages(validatorFields({name: "'taxa total de imposto da NF'"})),
     tax_iss_nf: Joi.number().min(0).messages(validatorFields({name: "'taxa de imposto ISS da NF'"})),
-    value_iss: Joi.number().positive().messages(validatorFields({name: "'debito ISS'"})),
-    tax_collection: Joi.number().positive().messages(validatorFields({name: "'recolhimento de imposto'"})),
+    value_iss: Joi.number().min(0).messages(validatorFields({name: "'debito ISS'"})),
+    tax_collection: Joi.number().min(0).messages(validatorFields({name: "'recolhimento de imposto'"})),
     bank_data: Joi.string().uuid().required().messages(validatorFields({name: "'dado bancário de entrada'"})),
     divisions: Joi.array().items(
       Joi.object({
@@ -43,11 +43,11 @@ calculationRoutes.post('/', celebrate({
         participant_type: Joi.string().valid(
           "VENDEDOR", "CAPTADOR", "COORDENADOR", "DIRETOR", "EMPRESA"
         ).required().messages(validatorFields({name: "'tipo de participante'"})),
-        comission_percentage: Joi.number().positive().required().messages(validatorFields({name: "'porcentagem da comissão'"})),
-        comission_integral: Joi.number().positive().required().messages(validatorFields({name: "'comissão bruta'"})),
-        tax_percentage: Joi.number().positive().messages(validatorFields({name: "'porcentagem do imposto'"})),
-        tax_value: Joi.number().positive().messages(validatorFields({name: "'valor do imposto'"})),
-        comission_liquid: Joi.number().positive().required().messages(validatorFields({name: "'comissão liquida'"})),
+        comission_percentage: Joi.number().min(0).required().messages(validatorFields({name: "'porcentagem da comissão'"})),
+        comission_integral: Joi.number().min(0).required().messages(validatorFields({name: "'comissão bruta'"})),
+        tax_percentage: Joi.number().min(0).messages(validatorFields({name: "'porcentagem do imposto'"})),
+        tax_value: Joi.number().min(0).messages(validatorFields({name: "'valor do imposto'"})),
+        comission_liquid: Joi.number().min(0).required().messages(validatorFields({name: "'comissão liquida'"})),
         user: Joi.string().uuid().messages(validatorFields({name: "'usuário participante'"})),
       }).required(),
     ).min(3).required().messages(validatorFields({name: "'comissões dos participantes'", min: 3})),
