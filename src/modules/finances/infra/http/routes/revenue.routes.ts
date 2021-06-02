@@ -30,12 +30,6 @@ revenueRoutes.post('/', celebrate({
     value_integral: Joi.number().positive().required().messages(validatorFields({
       name: "'Valor Bruto'"
     })),
-    tax_rate: Joi.number().positive().default(0).messages(validatorFields({
-      name: "'Taxa de Imposto'"
-    })),
-    invoice_value: Joi.number().positive().messages(validatorFields({
-      name: "'Valor da Nota'"
-    })),
     client: Joi.string().min(3).required().messages(validatorFields({
       name: "'Cliente'",
       min: 3
@@ -73,10 +67,10 @@ revenueRoutes.put('/:id', celebrate({
     value_integral: Joi.number().positive().messages(validatorFields({
       name: "'Valor Bruto'"
     })),
-    tax_rate: Joi.number().positive().messages(validatorFields({
+    tax_rate: Joi.number().min(0).default(0).messages(validatorFields({
       name: "'Taxa de Imposto'"
     })),
-    invoice_value: Joi.number().positive().messages(validatorFields({
+    invoice_value: Joi.number().min(0).messages(validatorFields({
       name: "'Valor da Nota'"
     })),
     client: Joi.string().min(3).messages(validatorFields({
@@ -94,6 +88,12 @@ revenueRoutes.patch('/paid/:id', celebrate({
     id: Joi.string().uuid().required(),
   },
   [Segments.BODY]: {
+    tax_rate: Joi.number().min(0).default(0).messages(validatorFields({
+      name: "'Taxa de Imposto'"
+    })),
+    invoice_value: Joi.number().min(0).messages(validatorFields({
+      name: "'Valor da Nota'"
+    })),
     pay_date: Joi.date().iso().required().messages(validatorFields({
       name: "'Data de Pagamento'"
     })),

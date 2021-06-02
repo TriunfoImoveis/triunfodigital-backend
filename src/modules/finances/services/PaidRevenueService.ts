@@ -33,11 +33,9 @@ class PaidRevenueService {
       data.pay_date = add(data.pay_date, {hours: 3});
     }
 
-    await this.revenueRepository.update(id, {
-      pay_date: data.pay_date,
-      bank_data: data.bank_data,
-      status: RevenueStatus.PAGO,
-    });
+    data.status = RevenueStatus.PAGO;
+
+    await this.revenueRepository.update(id, data);
   }
 }
 

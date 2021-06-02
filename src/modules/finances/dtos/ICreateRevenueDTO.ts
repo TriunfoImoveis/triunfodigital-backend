@@ -6,8 +6,6 @@ export default interface ICreateRevenueDTO {
     description: string;
     due_date: Date;
     value_integral: number;
-    tax_rate: number;
-    invoice_value?: number;
     client: string;
     subsidiary: Subsidiary;
 }
