@@ -39,8 +39,6 @@ class RevenueController {
       description,
       due_date,
       value_integral,
-      tax_rate,
-      invoice_value,
       client,
       subsidiary,
     });

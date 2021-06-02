@@ -38,7 +38,7 @@ class Revenue {
   @Column({ type: 'decimal', precision: 14, scale: 2 })
   value_integral: number;
 
-  @Column({ type: 'decimal', precision: 4, scale: 2 })
+  @Column({ type: 'decimal', precision: 4, scale: 2, nullable: true})
   tax_rate: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
@@ -47,7 +47,7 @@ class Revenue {
   @Column({ type: 'enum', enum: RevenueStatus, default: RevenueStatus.PEND })
   status: RevenueStatus;
 
-  @Column({ type: 'varchar', length: 150 })
+  @Column({ type: 'varchar', length: 150, nullable: true})
   client: string;
   
   @Column({ type: 'date', nullable: true })
