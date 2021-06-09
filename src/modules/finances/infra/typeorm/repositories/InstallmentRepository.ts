@@ -21,6 +21,7 @@ class InstallmentRespository implements IInstallmentRepository {
         .select()
         .innerJoinAndSelect("i.sale", "sale")
         .innerJoinAndSelect("sale.client_buyer", "buyer")
+        .leftJoinAndSelect("sale.client_seller", "seller")
         .innerJoinAndSelect("sale.realty", "realty")
         .leftJoinAndSelect("sale.builder", "builder")
         .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
