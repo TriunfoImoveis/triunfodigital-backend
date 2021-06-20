@@ -46,7 +46,7 @@ class Client {
   @Column({ type: 'varchar', length: 14, nullable: true })
   whatsapp: string;
 
-  @Column({ type: 'varchar', length: 150 })
+  @Column({ type: 'varchar', length: 150, nullable: true })
   occupation: string;
 
   @Column({ type: 'enum', enum: CivilStatus, nullable: true })

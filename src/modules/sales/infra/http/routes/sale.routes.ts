@@ -75,12 +75,11 @@ saleRoutes.post('/new', celebrate({
         .messages(validatorFields({name: "'email do comprador'"})),
       phone: Joi.string().pattern(/^[0-9]{11,11}$/).required()
         .messages(validatorFields({name: "'telefone do comprador'", max: 11})),
-      whatsapp: Joi.string().required()
-        .messages(validatorFields({name: "'whatsapp do comprador'"})),
+      whatsapp: Joi.string().messages(validatorFields({name: "'whatsapp do comprador'"})),
       date_birth: Joi.date().iso().messages(
         validatorFields({name: "'data de nascimento do comprador'"})
       ),
-      occupation: Joi.string().required().messages(
+      occupation: Joi.string().messages(
         validatorFields({name: "'segmento de atuação do comprador'"})
       ),
       civil_status: Joi.string().valid(
@@ -172,11 +171,10 @@ saleRoutes.post('/used', celebrate({
         .messages(validatorFields({name: "'email do comprador'"})),
       phone: Joi.string().pattern(/^[0-9]{11,11}$/).required()
         .messages(validatorFields({name: "'telefone do comprador'", max: 11})),
-      whatsapp: Joi.string().required()
-        .messages(validatorFields({name: "'whatsapp do comprador'"})),
+      whatsapp: Joi.string().messages(validatorFields({name: "'whatsapp do comprador'"})),
       date_birth: Joi.date().iso()
         .messages(validatorFields({name: "'data de nascimento do comprador'"})),
-      occupation: Joi.string().required()
+      occupation: Joi.string()
         .messages(validatorFields({name: "'segmento de atuação do comprador'"})),
       civil_status: Joi.string().valid(
           'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
@@ -212,11 +210,11 @@ saleRoutes.post('/used', celebrate({
         .messages(validatorFields({name: "'email do vendedor'"})),
       phone: Joi.string().pattern(/^[0-9]{11,11}$/).required()
         .messages(validatorFields({name: "'telefone do vendedor'", max: 11})),
-      whatsapp: Joi.string().required()
+      whatsapp: Joi.string()
         .messages(validatorFields({name: "'whatsapp do vendedor'"})),
       date_birth: Joi.date().iso()
         .messages(validatorFields({name: "'data de nascimento do vendedor'"})),
-      occupation: Joi.string().required()
+      occupation: Joi.string()
         .messages(validatorFields({name: "'segmento de atuação do vendedor'"})),
       civil_status: Joi.string().valid(
           'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
