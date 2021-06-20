@@ -7,7 +7,7 @@ export default interface IClientRepository {
   findByName(name: string): Promise<Client | undefined>;
   findById(id: string): Promise<Client | undefined>;
   findByIdAndActivate(id: string): Promise<Client | undefined>;
-  findByCPF(cpf: string): Promise<Client | undefined>;
+  findByCPFOrCNPJ(cpf_cnpj: string): Promise<Client | undefined>;
   findClientsActive(): Promise<Client[]>;
 
   createInstance(data: ICreateClientDTO): Promise<Client | undefined>;

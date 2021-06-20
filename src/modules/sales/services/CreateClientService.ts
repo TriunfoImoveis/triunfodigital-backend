@@ -16,6 +16,7 @@ class CreateClientService {
   public async execute({
     name,
     cpf,
+    cnpj,
     date_birth,
     email,
     phone,
@@ -24,17 +25,22 @@ class CreateClientService {
     civil_status,
     number_children,
     gender,
+    address,
   }: ICreateClientDTO): Promise<Client> {
-    const clientExists = await this.clientsRepository.findByCPF(cpf);
+    const cpf_cnpj = cpf ? cpf : cnpj;
+    const clientExists = await this.clientsRepository.findByCPFOrCNPJ(String(cpf_cnpj));
 
     if (clientExists) {
       return clientExists;
     }
 
+    const date_birth_formated = date_birth ? add(date_birth, {hours: 3}) : undefined;
+
     const client = await this.clientsRepository.createInstance({
       name,
       cpf,
-      date_birth: add(date_birth, {hours: 3}),
+      cnpj,
+      date_birth: date_birth_formated,
       email,
       phone,
       whatsapp,
@@ -42,6 +48,7 @@ class CreateClientService {
       civil_status,
       number_children,
       gender,
+      address,
     });
 
     if (!client) {

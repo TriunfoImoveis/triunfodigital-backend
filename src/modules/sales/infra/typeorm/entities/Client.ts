@@ -28,10 +28,13 @@ class Client {
   @Column({ type: 'varchar', length: 80 })
   name: string;
 
-  @Column({ type: 'varchar', length: 11, unique: true })
+  @Column({ type: 'varchar', length: 11, unique: true, nullable: true })
   cpf: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'varchar', length: 14, unique: true, nullable: true })
+  cnpj: string;
+
+  @Column({ type: 'date', nullable: true })
   date_birth: Date;
 
   @Column({ type: 'varchar', length: 150 })
@@ -46,14 +49,17 @@ class Client {
   @Column({ type: 'varchar', length: 150 })
   occupation: string;
 
-  @Column({ type: 'enum', enum: CivilStatus })
+  @Column({ type: 'enum', enum: CivilStatus, nullable: true })
   civil_status: CivilStatus;
 
-  @Column({ type: 'integer' })
+  @Column({ type: 'integer', nullable: true })
   number_children: number;
 
-  @Column({ type: 'enum', enum: Gender })
+  @Column({ type: 'enum', enum: Gender, nullable: true })
   gender: Gender;
+
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  address: string;
 
   @Column({ type: 'boolean', default: true })
   active: boolean;
