@@ -3,7 +3,6 @@ import { celebrate, Joi, Segments } from 'celebrate';
 
 import ensuredAthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 import ClientController from '@modules/sales/infra/http/controllers/ClientController';
-import validatorFields from '@shared/infra/http/validators/validatorFields';
 
 const clientRouter = Router();
 const clientController = new ClientController();
@@ -11,6 +10,7 @@ const clientController = new ClientController();
 clientRouter.get('/', celebrate({
   [Segments.QUERY]: {
     cpf: Joi.string().pattern(/^[0-9]{11,11}$/),
+    cnpj: Joi.string().pattern(/^[0-9]{14,14}$/),
   }
 }), clientController.index);
 

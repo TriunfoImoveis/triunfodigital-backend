@@ -13,9 +13,11 @@ import ListClientService from '@modules/sales/services/ListClientService';
 class ClientController {
 
   async index(request: Request, response: Response): Promise<Response> {
-    const {cpf} = request.query;
+    const {cpf, cnpj} = request.query;
 
     if ((typeof cpf !== 'string') && (typeof cpf !== 'undefined')){
+      throw new AppError("CPF not is valid string.");
+    } else if ((typeof cnpj !== 'string') && (typeof cnpj !== 'undefined')){
       throw new AppError("CPF not is valid string.");
     }
 
@@ -23,7 +25,8 @@ class ClientController {
     const listClientService = new ListClientService(clientsRepository);
 
     const clients = await listClientService.execute({
-      cpf
+      cpf,
+      cnpj,
     });
 
     return response.json(clients);

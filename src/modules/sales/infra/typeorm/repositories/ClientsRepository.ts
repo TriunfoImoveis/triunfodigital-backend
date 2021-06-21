@@ -48,10 +48,13 @@ class ClientsRepository implements IClientRepository {
     }
   }
 
-  async findByCPF(cpf: string): Promise<Client | undefined> {
+  async findByCPFOrCNPJ(cpf_cnpj: string): Promise<Client | undefined> {
     try {
       const client = await this.ormRepository.findOne({
-        where: { cpf },
+        where: [
+          { cpf: cpf_cnpj },
+          { cnpj: cpf_cnpj },
+        ]
       });
       return client;
     } catch (err) {
