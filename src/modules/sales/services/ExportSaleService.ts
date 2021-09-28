@@ -57,6 +57,19 @@ class ExportSaleService {
     ]
 
     const data = sales.map((sale) => {
+      const {client_seller, client_buyer} = sale;
+
+      var clientSeller_datebirth = null;
+      var clientBuyer_datebirth = null;
+      if (client_seller) {
+        const {date_birth} = client_seller;
+        clientSeller_datebirth = date_birth ? parseISO(date_birth.toString()) : null;
+      }
+      if (client_buyer) {
+        const {date_birth} = client_buyer;
+        clientBuyer_datebirth = date_birth ? parseISO(date_birth.toString()) : null;
+      }
+
       const subsidiary = sale.sale_has_sellers.reduce((seller) => {
         return seller;
       });
@@ -88,21 +101,21 @@ class ExportSaleService {
         property_type: sale.realty.property.name,
         realty: `${sale.realty.enterprise} - ${sale.realty.unit}`,
         neighborhood: sale.realty.neighborhood,
-        builder: sale.builder?.name,
-        client_seller_name: sale.client_seller?.name,
-        client_seller_datebirth: sale.client_seller?.date_birth ? parseISO(sale.client_seller.date_birth.toString()) : null,
-        client_seller_email: sale.client_seller?.email,
-        client_seller_phone: sale.client_seller?.phone,
-        client_seller_occupation: sale.client_seller?.occupation,
-        client_seller_civilStatus: sale.client_seller?.civil_status,
-        client_buyer_name: sale.client_buyer?.name,
-        client_buyer_datebirth: sale.client_buyer?.date_birth ? parseISO(sale.client_buyer.date_birth.toString()) : null,
-        client_buyer_email: sale.client_buyer?.email,
-        client_buyer_phone: sale.client_buyer?.phone,
-        client_buyer_occupation: sale.client_buyer?.occupation,
-        client_buyer_civilStatus: sale.client_buyer?.civil_status,
+        builder: sale.builder ? sale.builder.name : null,
+        client_seller_name: client_seller ? client_seller.name : null,
+        client_seller_datebirth: clientSeller_datebirth,
+        client_seller_email: client_seller ? client_seller.email : null,
+        client_seller_phone: client_seller ? client_seller.phone : null,
+        client_seller_occupation: client_seller ? client_seller.occupation : null,
+        client_seller_civilStatus: client_seller ? client_seller.civil_status : null,
+        client_buyer_name: client_buyer ? client_buyer.name : null,
+        client_buyer_datebirth: clientBuyer_datebirth,
+        client_buyer_email: client_buyer ? client_buyer.email : null,
+        client_buyer_phone: client_buyer ? client_buyer.phone : null,
+        client_buyer_occupation: client_buyer ? client_buyer.occupation : null,
+        client_buyer_civilStatus: client_buyer ? client_buyer.civil_status : null,
         directors: directors.toString(),
-        coordinator: sale.user_coordinator?.name,
+        coordinator: sale.user_coordinator ? sale.user_coordinator.name : null,
         captivators: captivators.toString(),
         sellers: sellers.toString(),
         status: sale.status
