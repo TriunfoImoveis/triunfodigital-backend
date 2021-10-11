@@ -129,6 +129,28 @@ class UsersRepository implements IUserRepository {
     }
   }
 
+
+  async findAllUsers(data: IRequestUserDTO): Promise<User[]> {
+    try {
+      const {name, city, departament, office} = data;
+      const users = await this.ormRepository.createQueryBuilder("user")
+        .select()
+        .innerJoinAndSelect("user.office", "office")
+        .innerJoinAndSelect("user.subsidiary", "subsidiary")
+        .innerJoinAndSelect("user.departament", "departament")
+        .where("user.name ILIKE :name", { name: name+"%" })
+        .andWhere("office.name LIKE :office", { office })
+        .andWhere("subsidiary.city LIKE :city", { city })
+        .andWhere("departament.name LIKE :departament", { departament })
+        .orderBy("user.name", "ASC")
+        .getMany();
+
+      return users;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
   async quantitySellers(id_sale: string): Promise<number> {
     try {
       const quantitySellers = await this.ormRepository.createQueryBuilder("user")

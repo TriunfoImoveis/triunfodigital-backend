@@ -24,6 +24,19 @@ usersRouter.get(
   usersController.index
 );
 
+usersRouter.get(
+  '/all',
+  celebrate({
+    [Segments.QUERY]: {
+      name: Joi.string().default(''),
+      city: Joi.string().default('%'),
+      departament: Joi.string().default('%'),
+      office: Joi.string().default('%'),
+    }
+  }),
+  usersController.listAllUsers
+);
+
 usersRouter.use(ensuredAuthenticated);
 
 usersRouter.post(
@@ -35,8 +48,8 @@ usersRouter.post(
       email: Joi.string().email().required()
         .messages(validatorFields({name: "'email'"})),
       password: Joi.string().$.min(6).max(15)
-        .rule({ 
-          message: "'senha' deve ter entre 6 e 15 caracteres" 
+        .rule({
+          message: "'senha' deve ter entre 6 e 15 caracteres"
         })
         .required().messages(validatorFields({
           name: "'senha'"
@@ -102,8 +115,8 @@ usersRouter.put(
       old_password: Joi.string()
         .messages(validatorFields({name: "'senha antiga'"})),
       password: Joi.string().$.min(6).max(15)
-        .rule({ 
-          message: "'senha' deve ter entre 6 e 15 caracteres" 
+        .rule({
+          message: "'senha' deve ter entre 6 e 15 caracteres"
         })
         .messages(validatorFields({name: "'senha'"})),
       password_confirmation: Joi.string().valid(Joi.ref('password'))

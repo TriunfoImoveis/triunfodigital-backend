@@ -7,6 +7,7 @@ import CreateUserService from '@modules/users/services/CreateUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
 import UploadAvatarUserService from '@modules/users/services/UploadAvatarUserService';
 import ListUserService from '@modules/users/services/ListUserService';
+import ListAllUserService from '@modules/users/services/ListAllUserService';
 import ShowUserService from '@modules/users/services/ShowUserService';
 import UpdateStatusUserService from '@modules/users/services/UpdateStatusUserService';
 
@@ -92,7 +93,7 @@ class UsersController {
     delete request.body.password_confirmation;
 
     const updateUser = container.resolve(UpdateUserService);
-    
+
     const updatedUser = await updateUser.execute({
       id: request.params.id,
       old_password: old_password,
@@ -122,6 +123,37 @@ class UsersController {
 
     return response.status(204).send();
   }
+
+  async listAllUsers(request: Request, response: Response): Promise<Response> {
+    const {
+      name,
+      city,
+      departament,
+      office
+    } = request.query;
+
+    if (typeof name !== "string") {
+      throw new AppError('Name not is validate string.');
+    } else if (typeof city !== "string") {
+      throw new AppError('City not is validate string.');
+    } else if (typeof departament !== "string") {
+      throw new AppError('Departament not is validate string.');
+    } else if (typeof office !== "string") {
+      throw new AppError('Office not is validate string.');
+    }
+
+    const listAllUserService = container.resolve(ListAllUserService);
+
+    const usersList = await listAllUserService.execute({
+      name,
+      city,
+      departament,
+      office,
+    });
+
+    return response.json(classToClass(usersList));
+  }
+
 }
 
 export default UsersController;

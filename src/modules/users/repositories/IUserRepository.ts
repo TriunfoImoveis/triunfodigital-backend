@@ -9,6 +9,10 @@ export default interface IUserRepository {
   findUsers(
     data: IRequestUserDTO
   ): Promise<User[]>;
+  findAllUsers(
+    data: IRequestUserDTO
+  ): Promise<User[]>;
+
 
   create(data: ICreateUsersDTO): Promise<User | undefined>;
   save(user: User): Promise<User>;
