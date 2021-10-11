@@ -47,6 +47,9 @@ import ComissionRepository from '@modules/finances/infra/typeorm/repositories/Co
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import NotificationsRepository from '@modules/notifications/infra/typeorm/repositories/NotificationsRepository';
 
+import IDespesaRepository from '@modules/externals/repositories/IDespesaRepository';
+import DespesaRepository from '@modules/externals/infra/typeorm/repositories/DespesaRepository';
+
 
 // USER
 container.registerSingleton<IUsersRepository>(
@@ -146,3 +149,10 @@ container.registerSingleton<INotificationsRepository>(
   NotificationsRepository,
 );
 // NOTIFICATION
+
+// EXTERNAL
+container.registerSingleton<IDespesaRepository>(
+  'DespesaRepository',
+  DespesaRepository,
+);
+// EXTERNAL
