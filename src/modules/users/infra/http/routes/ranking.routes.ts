@@ -9,6 +9,7 @@ const rankingRouter = Router();
 const rankingController = new RankingController();
 
 const currentMonth = new Date().getMonth() + 1;
+console.log('mes', currentMonth)
 
 rankingRouter.use(ensuredAuthenticated);
 
@@ -16,9 +17,9 @@ rankingRouter.get('/', celebrate({
   [Segments.QUERY]: {
     type: Joi.string().valid('ANUAL', 'MENSAL').default('ANUAL'),
     month: Joi.when('type', {
-      is: 'MENSAL', 
-      then: Joi.number().min(1).max(currentMonth).default(currentMonth).messages(
-        validatorFields({name: "'Mês'", min: 1, max: currentMonth})
+      is: 'MENSAL',
+      then: Joi.number().min(1).max(12).default(currentMonth).messages(
+        validatorFields({name: "'Mês'", min: 1, max: 12})
       ),
     }),
     city: Joi.string().required(),
