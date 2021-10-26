@@ -1,25 +1,25 @@
 import { inject, injectable } from 'tsyringe';
 
-import AppError from '@shared/errors/AppError';
 import IDespesaRepository from '@modules/externals/repositories/IDespesaRepository';
 import Despesa from '@modules/externals/infra/typeorm/entities/Despesa';
+import AppError from '@shared/errors/AppError';
 
 @injectable()
-class ShowDespesaService {
+class DeleteDespesaService {
   constructor(
     @inject('DespesaRepository')
     private despesasRepository: IDespesaRepository,
   ) {}
 
-  public async execute(id: string): Promise<Despesa> {
+  public async execute(id: string): Promise<void> {
     const despesa = await this.despesasRepository.findById(id);
 
     if (!despesa) {
-        throw new AppError("Nenhum item encontrado!", 404);
+        throw new AppError("Item não encontrado.", 404);
     }
 
-    return despesa;
+    await this.despesasRepository.delete(id);
   }
 }
 
-export default ShowDespesaService;
+export default DeleteDespesaService;

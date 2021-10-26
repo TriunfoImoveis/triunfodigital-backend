@@ -6,4 +6,7 @@ export default interface IDespesaRepository {
   findById(id: string): Promise<Despesa | undefined>;
   findAll(): Promise<Despesa[]>;
   create(data: ICreateDespesaDTO): Promise<Despesa>;
+  delete(id: string): Promise<void>;
+  findSaldoByFilial(): Promise<void>;
+  findSaldoByConta(): Promise<void>;
 }

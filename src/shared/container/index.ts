@@ -49,6 +49,12 @@ import NotificationsRepository from '@modules/notifications/infra/typeorm/reposi
 
 import IDespesaRepository from '@modules/externals/repositories/IDespesaRepository';
 import DespesaRepository from '@modules/externals/infra/typeorm/repositories/DespesaRepository';
+import IEscritorioRepository from '@modules/externals/repositories/IEscritorioRepository';
+import EscritorioRepository from '@modules/externals/infra/typeorm/repositories/EscritorioRepository';
+import IContaRepository from '@modules/externals/repositories/IContaRepository';
+import ContaRepository from '@modules/externals/infra/typeorm/repositories/ContaRepository';
+import ISaldoRepository from '@modules/externals/repositories/ISaldoRepository';
+import SaldoRepository from '@modules/externals/infra/typeorm/repositories/SaldoRepository';
 
 
 // USER
@@ -154,5 +160,17 @@ container.registerSingleton<INotificationsRepository>(
 container.registerSingleton<IDespesaRepository>(
   'DespesaRepository',
   DespesaRepository,
+);
+container.registerSingleton<IEscritorioRepository>(
+  'EscritorioRepository',
+  EscritorioRepository,
+);
+container.registerSingleton<IContaRepository>(
+  'ContaRepository',
+  ContaRepository,
+);
+container.registerSingleton<ISaldoRepository>(
+  'SaldoRepository',
+  SaldoRepository,
 );
 // EXTERNAL

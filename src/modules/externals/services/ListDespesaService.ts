@@ -7,11 +7,11 @@ import Despesa from '@modules/externals/infra/typeorm/entities/Despesa';
 class ListDespesaService {
   constructor(
     @inject('DespesaRepository')
-    private officesRepository: IDespesaRepository,
+    private despesasRepository: IDespesaRepository,
   ) {}
 
   public async execute(): Promise<Despesa[]> {
-    const despesas = await this.officesRepository.findAll();
+    const despesas = await this.despesasRepository.findAll();
 
     return despesas;
   }

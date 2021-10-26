@@ -8,7 +8,7 @@ import DespesaController from '@modules/externals/infra/http/controllers/Despesa
 const despesaRouter = Router();
 const despesaController = new DespesaController();
 
-despesaRouter.use(ensuredAuthenticated);
+// despesaRouter.use(ensuredAuthenticated);
 
 despesaRouter.get('/', despesaController.index);
 
@@ -50,7 +50,7 @@ despesaRouter.get(
     despesaController.show,
 );
 
-// officeRouter.put(
+// despesaRouter.put(
 //     '/:id',
 //     celebrate({
 //         [Segments.PARAMS]: {
@@ -61,17 +61,17 @@ despesaRouter.get(
 //         active: Joi.boolean().messages(validatorFields({name: "'ativo'"})),
 //         },
 //     }),
-//     officeController.update,
+//     despesaController.update,
 // );
 
-// officeRouter.delete(
-//     '/:id',
-//     celebrate({
-//         [Segments.PARAMS]: {
-//         id: Joi.string().uuid(),
-//         },
-//     }),
-//     officeController.delete,
-// );
+despesaRouter.delete(
+    '/:id',
+    celebrate({
+        [Segments.PARAMS]: {
+            id: Joi.string().uuid(),
+        },
+    }),
+    despesaController.delete,
+);
 
 export default despesaRouter;

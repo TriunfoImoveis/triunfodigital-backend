@@ -8,11 +8,11 @@ import Despesa from '@modules/externals/infra/typeorm/entities/Despesa';
 class CreateDespesaService {
   constructor(
     @inject('DespesaRepository')
-    private officesRepository: IDespesaRepository,
+    private despesasRepository: IDespesaRepository,
   ) {}
 
   public async execute(data: ICreateDespesaDTO): Promise<Despesa> {
-    const despesa = await this.officesRepository.create(data);
+    const despesa = await this.despesasRepository.create(data);
 
     return despesa;
   }
