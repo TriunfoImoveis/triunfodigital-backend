@@ -32,6 +32,12 @@ import calculationRoutes from '@modules/finances/infra/http/routes/calculation.r
 // NOTIFICATION
 import notificationRouter from '@modules/notifications/infra/http/routes/notification.routes';
 
+// EXTERNAL
+import despesaRouter from '@modules/externals/infra/http/routes/despesa.routes';
+import escritorioRouter from '@modules/externals/infra/http/routes/escritorio.routes';
+import contaRouter from '@modules/externals/infra/http/routes/conta.routes';
+import saldoRouter from '@modules/externals/infra/http/routes/saldo.routes';
+
 
 const routes = Router();
 
@@ -66,5 +72,11 @@ routes.use('/calculator', calculationRoutes);
 
 // Module Notifications
 routes.use('/notification', notificationRouter);
+
+// Module Externals
+routes.use('/despesa', despesaRouter);
+routes.use('/escritorio', escritorioRouter);
+routes.use('/conta', contaRouter);
+routes.use('/saldo', saldoRouter);
 
 export default routes;

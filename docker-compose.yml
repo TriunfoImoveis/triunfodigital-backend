@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+    db:
+        image: postgres:9.6-alpine
+        volumes:
+            - triunfo_digital_data:/var/lib/postgresql/data/
+            - "/etc/timezone:/etc/timezone:ro"
+            - "/etc/localtime:/etc/localtime:ro"
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres-docker
+        networks:
+            - net_api
+        ports:
+            - "5432:5432"
+
+    mongo:
+        hostname: mongo
+        image: mongo:4.2
+        networks:
+            - net_api
+
+    api:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+
+        restart: always
+        volumes:
+            - .:/app
+
+        networks:
+            - net_api
+        ports:
+            - 3333:3333
+        depends_on:
+            - db
+
+networks:
+    net_api:
+volumes:
+    triunfo_digital_data:

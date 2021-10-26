@@ -21,6 +21,11 @@ class ExportSaleService {
   public async execute(): Promise<IResponseDTO | undefined> {
     const sales = await this.salesRepository.findAllWithoutFilters();
 
+    const numberInBRL = (money: number): string => {
+      const brl = money.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
+      return brl;
+    }
+
     const workSheetColumnNames = [
       { header: 'FILIAL', key: 'subsidiary', width: 10 },
       { header: 'TIPO DE VENDA', key: 'sale_type', width: 15 },
@@ -29,7 +34,6 @@ class ExportSaleService {
       { header: '(%) VENDA', key: 'sale_percentage', width: 10, style: { numFmt: '0.00%' } },
       { header: 'COMISSÃO', key: 'commission', width: 15, style: { numFmt: '"R$"#,##0.00;[Red]\-"R$"#,##0.00' } },
       { header: 'BÔNUS', key: 'bonus', width: 15, style: { numFmt: '"R$"#,##0.00;[Red]\-"R$"#,##0.00' } },
-      { header: 'TIPO DE PAGAMENTO', key: 'payment_type', width: 20 },
       { header: 'VALOR DO SINAL', key: 'value_signal', width: 15, style: { numFmt: '"R$"#,##0.00;[Red]\-"R$"#,##0.00' } },
       { header: 'DATA PAG. SINAL', key: 'pay_date_signal', width: 15, style: { numFmt: 'dd/mm/yyyy' } },
       { header: 'ORIGEM', key: 'origin', width: 15 },
@@ -54,10 +58,13 @@ class ExportSaleService {
       { header: 'CAPTADORES', key: 'captivators', width: 15 },
       { header: 'VENDEDORES', key: 'sellers', width: 20 },
       { header: 'STATUS', key: 'status', width: 15 },
+      { header: 'TIPO DE PAGAMENTO', key: 'payment_type', width: 20 },
+      { header: 'FORMA DE PAGAMENTO DA COMISSÃO', key: 'comission_payament', width: 50 },
     ]
 
+
     const data = sales.map((sale) => {
-      const {client_seller, client_buyer} = sale;
+      const {client_seller, client_buyer, installments} = sale;
 
       var clientSeller_datebirth = null;
       var clientBuyer_datebirth = null;
@@ -86,6 +93,15 @@ class ExportSaleService {
         return seller.name;
       });
 
+      installments.sort((a ,b) => {
+        return a.installment_number - b.installment_number;
+      });
+
+      const comissionPaymentText = installments.map(installment => {
+        const date = format(parseISO(installment.due_date.toString()), 'dd/MM/yy');
+        return `${installment.installment_number}° parcela de ${numberInBRL(Number(installment.value))} com vencimento em ${date} e que está ${installment.status}`;
+      }).join('; ');
+
       const sales = {
         subsidiary: subsidiary.subsidiary.city,
         sale_type: sale.sale_type,
@@ -94,7 +110,6 @@ class ExportSaleService {
         sale_percentage: sale.percentage_sale / 100,
         commission: Number(sale.commission),
         bonus: sale.bonus ? Number(sale.bonus) : null,
-        payment_type: sale.payment_type.name,
         value_signal: sale.value_signal ? Number(sale.value_signal) : null,
         pay_date_signal: sale.pay_date_signal ? parseISO(sale.pay_date_signal.toString()) : null,
         origin: sale.origin.name,
@@ -118,7 +133,9 @@ class ExportSaleService {
         coordinator: sale.user_coordinator ? sale.user_coordinator.name : null,
         captivators: captivators.toString(),
         sellers: sellers.toString(),
-        status: sale.status
+        status: sale.status,
+        payment_type: sale.payment_type.name,
+        comission_payament: comissionPaymentText,
       }
 
       return sales;
