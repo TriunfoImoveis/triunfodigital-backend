@@ -26,30 +26,6 @@ class ExportSaleService {
       return brl;
     }
 
-    const getComissionPaymentText = (): string => {
-      let comissionPaymentText = '';
-      sales.map(sale => {
-        const { installments} = sale;
-        const comissionPayment = installments.map(installment => {
-          const date = format(parseISO(installment.due_date.toString()), 'dd/MM/yy');
-          return `${installment.installment_number}° parcela de ${numberInBRL(Number(installment.value))} com vencimento em ${date} e que está ${installment.status}`;
-        }).reduce(item => item);
-        return comissionPayment;
-      }).forEach((item, indice) => {
-        if (indice === 0) {
-          comissionPaymentText = item;
-        } else {
-          comissionPaymentText = comissionPaymentText + '; ' + item;
-        }
-
-      });
-
-      return comissionPaymentText;
-    };
-
-
-
-
     const workSheetColumnNames = [
       { header: 'FILIAL', key: 'subsidiary', width: 10 },
       { header: 'TIPO DE VENDA', key: 'sale_type', width: 15 },
@@ -88,7 +64,7 @@ class ExportSaleService {
 
 
     const data = sales.map((sale) => {
-      const {client_seller, client_buyer} = sale;
+      const {client_seller, client_buyer, installments} = sale;
 
       var clientSeller_datebirth = null;
       var clientBuyer_datebirth = null;
@@ -116,6 +92,15 @@ class ExportSaleService {
       const sellers = sale.sale_has_sellers.map((seller) => {
         return seller.name;
       });
+
+      installments.sort((a ,b) => {
+        return a.installment_number - b.installment_number;
+      });
+
+      const comissionPaymentText = installments.map(installment => {
+        const date = format(parseISO(installment.due_date.toString()), 'dd/MM/yy');
+        return `${installment.installment_number}° parcela de ${numberInBRL(Number(installment.value))} com vencimento em ${date} e que está ${installment.status}`;
+      }).join('; ');
 
       const sales = {
         subsidiary: subsidiary.subsidiary.city,
@@ -150,7 +135,7 @@ class ExportSaleService {
         sellers: sellers.toString(),
         status: sale.status,
         payment_type: sale.payment_type.name,
-        comission_payament: getComissionPaymentText(),
+        comission_payament: comissionPaymentText,
       }
 
       return sales;

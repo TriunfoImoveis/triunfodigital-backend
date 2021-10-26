@@ -9,7 +9,6 @@ const rankingRouter = Router();
 const rankingController = new RankingController();
 
 const currentMonth = new Date().getMonth() + 1;
-console.log('mes', currentMonth)
 
 rankingRouter.use(ensuredAuthenticated);
 
