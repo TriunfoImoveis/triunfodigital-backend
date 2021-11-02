@@ -4,6 +4,9 @@ import { format, parseISO } from "date-fns";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IStorageProvider from "@shared/container/providers/StorageProvider/models/IStorageProvider";
 
+interface IRequestRepository {
+  state: string,
+}
 interface IResponseDTO {
   link_url: string;
 }
@@ -18,8 +21,11 @@ class ExportSaleService {
     private storagePrivider: IStorageProvider,
   ) { }
 
-  public async execute(): Promise<IResponseDTO | undefined> {
-    const sales = await this.salesRepository.findAllWithoutFilters();
+  public async execute({state}: IRequestRepository): Promise<IResponseDTO | undefined> {
+    let sales = await this.salesRepository.findAllWithoutFilters();
+    if (state.length > 0 ) {
+      sales = sales.filter(item => item.realty.state === state)
+    }
 
     const numberInBRL = (money: number): string => {
       const brl = money.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
