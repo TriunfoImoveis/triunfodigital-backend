@@ -22,11 +22,11 @@ class SaleController {
 
     const listSaleService = container.resolve(ListSaleService);
     const sales = await listSaleService.execute({
-      name: name as string, 
-      city: city as string, 
+      name: name as string,
+      city: city as string,
       status: status as string,
     });
-    
+
     return response.json(classToClass(sales));
   }
 
@@ -61,7 +61,7 @@ class SaleController {
       observation,
       installments,
     } = request.body;
-    
+
     const createRealtyService = container.resolve(CreateRealtyService);
     const realtyId = await createRealtyService.execute({
       enterprise: realty.enterprise,
@@ -214,7 +214,7 @@ class SaleController {
     const { motive, another_motive } = request.body;
 
     const notValidSaleService = container.resolve(NotValidSaleService);
-    
+
     await notValidSaleService.execute({
       id: request.params.id,
       status: Status.CA,
@@ -237,7 +237,7 @@ class SaleController {
 
   async validSignal(request:Request, response: Response): Promise<Response> {
     const validSignalService = container.resolve(ValidSignalService);
-    
+
     await validSignalService.execute(
       request.params.id,
     );
@@ -246,8 +246,12 @@ class SaleController {
   }
 
   async exportExcel(request: Request, response: Response): Promise<Response> {
+    const {state} = request.query;
+
     const exportSaleService = container.resolve(ExportSaleService);
-    const link_url = await exportSaleService.execute();
+    const link_url = await exportSaleService.execute({
+      state: state as string || ''
+    });
 
     return response.status(201).json(link_url);
   }
