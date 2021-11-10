@@ -4,9 +4,16 @@ import ListSaldoService from '@modules/externals/services/ListSaldoService';
 
 class SaldoController {
     async index(request: Request, response: Response): Promise<Response> {
-        const listSaldoService = container.resolve(ListSaldoService);
+        const { 
+            escritorio,
+            conta,
+        } = request.query;
 
-        const saldos = await listSaldoService.execute();
+        const listSaldoService = container.resolve(ListSaldoService);
+        const saldos = await listSaldoService.execute({
+            escritorio: escritorio as string,
+            conta: conta as string,
+        });
 
         return response.json(saldos);
     }

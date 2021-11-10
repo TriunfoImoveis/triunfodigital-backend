@@ -7,9 +7,21 @@ import DeleteDespesaService from '@modules/externals/services/DeleteDespesaServi
 
 class DespesaController {
     async index(request: Request, response: Response): Promise<Response> {
+        const { 
+            escritorio,
+            conta,
+            data_inicio,
+            data_fim,
+        } = request.query;
+
         const listDespesaService = container.resolve(ListDespesaService);
 
-        const despesas = await listDespesaService.execute();
+        const despesas = await listDespesaService.execute({
+            escritorio: escritorio as string,
+            conta: conta as string,
+            data_inicio: data_inicio as string,
+            data_fim: data_fim as string,
+        });
 
         return response.json(despesas);
     }
