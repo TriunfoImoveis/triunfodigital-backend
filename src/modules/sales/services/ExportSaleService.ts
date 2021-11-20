@@ -11,6 +11,14 @@ interface IResponseDTO {
   link_url: string;
 }
 
+interface Installment {
+  id: string;
+  installment_number: Number;
+  value: number;
+  due_date: Date;
+  status: string;
+}
+
 @injectable()
 class ExportSaleService {
   constructor(
@@ -32,25 +40,17 @@ class ExportSaleService {
       return brl;
     }
 
-    const getComissionPaymentText = (): string => {
-      let comissionPaymentText = '';
-      sales.map(sale => {
-        const { installments} = sale;
-        const comissionPayment = installments.map(installment => {
-          const date = format(parseISO(installment.due_date.toString()), 'dd/MM/yy');
-          return `${installment.installment_number}° parcela de ${numberInBRL(Number(installment.value))} com vencimento em ${date} e que está ${installment.status}`;
-        }).reduce(item => item);
-        return comissionPayment;
-      }).forEach((item, indice) => {
-        if (indice === 0) {
-          comissionPaymentText = item;
-        } else {
-          comissionPaymentText = comissionPaymentText + '; ' + item;
+    const getComissionPayment = (installments: Installment[]): Object => {
+      let installmentFields = {};
+      installments.forEach((installment, index) => {
+        installmentFields = {
+          ...installmentFields,
+          [`installment_value_${index + 1}`]: numberInBRL(Number(installment.value)),
+          [`installment_due_date_${index + 1}`]: format(parseISO(installment.due_date.toString()), 'dd/MM/yyyy'),
         }
-
       });
 
-      return comissionPaymentText;
+      return installmentFields;
     };
 
 
@@ -88,14 +88,22 @@ class ExportSaleService {
       { header: 'CAPTADORES', key: 'captivators', width: 15 },
       { header: 'VENDEDORES', key: 'sellers', width: 20 },
       { header: 'STATUS', key: 'status', width: 15 },
-      { header: 'TIPO DE PAGAMENTO', key: 'payment_type', width: 20 },
-      { header: 'FORMA DE PAGAMENTO DA COMISSÃO', key: 'comission_payament', width: 50 },
+      { header: 'TIPO DE PAGAMENTO', key: 'payment_type', width: 20},
+      { header: '1º PARCELA', key: 'installment_value_1', width: 20, default: '-------------'},
+      { header: '1º PARCELA DT PAG', key: 'installment_due_date_1', width: 20, default: '-------------'},
+      { header: '2º PARCELA', key: 'installment_value_2', width: 20, default: '-------------'},
+      { header: '2º PARCELA DT PAG', key: 'installment_due_date_2', width: 20, default: '-------------'},
+      { header: '3º PARCELA', key: 'installment_value_3', width: 20, default: '-------------'},
+      { header: '3º PARCELA DT PAG', key: 'installment_due_date_3', width: 20, default: '-------------'},
+      { header: '4º PARCELA', key: 'installment_value_4', width: 20, default: '-------------'},
+      { header: '4º PARCELA DT PAG', key: 'installment_due_date_4', width: 20, default: '-------------'},
+      { header: '5º PARCELA', key: 'installment_value_5', width: 20, default: '-------------'},
+      { header: '5º PARCELA DT PAG', key: 'installment_due_date_5', width: 20, default: '-------------'},
     ]
 
-
-    const data = sales.map((sale) => {
+    const data = sales.map((sale, index) => {
       const {client_seller, client_buyer} = sale;
-
+      const installmentFields = getComissionPayment(sale.installments);
       var clientSeller_datebirth = null;
       var clientBuyer_datebirth = null;
       if (client_seller) {
@@ -156,7 +164,7 @@ class ExportSaleService {
         sellers: sellers.toString(),
         status: sale.status,
         payment_type: sale.payment_type.name,
-        comission_payament: getComissionPaymentText(),
+        ...installmentFields,
       }
 
       return sales;
