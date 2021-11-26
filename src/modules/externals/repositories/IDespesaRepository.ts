@@ -1,5 +1,6 @@
 import ICreateDespesaDTO from "@modules/externals/dtos/ICreateDespesaDTO";
 import Despesa from "@modules/externals/infra/typeorm/entities/Despesa";
+import IRequestSaldoDTO from "@modules/externals/dtos/IRequestSaldoDTO";
 
 
 export default interface IDespesaRepository {
@@ -7,6 +8,5 @@ export default interface IDespesaRepository {
   findAll(): Promise<Despesa[]>;
   create(data: ICreateDespesaDTO): Promise<Despesa>;
   delete(id: string): Promise<void>;
-  findSaldoByFilial(): Promise<void>;
-  findSaldoByConta(): Promise<void>;
+  findByFilters(filters: IRequestSaldoDTO): Promise<Despesa[]>;
 }

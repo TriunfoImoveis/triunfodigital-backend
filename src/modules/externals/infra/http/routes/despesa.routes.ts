@@ -4,13 +4,32 @@ import { celebrate, Joi, Segments } from 'celebrate';
 import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 import validatorFields from '@shared/infra/http/validators/validatorFields';
 import DespesaController from '@modules/externals/infra/http/controllers/DespesaController';
+import { endOfYesterday, startOfYesterday } from 'date-fns';
 
 const despesaRouter = Router();
 const despesaController = new DespesaController();
 
 // despesaRouter.use(ensuredAuthenticated);
 
-despesaRouter.get('/', despesaController.index);
+const CURRENT_DATE = new Date()
+const START_YESTERDAY = startOfYesterday()
+const END_YESTERDAY = endOfYesterday()
+
+despesaRouter.get(
+    '/', 
+    celebrate({
+    [Segments.QUERY]: {
+        escritorio: Joi.string().uuid().default('%')
+            .messages(validatorFields({name: "Escritorio"})),
+        conta: Joi.string().uuid().default('%')
+            .messages(validatorFields({name: "'Conta'"})),
+        data_inicio: Joi.date().iso().default(START_YESTERDAY)
+            .messages(validatorFields({name: "'data inicio'"})),
+        data_fim: Joi.date().iso().default(END_YESTERDAY)
+            .greater(Joi.ref('data_inicio'))
+            .messages(validatorFields({name: "'data fim'"})),
+    },
+}), despesaController.index);
 
 despesaRouter.post(
     '/',

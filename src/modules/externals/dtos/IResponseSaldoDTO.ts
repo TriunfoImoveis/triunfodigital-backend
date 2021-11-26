@@ -1,8 +1,8 @@
-import Conta from "@modules/externals/infra/typeorm/entities/Conta";
-import Escritorio from "@modules/externals/infra/typeorm/entities/Escritorio";
+import Despesa from "@modules/externals/infra/typeorm/entities/Despesa";
 
 export default interface IResponseSaldoDTO {
-    escritorio: Escritorio | undefined;
-    conta: Conta | undefined;
-    saldo: number;
+    saldo_entrada: Number;
+    saldo_saida: Number;
+    saldo_total: Number;
+    despesas: Despesa[];
 }

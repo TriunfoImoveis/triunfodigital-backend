@@ -11,6 +11,14 @@ interface IResponseDTO {
   link_url: string;
 }
 
+interface InstallmentType {
+  id: string;
+  installment_number: Number;
+  value: number;
+  due_date: Date;
+  status: string;
+}
+
 @injectable()
 class ExportSaleService {
   constructor(
@@ -65,7 +73,16 @@ class ExportSaleService {
       { header: 'VENDEDORES', key: 'sellers', width: 20 },
       { header: 'STATUS', key: 'status', width: 15 },
       { header: 'TIPO DE PAGAMENTO', key: 'payment_type', width: 20 },
-      { header: 'FORMA DE PAGAMENTO DA COMISSÃO', key: 'comission_payament', width: 50 },
+      { header: '1º PARCELA', key: 'installment_value_0', width: 20, default: '-------------'},
+      { header: '1º PARCELA DT PAG', key: 'installment_due_date_0', width: 20, default: '-------------'},
+      { header: '2º PARCELA', key: 'installment_value_1', width: 20, default: '-------------'},
+      { header: '2º PARCELA DT PAG', key: 'installment_due_date_1', width: 20, default: '-------------'},
+      { header: '3º PARCELA', key: 'installment_value_2', width: 20, default: '-------------'},
+      { header: '3º PARCELA DT PAG', key: 'installment_due_date_2', width: 20, default: '-------------'},
+      { header: '4º PARCELA', key: 'installment_value_3', width: 20, default: '-------------'},
+      { header: '4º PARCELA DT PAG', key: 'installment_due_date_3', width: 20, default: '-------------'},
+      { header: '5º PARCELA', key: 'installment_value_4', width: 20, default: '-------------'},
+      { header: '5º PARCELA DT PAG', key: 'installment_due_date_4', width: 20, default: '-------------'},
     ]
 
 
@@ -103,10 +120,14 @@ class ExportSaleService {
         return a.installment_number - b.installment_number;
       });
 
-      const comissionPaymentText = installments.map(installment => {
-        const date = format(parseISO(installment.due_date.toString()), 'dd/MM/yy');
-        return `${installment.installment_number}° parcela de ${numberInBRL(Number(installment.value))} com vencimento em ${date} e que está ${installment.status}`;
-      }).join('; ');
+      let installmentFields = {};
+      installments.forEach((installment, index) => {
+        installmentFields = {
+          ...installmentFields,
+          [`installment_value_${index}`]: numberInBRL(Number(installment.value)),
+          [`installment_due_date_${index}`]: format(parseISO(installment.due_date.toString()), 'dd/MM/yyyy'),
+        }
+      })
 
       const sales = {
         subsidiary: subsidiary.subsidiary.city,
@@ -141,7 +162,7 @@ class ExportSaleService {
         sellers: sellers.toString(),
         status: sale.status,
         payment_type: sale.payment_type.name,
-        comission_payament: comissionPaymentText,
+        ...installmentFields,
       }
 
       return sales;
@@ -154,7 +175,7 @@ class ExportSaleService {
           data: data
         },
         fileName: 'sales',
-        refCol: "A1:V1"
+        refCol: "A1:AF1"
       }
     );
 

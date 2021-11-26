@@ -1,9 +1,10 @@
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Like, Repository } from 'typeorm';
 
 import AppError from '@shared/errors/AppError';
 import IDespesaRepository from '@modules/externals/repositories/IDespesaRepository';
 import Despesa from '@modules/externals/infra/typeorm/entities/Despesa';
 import ICreateDespesaDTO from '@modules/externals/dtos/ICreateDespesaDTO';
+import IRequestSaldoDTO from '@modules/externals/dtos/IRequestSaldoDTO';
 
 class DespesaRepository implements IDespesaRepository {
   private ormRepository: Repository<Despesa>;
@@ -52,21 +53,28 @@ class DespesaRepository implements IDespesaRepository {
     }
   }
 
-  async findSaldoByFilial(): Promise<void> {
+  async findByFilters({
+    escritorio, 
+    conta,
+    data_inicio,
+    data_fim,
+  }: IRequestSaldoDTO): Promise<Despesa[]> {
     try {
-      const saldos = await this.ormRepository.createQueryBuilder("despesas")
-        .select("escritorio.nome")
-        .innerJoinAndSelect("despesas.escritorio", "escritorio")
-        .where("despesas.tipo_despesa IN (:...tipo)", {tipo: ["ENTRADA"]})
-        .getMany();
-      console.log(saldos)
+      const despesas = await this.ormRepository.createQueryBuilder("despesa")
+      .select()
+      .innerJoinAndSelect("despesa.escritorio", "escritorio")
+      .innerJoinAndSelect("despesa.conta", "conta")
+      .where("escritorio.id::text LIKE :escritorio", {escritorio: escritorio})
+      .andWhere("conta.id::text LIKE :conta", { conta: conta })
+      .andWhere(
+        "despesa.created_at BETWEEN :inicio AND :fim", 
+        {inicio: data_inicio, fim: data_fim}
+      ).getMany();
+
+      return despesas;
     } catch (err) {
       throw new AppError(err.detail);
     }
-  }
-
-  async findSaldoByConta(): Promise<void> {
-    
   }
 }
 
