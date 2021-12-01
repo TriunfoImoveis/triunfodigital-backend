@@ -23,6 +23,20 @@ class ExpenseRepository implements IExpenseRepository {
     }
   }
 
+  async findByStatus(status: string): Promise<Expense[]> {
+    try {
+      const expenses = await this.ormRepository.find({
+        relations: ["group", "subsidiary", "bank_data", "user"],
+        where: {
+          status: status
+        }
+      });
+      return expenses;
+    }  catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
   async list(): Promise<Expense[]> {
     try {
       const expenses = await this.ormRepository.find({relations: ["group", "subsidiary", "bank_data", "user"]});

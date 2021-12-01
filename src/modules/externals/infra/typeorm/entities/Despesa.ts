@@ -1,3 +1,4 @@
+import GroupExpense from "@modules/finances/infra/typeorm/entities/GroupExpense";
 import { 
     Column, 
     CreateDateColumn, 
@@ -28,6 +29,10 @@ class Despesa {
 
   @Column({ type: 'decimal', precision: 14, scale: 2 })
   valor: number;
+
+  @ManyToOne(type => GroupExpense, {nullable: true})
+  @JoinColumn({ name: 'id_grupo' })
+  grupo: GroupExpense;
 
   @ManyToOne(type => Escritorio, {nullable: false})
   @JoinColumn({ name: 'id_escritorio' })

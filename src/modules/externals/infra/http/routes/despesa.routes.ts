@@ -42,6 +42,9 @@ despesaRouter.post(
                     name: "Tipo de Despesa", 
                     ref: "[ENTRADA ou SAIDA]"
                 })),
+            grupo: Joi.string().uuid().required().messages(validatorFields({
+                name: "Grupo"
+            })),
             descricao: Joi.string().required().messages(validatorFields({
                 name: "Descrição"
             })),

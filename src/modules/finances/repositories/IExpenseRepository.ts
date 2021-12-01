@@ -4,6 +4,7 @@ import IUpdateExpenseDTO from "@modules/finances/dtos/IUpdateExpenseDTO";
 
 export default interface IExpenseRepository {
     findById(id: string): Promise<Expense | undefined>;
+    findByStatus(status: string): Promise<Expense[]>;
     list(): Promise<Expense[]>;
     create(data: ICreateExpenseDTO): Promise<Expense>;
     update(id: string, data: IUpdateExpenseDTO): Promise<void>;

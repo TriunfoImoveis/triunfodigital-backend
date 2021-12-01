@@ -39,6 +39,7 @@ class DespesaController {
     async create(request: Request, response: Response): Promise<Response> {
         const { 
             tipo_despesa,
+            grupo,
             descricao,
             valor,
             escritorio,
@@ -49,6 +50,7 @@ class DespesaController {
 
         const newOffice = await createDespesaService.execute({
         tipo_despesa,
+        grupo,
         descricao,
         valor,
         escritorio,
