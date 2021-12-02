@@ -12,8 +12,6 @@ const despesaController = new DespesaController();
 // despesaRouter.use(ensuredAuthenticated);
 
 const CURRENT_DATE = new Date()
-const START_YESTERDAY = startOfYesterday()
-const END_YESTERDAY = endOfYesterday()
 
 despesaRouter.get(
     '/', 
@@ -23,9 +21,9 @@ despesaRouter.get(
             .messages(validatorFields({name: "Escritorio"})),
         conta: Joi.string().uuid().default('%')
             .messages(validatorFields({name: "'Conta'"})),
-        data_inicio: Joi.date().iso().default(START_YESTERDAY)
+        data_inicio: Joi.date().iso().default(new Date(2021, 1, 1))
             .messages(validatorFields({name: "'data inicio'"})),
-        data_fim: Joi.date().iso().default(END_YESTERDAY)
+        data_fim: Joi.date().iso().default(CURRENT_DATE)
             .greater(Joi.ref('data_inicio'))
             .messages(validatorFields({name: "'data fim'"})),
     },
@@ -51,6 +49,9 @@ despesaRouter.post(
             valor: Joi.number().positive().required().messages(validatorFields({
                 name: "'Valor'"
             })),
+            data_pagamento: Joi.date().iso().required().messages(validatorFields({
+                name: "'Data do Pagamento'"
+            })),
             escritorio: Joi.string().uuid().required().messages(validatorFields({
                 name: "Escritorio"
             })),
@@ -72,19 +73,29 @@ despesaRouter.get(
     despesaController.show,
 );
 
-// despesaRouter.put(
-//     '/:id',
-//     celebrate({
-//         [Segments.PARAMS]: {
-//         id: Joi.string().uuid(),
-//         },
-//         [Segments.BODY]: {
-//         name: Joi.string().messages(validatorFields({name: "'nome'"})),
-//         active: Joi.boolean().messages(validatorFields({name: "'ativo'"})),
-//         },
-//     }),
-//     despesaController.update,
-// );
+despesaRouter.put(
+    '/:id',
+    celebrate({
+        [Segments.PARAMS]: {
+            id: Joi.string().uuid(),
+        },
+        [Segments.BODY]: {
+            grupo: Joi.string().uuid().messages(validatorFields({
+                name: "Grupo"
+            })),
+            descricao: Joi.string().messages(validatorFields({
+                name: "Descrição"
+            })),
+            valor: Joi.number().positive().messages(validatorFields({
+                name: "'Valor'"
+            })),
+            data_pagamento: Joi.date().iso().messages(validatorFields({
+                name: "'Data do Pagamento'"
+            })),
+        },
+    }),
+    despesaController.update,
+);
 
 despesaRouter.delete(
     '/:id',

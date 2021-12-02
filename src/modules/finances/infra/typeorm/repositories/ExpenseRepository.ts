@@ -5,6 +5,7 @@ import AppError from "@shared/errors/AppError";
 import IExpenseRepository from "@modules/finances/repositories/IExpenseRepository";
 import ICreateExpenseDTO from "@modules/finances/dtos/ICreateExpenseDTO";
 import IUpdateExpenseDTO from "@modules/finances/dtos/IUpdateExpenseDTO";
+import IRequestSaldoDTO from "@modules/externals/dtos/IRequestSaldoDTO";
 
 class ExpenseRepository implements IExpenseRepository {
   private ormRepository: Repository<Expense>;
@@ -33,6 +34,33 @@ class ExpenseRepository implements IExpenseRepository {
       });
       return expenses;
     }  catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async findByFilters({
+    escritorio,
+    conta,
+    data_inicio,
+    data_fim
+  }: IRequestSaldoDTO): Promise<Expense[]> {
+    try {
+      const expenses = await this.ormRepository.createQueryBuilder("expenses")
+      .select()
+      .innerJoinAndSelect("expenses.group", "group")
+      .innerJoinAndSelect("expenses.subsidiary", "subsidiary")
+      .innerJoinAndSelect("expenses.bank_data", "bank_data")
+      .leftJoinAndSelect("expenses.user", "user")
+      .where("expenses.status = 'PAGO'")
+      .andWhere("subsidiary.id::text LIKE :escritorio", {escritorio: escritorio})
+      .andWhere("bank_data.id::text LIKE :conta", { conta: conta })
+      .andWhere(
+        "expenses.pay_date BETWEEN :inicio AND :fim", 
+        {inicio: data_inicio, fim: data_fim}
+      ).getMany();
+
+      return expenses;
+    } catch (err) {
       throw new AppError(err.detail);
     }
   }

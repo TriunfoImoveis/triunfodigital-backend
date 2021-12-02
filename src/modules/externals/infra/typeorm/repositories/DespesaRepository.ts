@@ -1,10 +1,11 @@
-import { getRepository, Like, Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 
 import AppError from '@shared/errors/AppError';
 import IDespesaRepository from '@modules/externals/repositories/IDespesaRepository';
 import Despesa from '@modules/externals/infra/typeorm/entities/Despesa';
 import ICreateDespesaDTO from '@modules/externals/dtos/ICreateDespesaDTO';
 import IRequestSaldoDTO from '@modules/externals/dtos/IRequestSaldoDTO';
+import IUpdateDespesaDTO from '@modules/externals/dtos/IUpdateDespesaDTO';
 
 class DespesaRepository implements IDespesaRepository {
   private ormRepository: Repository<Despesa>;
@@ -67,11 +68,19 @@ class DespesaRepository implements IDespesaRepository {
       .where("escritorio.id::text LIKE :escritorio", {escritorio: escritorio})
       .andWhere("conta.id::text LIKE :conta", { conta: conta })
       .andWhere(
-        "despesa.created_at BETWEEN :inicio AND :fim", 
+        "despesa.data_pagamento BETWEEN :inicio AND :fim", 
         {inicio: data_inicio, fim: data_fim}
       ).getMany();
 
       return despesas;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async update(id: string, data: IUpdateDespesaDTO): Promise<void> {
+    try {
+      await this.ormRepository.update(id, data);
     } catch (err) {
       throw new AppError(err.detail);
     }
