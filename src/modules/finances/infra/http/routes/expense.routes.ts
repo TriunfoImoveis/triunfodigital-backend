@@ -18,7 +18,16 @@ expenseRoutes.post('/groups', celebrate({
   }
 }), expenseController.createGroup);
 
-expenseRoutes.get('/', expenseController.list);
+expenseRoutes.get('/', celebrate({
+  [Segments.QUERY]: {
+    status: Joi.string().valid(
+      "PENDENTE",
+      "VENCIDO",
+      "PAGO",
+      "CANCELADO",
+    )
+  }
+}), expenseController.list);
 
 expenseRoutes.post('/', celebrate({
   [Segments.BODY]: {

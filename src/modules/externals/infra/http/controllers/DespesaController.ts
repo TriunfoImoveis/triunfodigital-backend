@@ -4,6 +4,7 @@ import CreateDespesaService from '@modules/externals/services/CreateDespesaServi
 import ListDespesaService from '@modules/externals/services/ListDespesaService';
 import ShowDespesaService from '@modules/externals/services/ShowDespesaService';
 import DeleteDespesaService from '@modules/externals/services/DeleteDespesaService';
+import UpdateDespesaService from '@modules/externals/services/UpdateDespesaService';
 
 class DespesaController {
     async index(request: Request, response: Response): Promise<Response> {
@@ -39,8 +40,10 @@ class DespesaController {
     async create(request: Request, response: Response): Promise<Response> {
         const { 
             tipo_despesa,
+            grupo,
             descricao,
             valor,
+            data_pagamento,
             escritorio,
             conta,
         } = request.body;
@@ -48,26 +51,28 @@ class DespesaController {
         const createDespesaService = container.resolve(CreateDespesaService);
 
         const newOffice = await createDespesaService.execute({
-        tipo_despesa,
-        descricao,
-        valor,
-        escritorio,
-        conta,
+            tipo_despesa,
+            grupo,
+            descricao,
+            valor,
+            data_pagamento,
+            escritorio,
+            conta,
         });
 
         return response.json(newOffice);
     }
 
-//   async update(request: Request, response: Response): Promise<Response> {
-//     const updateOfficeService = container.resolve(UpdateOfficeService);
-    
-//     const updatedOffice = await updateOfficeService.execute({
-//       id: request.params.id,
-//       body: request.body,
-//     });
+    async update(request: Request, response: Response): Promise<Response> {
+        const {id} = request.params;
+        const data = request.body;
 
-//     return response.json(updatedOffice);
-//   }
+        const updateDespesaService = container.resolve(UpdateDespesaService);
+        
+        await updateDespesaService.execute(id, data);
+
+        return response.status(204).send();
+    }
 
     async delete(request: Request, response: Response): Promise<Response> {
         const deleteDespesaService = container.resolve(DeleteDespesaService);

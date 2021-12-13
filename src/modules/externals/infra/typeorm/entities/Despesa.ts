@@ -1,3 +1,6 @@
+import GroupExpense from "@modules/finances/infra/typeorm/entities/GroupExpense";
+import Subsidiary from "@modules/organizations/infra/typeorm/entities/Subsidiary";
+import BankData from "@modules/users/infra/typeorm/entities/BankData";
 import { 
     Column, 
     CreateDateColumn, 
@@ -29,13 +32,20 @@ class Despesa {
   @Column({ type: 'decimal', precision: 14, scale: 2 })
   valor: number;
 
-  @ManyToOne(type => Escritorio, {nullable: false})
+  @ManyToOne(type => GroupExpense, {nullable: true})
+  @JoinColumn({ name: 'id_grupo' })
+  grupo: GroupExpense;
+
+  @Column({ type: 'date' })
+  data_pagamento: Date;
+
+  @ManyToOne(type => Subsidiary, {nullable: false})
   @JoinColumn({ name: 'id_escritorio' })
-  escritorio: Escritorio;
+  escritorio: Subsidiary;
   
-  @ManyToOne(type => Conta, {nullable: true})
+  @ManyToOne(type => BankData, {nullable: true})
   @JoinColumn({ name: 'id_conta' })
-  conta: Conta;
+  conta: BankData;
 
   @CreateDateColumn()
   created_at: Date;

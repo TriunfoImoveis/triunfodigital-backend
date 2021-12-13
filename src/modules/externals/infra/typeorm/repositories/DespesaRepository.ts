@@ -1,10 +1,11 @@
-import { getRepository, Like, Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 
 import AppError from '@shared/errors/AppError';
 import IDespesaRepository from '@modules/externals/repositories/IDespesaRepository';
 import Despesa from '@modules/externals/infra/typeorm/entities/Despesa';
 import ICreateDespesaDTO from '@modules/externals/dtos/ICreateDespesaDTO';
 import IRequestSaldoDTO from '@modules/externals/dtos/IRequestSaldoDTO';
+import IUpdateDespesaDTO from '@modules/externals/dtos/IUpdateDespesaDTO';
 
 class DespesaRepository implements IDespesaRepository {
   private ormRepository: Repository<Despesa>;
@@ -16,7 +17,7 @@ class DespesaRepository implements IDespesaRepository {
   async findAll(): Promise<Despesa[]> {
     try {
       const despesa = await this.ormRepository.find({
-        relations: ['escritorio', 'conta']
+        relations: ['escritorio', 'conta', 'grupo']
       });
       return despesa;
     } catch (err) {
@@ -27,7 +28,7 @@ class DespesaRepository implements IDespesaRepository {
   async findById(id: string): Promise<Despesa | undefined> {
     try {
       const despesa = await this.ormRepository.findOne(id, {
-        relations: ['escritorio', 'conta']
+        relations: ['escritorio', 'conta', 'grupo']
       });
       return despesa;
     } catch (err) {
@@ -62,16 +63,25 @@ class DespesaRepository implements IDespesaRepository {
     try {
       const despesas = await this.ormRepository.createQueryBuilder("despesa")
       .select()
+      .innerJoinAndSelect("despesa.grupo", "grupo")
       .innerJoinAndSelect("despesa.escritorio", "escritorio")
       .innerJoinAndSelect("despesa.conta", "conta")
       .where("escritorio.id::text LIKE :escritorio", {escritorio: escritorio})
       .andWhere("conta.id::text LIKE :conta", { conta: conta })
       .andWhere(
-        "despesa.created_at BETWEEN :inicio AND :fim", 
+        "despesa.data_pagamento BETWEEN :inicio AND :fim", 
         {inicio: data_inicio, fim: data_fim}
       ).getMany();
 
       return despesas;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async update(id: string, data: IUpdateDespesaDTO): Promise<void> {
+    try {
+      await this.ormRepository.update(id, data);
     } catch (err) {
       throw new AppError(err.detail);
     }

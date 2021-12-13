@@ -4,7 +4,6 @@ import path from 'path';
 
 import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
 import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
-import mailQueue from "@shared/container/providers/JobProvider/implementations/Queue";
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 import SendEmailJob from '@shared/container/providers/JobProvider/implementations/SendEmailJob';
 

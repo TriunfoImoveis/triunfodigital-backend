@@ -10,8 +10,12 @@ class ListExpenseService {
     private expenseRepository: IExpenseRepository, 
   ) {}
 
-  public async execute(): Promise<Expense[]> {
-    const listExpense = await this.expenseRepository.list();
+  public async execute(status: string | undefined): Promise<Expense[]> {
+    if (status !== undefined) {
+      var listExpense = await this.expenseRepository.findByStatus(status);
+    } else {
+      var listExpense = await this.expenseRepository.list();
+    }
 
     return listExpense;
   }

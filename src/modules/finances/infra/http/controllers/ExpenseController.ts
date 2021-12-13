@@ -27,8 +27,11 @@ class ExpenseController {
   }
 
   async list(request: Request, response: Response): Promise<Response> {
+    const { status } = request.query;
     const listExpenseService = container.resolve(ListExpenseService);
-    const listExpense = await listExpenseService.execute();
+    const listExpense = await listExpenseService.execute(
+      status as string | undefined
+    );
 
     return response.json(listExpense);
   }
