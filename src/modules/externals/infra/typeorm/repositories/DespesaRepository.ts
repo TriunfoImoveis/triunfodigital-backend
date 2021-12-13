@@ -17,7 +17,7 @@ class DespesaRepository implements IDespesaRepository {
   async findAll(): Promise<Despesa[]> {
     try {
       const despesa = await this.ormRepository.find({
-        relations: ['escritorio', 'conta']
+        relations: ['escritorio', 'conta', 'grupo']
       });
       return despesa;
     } catch (err) {
@@ -28,7 +28,7 @@ class DespesaRepository implements IDespesaRepository {
   async findById(id: string): Promise<Despesa | undefined> {
     try {
       const despesa = await this.ormRepository.findOne(id, {
-        relations: ['escritorio', 'conta']
+        relations: ['escritorio', 'conta', 'grupo']
       });
       return despesa;
     } catch (err) {
@@ -63,6 +63,7 @@ class DespesaRepository implements IDespesaRepository {
     try {
       const despesas = await this.ormRepository.createQueryBuilder("despesa")
       .select()
+      .innerJoinAndSelect("despesa.grupo", "grupo")
       .innerJoinAndSelect("despesa.escritorio", "escritorio")
       .innerJoinAndSelect("despesa.conta", "conta")
       .where("escritorio.id::text LIKE :escritorio", {escritorio: escritorio})
