@@ -4,7 +4,6 @@ import IDespesaRepository from '@modules/externals/repositories/IDespesaReposito
 import IRequestSaldoDTO from '@modules/externals/dtos/IRequestSaldoDTO';
 import IResponseSaldoDTO from '@modules/externals/dtos/IResponseSaldoDTO';
 import IExpenseRepository from "@modules/finances/repositories/IExpenseRepository";
-import AppError from '@shared/errors/AppError';
 
 @injectable()
 class ListDespesaService {

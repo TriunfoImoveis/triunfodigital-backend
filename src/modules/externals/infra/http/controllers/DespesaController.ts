@@ -5,6 +5,7 @@ import ListDespesaService from '@modules/externals/services/ListDespesaService';
 import ShowDespesaService from '@modules/externals/services/ShowDespesaService';
 import DeleteDespesaService from '@modules/externals/services/DeleteDespesaService';
 import UpdateDespesaService from '@modules/externals/services/UpdateDespesaService';
+import ExportDespesaService from '@modules/externals/services/ExportDespesaService';
 
 class DespesaController {
     async index(request: Request, response: Response): Promise<Response> {
@@ -80,6 +81,14 @@ class DespesaController {
         await deleteDespesaService.execute(request.params.id);
 
         return response.status(204).send();
+    }
+
+    async exportExcel(request: Request, response: Response): Promise<Response> {
+    
+        const exportSaleService = container.resolve(ExportDespesaService);
+        const link_url = await exportSaleService.execute();
+    
+        return response.status(201).json(link_url);
     }
 }
 

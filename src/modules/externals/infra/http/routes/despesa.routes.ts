@@ -107,4 +107,6 @@ despesaRouter.delete(
     despesaController.delete,
 );
 
+despesaRouter.get('/export/excel', despesaController.exportExcel);
+
 export default despesaRouter;
