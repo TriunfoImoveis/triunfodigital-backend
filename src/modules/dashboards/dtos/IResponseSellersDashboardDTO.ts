@@ -43,5 +43,20 @@ export default interface IResponseSellersDashboardDTO {
             property: string,
             quantity: number,
         }[],
+    },
+    client: {
+        genders: {
+            gender: string,
+            percentage: number,
+        }[],
+        civil_status: {
+            status: string,
+            percentage: number,
+        }[],
+        avg_number_children: number,
+        age_groups: {
+            age: string,
+            percentage: number,
+        }[],
     }
 }

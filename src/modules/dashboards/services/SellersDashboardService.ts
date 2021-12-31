@@ -1,4 +1,5 @@
 import { inject, injectable } from 'tsyringe';
+import { differenceInYears } from 'date-fns';
 
 import IRequestSellersDashboardDTO from '@modules/dashboards/dtos/IRequestSellersDashboardDTO';
 import IResponseSellersDashboardDTO from '@modules/dashboards/dtos/IResponseSellersDashboardDTO';
@@ -102,9 +103,9 @@ class SellersDashboardService {
     const sales_caiu = sales.filter(sale => sale.status === "CAIU");
     const sales_pendente = sales.filter(sale => sale.status === "PENDENTE");
     const sales_pago_total = sales.filter(sale => sale.status === "PAGO_TOTAL");
+    const sales_paid = [...sales_pendente, ...sales_pago_total]
 
     // tipo de venda
-    const sales_paid = [...sales_pendente, ...sales_pago_total]
     const type_new = sales_paid.filter(sale => sale.sale_type === "NOVO").length;
     const type_used = sales_paid.filter(sale => sale.sale_type === "USADO").length;
 
@@ -130,6 +131,66 @@ class SellersDashboardService {
       return { 
         property: property.name,
         quantity: quantity,
+      }
+    });
+
+    /* perfil do cliente comprador */
+    const QUANTITY_SALES = sales_paid.length;
+    // GENERO
+    const genders = ["FEMININO", "MASCULINO", "OUTRO"].map(
+      gender => {
+        const quantity = sales_paid.filter(
+          sale => sale?.client_buyer?.gender === gender
+        ).length;
+        const percentage = (quantity / QUANTITY_SALES)*100;
+        return {
+          gender: gender,
+          percentage: Number(percentage.toFixed(1)),
+        }
+      })
+
+    // Estado Civil
+    const civil_status = ["CASADO(A)", "DIVORCIADO(A)", "SOLTEIRO(A)", "VIUVO(A)"].map(
+      status => {
+        const quantity = sales_paid.filter(
+          sale => sale?.client_buyer?.civil_status === status
+        ).length;
+        const percentage = (quantity/QUANTITY_SALES)*100;
+        return {
+          status: status,
+          percentage: Number(percentage.toFixed(1)),
+        }
+      })
+
+    // Número de filhos
+    const sum_number_childrens = sales_paid.map(
+      sale => sale?.client_buyer?.number_children
+    ).reduce(
+      (total, children) => total += children
+    );
+    const avg_number_childrens = Number((sum_number_childrens/QUANTITY_SALES).toFixed(0));
+
+    // Faixa Etaria
+    const list_age_groups = [
+      { age_group: "0-18", min: 0, max: 18 }, 
+      { age_group: "19-39", min: 19, max: 39 }, 
+      { age_group: "40-59", min: 40, max: 59 }, 
+      { age_group: "+60", min: 60, max: 150 },
+    ]
+
+    const age_groups = list_age_groups.map(age_group => {
+      const quantity = sales_paid.filter(
+        sale => {
+          const age = differenceInYears(new Date(sale?.sale_date), new Date(sale?.client_buyer?.date_birth));
+          if (age >= age_group.min && age <= age_group.max) {
+            return age;
+          }
+        }
+      ).length;
+      const percentage = (quantity/QUANTITY_SALES)*100;
+      return {
+        age: age_group.age_group,
+        percentage: Number(percentage.toFixed(1)),
       }
     });
 
@@ -167,7 +228,13 @@ class SellersDashboardService {
         },
         origins: origin_sales,
         properties: properties_sales,
-      }
+      },
+      client: {
+        genders: genders,
+        civil_status: civil_status,
+        avg_number_children: avg_number_childrens,
+        age_groups: age_groups,
+      },
     }
   }
 }
