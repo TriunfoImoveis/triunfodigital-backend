@@ -135,7 +135,7 @@ class SellersDashboardService {
     const properties = await this.propertyRepository.findAll();
     const properties_sales = properties.map(property => {
       const quantity = sales_paid.filter(
-        sale => sale.realty.property?.id === property.id
+        sale => sale.realty.property.id === property.id
       ).length;
       return { 
         property: property.name,
