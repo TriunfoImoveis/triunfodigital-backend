@@ -123,7 +123,7 @@ class SellersDashboardService {
     const origin_sales = origins.map(origin => {
       let total = 0;
       sales_paid.filter(
-        sale => sale.origin?.id === origin.id
+        sale => sale.origin.id === origin.id
       ).forEach(sale => total += Number(sale.realty_ammount));
       return { 
         origin: origin.name,
@@ -135,7 +135,7 @@ class SellersDashboardService {
     const properties = await this.propertyRepository.findAll();
     const properties_sales = properties.map(property => {
       const quantity = sales_paid.filter(
-        sale => sale.realty?.property?.id === property.id
+        sale => sale.realty.property?.id === property.id
       ).length;
       return { 
         property: property.name,
@@ -148,7 +148,7 @@ class SellersDashboardService {
     const genders = ["FEMININO", "MASCULINO", "OUTRO"].map(
       gender => {
         const quantity = sales_paid.filter(
-          sale => sale.client_buyer?.gender === gender
+          sale => sale.client_buyer.gender === gender
         ).length;
         const percentage = (quantity / QUANTITY_SALES)*100;
         return {
@@ -161,7 +161,7 @@ class SellersDashboardService {
     const civil_status = ["CASADO(A)", "DIVORCIADO(A)", "SOLTEIRO(A)", "VIUVO(A)"].map(
       status => {
         const quantity = sales_paid.filter(
-          sale => sale.client_buyer?.civil_status === status
+          sale => sale.client_buyer.civil_status === status
         ).length;
         const percentage = (quantity/QUANTITY_SALES)*100;
         return {
@@ -172,7 +172,7 @@ class SellersDashboardService {
 
     // Número de filhos
     const sum_number_childrens = sales_paid.map(
-      sale => sale.client_buyer?.number_children
+      sale => sale.client_buyer.number_children
     ).reduce(
       (total, children) => total += children
     );
@@ -189,7 +189,7 @@ class SellersDashboardService {
     const age_groups = list_age_groups.map(age_group => {
       const quantity = sales_paid.filter(
         sale => {
-          const age = differenceInYears(new Date(sale.sale_date), new Date(sale.client_buyer?.date_birth));
+          const age = differenceInYears(new Date(sale.sale_date), new Date(sale.client_buyer.date_birth));
           if (age >= age_group.min && age <= age_group.max) {
             return age;
           }
