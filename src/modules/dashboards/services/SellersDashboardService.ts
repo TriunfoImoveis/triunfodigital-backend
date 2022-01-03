@@ -1,6 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { differenceInYears } from 'date-fns';
 
+import AppError from '@shared/errors/AppError';
 import IRequestSellersDashboardDTO from '@modules/dashboards/dtos/IRequestSellersDashboardDTO';
 import IResponseSellersDashboardDTO from '@modules/dashboards/dtos/IResponseSellersDashboardDTO';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
@@ -35,6 +36,11 @@ class SellersDashboardService {
   }: IRequestSellersDashboardDTO): Promise<IResponseSellersDashboardDTO> {
     const ano_formated = ano.toString();
     const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+
+    const user = await this.usersRepository.findById(corretor);
+    if (!user) {
+      throw new AppError("Usuário não encontrado!", 404);
+    }
 
     // Calculo VGV para corretor vendedor.
     const sales_sellers = await this.salesRepository.salesForUserSellers(
@@ -104,17 +110,20 @@ class SellersDashboardService {
     const sales_pendente = sales.filter(sale => sale.status === "PENDENTE");
     const sales_pago_total = sales.filter(sale => sale.status === "PAGO_TOTAL");
     const sales_paid = [...sales_pendente, ...sales_pago_total]
+    const QUANTITY_SALES = sales_paid.length;
 
     // tipo de venda
-    const type_new = sales_paid.filter(sale => sale.sale_type === "NOVO").length;
-    const type_used = sales_paid.filter(sale => sale.sale_type === "USADO").length;
+    const quantity_new = sales_paid.filter(sale => sale.sale_type === "NOVO").length;
+    const percentage_new = Number(((quantity_new/QUANTITY_SALES)*100).toFixed(2));
+    const quantity_used = sales_paid.filter(sale => sale.sale_type === "USADO").length;
+    const percentage_used = Number(((quantity_used/QUANTITY_SALES)*100).toFixed(2));
 
     // origem da venda
     const origins = await this.originsRepository.findAll();
     const origin_sales = origins.map(origin => {
       let total = 0;
       sales_paid.filter(
-        sale => sale?.origin.id === origin.id
+        sale => sale.origin.id === origin.id
       ).forEach(sale => total += Number(sale.realty_ammount));
       return { 
         origin: origin.name,
@@ -126,7 +135,7 @@ class SellersDashboardService {
     const properties = await this.propertyRepository.findAll();
     const properties_sales = properties.map(property => {
       const quantity = sales_paid.filter(
-        sale => sale?.realty?.property.id === property.id
+        sale => sale.realty.property.id === property.id
       ).length;
       return { 
         property: property.name,
@@ -135,17 +144,16 @@ class SellersDashboardService {
     });
 
     /* perfil do cliente comprador */
-    const QUANTITY_SALES = sales_paid.length;
     // GENERO
     const genders = ["FEMININO", "MASCULINO", "OUTRO"].map(
       gender => {
         const quantity = sales_paid.filter(
-          sale => sale?.client_buyer?.gender === gender
+          sale => sale.client_buyer.gender === gender
         ).length;
         const percentage = (quantity / QUANTITY_SALES)*100;
         return {
           gender: gender,
-          percentage: Number(percentage.toFixed(1)),
+          percentage: Number(percentage.toFixed(2)),
         }
       })
 
@@ -153,18 +161,18 @@ class SellersDashboardService {
     const civil_status = ["CASADO(A)", "DIVORCIADO(A)", "SOLTEIRO(A)", "VIUVO(A)"].map(
       status => {
         const quantity = sales_paid.filter(
-          sale => sale?.client_buyer?.civil_status === status
+          sale => sale.client_buyer.civil_status === status
         ).length;
         const percentage = (quantity/QUANTITY_SALES)*100;
         return {
           status: status,
-          percentage: Number(percentage.toFixed(1)),
+          percentage: Number(percentage.toFixed(2)),
         }
       })
 
     // Número de filhos
     const sum_number_childrens = sales_paid.map(
-      sale => sale?.client_buyer?.number_children
+      sale => sale.client_buyer.number_children
     ).reduce(
       (total, children) => total += children
     );
@@ -190,7 +198,7 @@ class SellersDashboardService {
       const percentage = (quantity/QUANTITY_SALES)*100;
       return {
         age: age_group.age_group,
-        percentage: Number(percentage.toFixed(1)),
+        percentage: Number(percentage.toFixed(2)),
       }
     });
 
@@ -223,8 +231,8 @@ class SellersDashboardService {
           pago_total: sales_pago_total.length,
         },
         types: {
-          new: type_new,
-          used: type_used,
+          new: percentage_new,
+          used: percentage_used,
         },
         origins: origin_sales,
         properties: properties_sales,
