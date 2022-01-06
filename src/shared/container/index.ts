@@ -56,6 +56,9 @@ import ContaRepository from '@modules/externals/infra/typeorm/repositories/Conta
 import ISaldoRepository from '@modules/externals/repositories/ISaldoRepository';
 import SaldoRepository from '@modules/externals/infra/typeorm/repositories/SaldoRepository';
 
+import ISaleDashboardRepository from '@modules/dashboards/repositories/ISaleDashboardRepository';
+import SaleDashboardRepository from '@modules/dashboards/infra/typeorm/repositories/SaleDashboardRepository';
+
 
 // USER
 container.registerSingleton<IUsersRepository>(

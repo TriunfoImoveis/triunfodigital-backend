@@ -8,7 +8,7 @@ import RankingService from '@modules/users/services/RankingService';
 class RankingController {
   async index(request: Request, response: Response): Promise<Response> {
     const {
-      type,
+      year,
       month,
       city,
       user,
@@ -16,8 +16,8 @@ class RankingController {
 
     const rankingService = container.resolve(RankingService);
     const ranking = await rankingService.execute({
-      type: type as string,
-      month: Number(month),
+      year: Number(year),
+      month: month as number | undefined,
       city: city as string,
       user: user as string,
     });

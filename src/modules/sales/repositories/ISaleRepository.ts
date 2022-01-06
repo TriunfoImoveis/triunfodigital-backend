@@ -37,5 +37,7 @@ export default interface ISaleRepository {
     date: string,
   ): Promise<Sale[]>;
 
+  salesForDashboard(id: string, date: string): Promise<Sale[]>;
+
   validSignal(id: string, status: Boolean): Promise<void>;
 }
