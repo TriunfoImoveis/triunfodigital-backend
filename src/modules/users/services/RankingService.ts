@@ -6,8 +6,8 @@ import IResponseRankingDTO from "@modules/users/dtos/IResponseRankingDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 
 interface IRequestRankingDTO {
-  type: string;
-  month: number;
+  year: number;
+  month?: number;
   city: string;
   user: string;
 }
@@ -23,14 +23,15 @@ class RankingService {
   ) {}
 
   public async execute({
-    type,
+    year,
     month,
     city,
     user,
   }: IRequestRankingDTO): Promise<IResponseRankingDTO[]> {
     // Pega a data atual e o formato Ano e Mês juntos para filtrar as vendas
-    var date = new Date().getFullYear().toString();
-    if (type === "MENSAL") {
+    var date = year.toString();
+
+    if (month !== undefined) {
       let monthFormated = month.toString();
       if ((month >= 1) && (month <= 9)) {
         monthFormated = `0${monthFormated}`;
@@ -41,7 +42,7 @@ class RankingService {
       var format_date = "yyyy";
       var dateFormated = date;
     }
-    
+
     // Verifica se é ranking de Corretores ou Captadores e filtra os usuários
     var users = await this.usersRepository.findUsers({
       city,
