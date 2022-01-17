@@ -24,6 +24,9 @@ class UpdateExpenseService {
     if (data.due_date) {
       data.due_date = add(data.due_date, {hours: 3});
     }
+    if (data.pay_date) {
+      data.pay_date = add(data.pay_date, {hours: 3});
+    }
     
     await this.expenseRepository.update(id, data);
 
