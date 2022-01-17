@@ -100,7 +100,13 @@ expenseRoutes.put('/:id', celebrate({
     })),
     user: Joi.string().uuid().optional().messages(validatorFields({
       name: "Usuário"
-    }))
+    })),
+    pay_date: Joi.date().iso().messages(validatorFields({
+      name: "'Data do Pagamento'"
+    })),
+    value_paid: Joi.number().positive().messages(validatorFields({
+      name: "'Valor Pago'"
+    })),
   }
 }), expenseController.update);
 
