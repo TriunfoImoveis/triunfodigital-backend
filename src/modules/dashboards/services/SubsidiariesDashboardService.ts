@@ -9,6 +9,7 @@ import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import IComissionRepository from '@modules/finances/repositories/IComissionRepository';
 import IOriginRepository from '@modules/sales/repositories/IOriginRepository';
 import IPropertyRepository from '@modules/sales/repositories/IPropertyRepository';
+import formated_strings from '@shared/utils/formated_strings';
 
 
 @injectable()
@@ -63,15 +64,15 @@ class SubsidiariesDashboardService {
     const ticket_medium = Number((vgv_total/12).toFixed(2));
 
     // Comissão
-    // const comissions = await this.comissionRepository.findByUser(
-    //   corretor, 
-    //   ano_formated,
-    // );
+    const comissions = await this.comissionRepository.findBySubsidiary(
+      subsidiary, 
+      year_formated,
+    );
 
-    // var total_comissions = 0;
-    // comissions.forEach(
-    //   comission => total_comissions += Number(comission.comission_liquid)
-    // );
+    var total_comissions = 0;
+    comissions.forEach(
+      comission => total_comissions += Number(comission.comission_liquid)
+    );
 
     // Vgv por mes
     const vgv_for_month = await Promise.all(
@@ -124,6 +125,23 @@ class SubsidiariesDashboardService {
         quantity: Number(percentage.toFixed(2)),
       }
     });
+
+    // Por Bairro
+    const all_neighborhoods = sales_paid.map(sale => formated_strings(sale.realty.neighborhood));
+    const neighborhoods = all_neighborhoods.filter(
+      (neighbor, index) => all_neighborhoods.indexOf(neighbor) === index
+    ).sort();
+
+    const quantity_neighborhoods = neighborhoods.map(neighbor => {
+      const quantity = sales_paid.filter(
+        sale => formated_strings(sale.realty.neighborhood) === neighbor
+      ).length;
+
+      return {
+        neighborhood: neighbor,
+        quantity: quantity
+      }
+    }).sort((a ,b) => b.quantity - a.quantity);
 
     /* perfil do cliente comprador */
     // GENERO
@@ -188,7 +206,7 @@ class SubsidiariesDashboardService {
     return {
       quantity_sales: QUANTITY_SALES,
       ticket_medium: ticket_medium,
-      comission: 0,
+      comission: total_comissions,
       vgv: {
         total: vgv_total,
         months: vgv_for_month,
@@ -206,6 +224,7 @@ class SubsidiariesDashboardService {
         },
         origins: origin_sales,
         properties: properties_sales,
+        neighborhoods: quantity_neighborhoods,
       },
       client: {
         genders: genders,

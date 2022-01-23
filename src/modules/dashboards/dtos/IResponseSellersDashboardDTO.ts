@@ -43,6 +43,10 @@ export default interface IResponseSellersDashboardDTO {
             property: string,
             quantity: number,
         }[],
+        neighborhoods: {
+            neighborhood: string,
+            quantity: number,
+        }[],
     },
     client: {
         genders: {
