@@ -2,23 +2,23 @@ import { inject, injectable } from 'tsyringe';
 import { differenceInYears } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
-import IRequestSellersDashboardDTO from '@modules/dashboards/dtos/IRequestSellersDashboardDTO';
-import IResponseSellersDashboardDTO from '@modules/dashboards/dtos/IResponseSellersDashboardDTO';
+import IRequestSubsidiariesDashboardDTO from '@modules/dashboards/dtos/IRequestSubsidiariesDashboardDTO';
+import IResponseSubsidiariesDashboardDTO from '@modules/dashboards/dtos/IResponseSubsidiariesDashboardDTO';
+import ISubsidiaryRepository from '@modules/organizations/repositories/ISubsidiaryRepository';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
+import IComissionRepository from '@modules/finances/repositories/IComissionRepository';
 import IOriginRepository from '@modules/sales/repositories/IOriginRepository';
 import IPropertyRepository from '@modules/sales/repositories/IPropertyRepository';
-import IUserRepository from '@modules/users/repositories/IUserRepository';
-import IComissionRepository from '@modules/finances/repositories/IComissionRepository';
-import { calculate_vgv } from '@shared/utils/calculate_vgv';
+
 
 @injectable()
-class SellersDashboardService {
+class SubsidiariesDashboardService {
   constructor(
+    @inject('SubsidiariesRepository')
+    private subsidiariesRepository: ISubsidiaryRepository,
+
     @inject('SalesRepository')
     private salesRepository: ISaleRepository,
-
-    @inject('UsersRepository')
-    private usersRepository: IUserRepository,
 
     @inject('ComissionRepository')
     private comissionRepository: IComissionRepository,
@@ -31,79 +31,19 @@ class SellersDashboardService {
   ) {}
 
   public async execute({
-    corretor,
-    ano,
-  }: IRequestSellersDashboardDTO): Promise<IResponseSellersDashboardDTO> {
-    const ano_formated = ano.toString();
+    subsidiary,
+    year,
+  }: IRequestSubsidiariesDashboardDTO): Promise<IResponseSubsidiariesDashboardDTO> {
+    const year_formated = year.toString();
     const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
 
-    const user = await this.usersRepository.findById(corretor);
-    if (!user) {
-      throw new AppError("Usuário não encontrado!", 404);
+    const subsidiary_exists = await this.subsidiariesRepository.findById(subsidiary);
+    if (!subsidiary_exists) {
+      throw new AppError("Filial não encontrada!", 404);
     }
 
-    // Calculo VGV para corretor vendedor.
-    const sales_sellers = await this.salesRepository.salesForUserSellers(
-      corretor, 
-      "yyyy", 
-      ano_formated
-    );
-    const vgv_sellers = await calculate_vgv(sales_sellers);
-    const vgv_sellers_for_month = await Promise.all(
-      months.map(async month => {
-        const sales = await this.salesRepository.salesForUserSellers(
-          corretor, 
-          "yyyyMM", 
-          ano_formated+month,
-        );
-        const vgv = await calculate_vgv(sales);
-        return {
-          month: month,
-          vgv: vgv,
-        };
-      })
-    );
+    const sales = await this.salesRepository.salesForSubsidiary(subsidiary, "yyyy", year_formated);
 
-    // Calculo VGV para corretor captador.
-    const sales_captivators = await this.salesRepository.salesForUserCaptivators(
-      corretor, 
-      "yyyy", 
-      ano_formated
-    );
-    const vgv_captivators = await calculate_vgv(sales_captivators);
-    const vgv_captivators_for_month = await Promise.all(
-      months.map(async month => {
-        const sales = await this.salesRepository.salesForUserCaptivators(
-          corretor, 
-          "yyyyMM", 
-          ano_formated+month,
-        );
-        const vgv = await calculate_vgv(sales);
-        return {
-          month: month,
-          vgv: vgv,
-        };
-      })
-    );
-
-    const ticket_medium_sales = Number((vgv_sellers/12).toFixed(2));
-    const ticket_medium_captivators = Number((vgv_captivators/12).toFixed(2));
-
-    // Calculo de Comissões
-    const comissions = await this.comissionRepository.findByUser(
-      corretor, 
-      ano_formated,
-    );
-
-    var total_comissions = 0;
-    comissions.forEach(
-      comission => total_comissions += Number(comission.comission_liquid)
-    );
-
-
-    // Vendas
-    const sales = await this.salesRepository.salesForDashboard(corretor, ano_formated);
-    
     // status
     const sales_nao_validado = sales.filter(sale => sale.status === "NAO_VALIDADO");
     const sales_caiu = sales.filter(sale => sale.status === "CAIU");
@@ -111,6 +51,47 @@ class SellersDashboardService {
     const sales_pago_total = sales.filter(sale => sale.status === "PAGO_TOTAL");
     const sales_paid = [...sales_pendente, ...sales_pago_total]
     const QUANTITY_SALES = sales_paid.length;
+    
+    // Vgv
+    const vgv_total = sales_paid.map(
+      sale => sale.realty_ammount
+    ).reduce(
+      (total, realty_ammount) => total += Number(realty_ammount)
+    , 0);
+
+    // Ticket Medio
+    const ticket_medium = Number((vgv_total/12).toFixed(2));
+
+    // Comissão
+    // const comissions = await this.comissionRepository.findByUser(
+    //   corretor, 
+    //   ano_formated,
+    // );
+
+    // var total_comissions = 0;
+    // comissions.forEach(
+    //   comission => total_comissions += Number(comission.comission_liquid)
+    // );
+
+    // Vgv por mes
+    const vgv_for_month = await Promise.all(
+      months.map(async month => {
+        const sales = await this.salesRepository.salesForSubsidiary(
+          subsidiary, 
+          "yyyyMM", 
+          year_formated+month,
+        );
+        const vgv = sales
+          .filter(sale => ["PENDENTE", "PAGO_TOTAL"].includes(sale.status))
+          .map(sale => sale.realty_ammount)
+          .reduce((total, realty_ammount) => total += Number(realty_ammount), 0);
+      
+        return {
+          month: month,
+          vgv: vgv,
+        };
+      })
+    );
 
     // tipo de venda
     const quantity_new = sales_paid.filter(sale => sale.sale_type === "NOVO").length;
@@ -156,7 +137,7 @@ class SellersDashboardService {
           gender: gender,
           percentage: Number(percentage.toFixed(2)),
         }
-      })
+      });
 
     // Estado Civil
     const civil_status = ["CASADO(A)", "DIVORCIADO(A)", "SOLTEIRO(A)", "VIUVO(A)"].map(
@@ -169,7 +150,7 @@ class SellersDashboardService {
           status: status,
           percentage: Number(percentage.toFixed(2)),
         }
-      })
+      });
 
     // Número de filhos
     const sum_number_childrens = sales_paid.map(
@@ -205,24 +186,12 @@ class SellersDashboardService {
 
 
     return {
-      quantity: {
-        sales: sales_sellers.length,
-        captivators: sales_captivators.length,
-      },
-      ticket_medium: {
-        sales: ticket_medium_sales,
-        captivators: ticket_medium_captivators,
-      },
-      comission: total_comissions,
+      quantity_sales: QUANTITY_SALES,
+      ticket_medium: ticket_medium,
+      comission: 0,
       vgv: {
-        sales: {
-          total: vgv_sellers,
-          months: vgv_sellers_for_month,
-        },
-        captivators: {
-          total: vgv_captivators,
-          months: vgv_captivators_for_month,
-        },
+        total: vgv_total,
+        months: vgv_for_month,
       },
       sales: {
         status: {
@@ -248,4 +217,4 @@ class SellersDashboardService {
   }
 }
 
-export default SellersDashboardService;
+export default SubsidiariesDashboardService;

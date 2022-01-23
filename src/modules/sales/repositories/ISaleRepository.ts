@@ -39,5 +39,12 @@ export default interface ISaleRepository {
 
   salesForDashboard(id: string, date: string): Promise<Sale[]>;
 
+  salesForSubsidiary(
+    id_subsidiary: string, 
+    format_date: string,
+    date: string
+  ): Promise<Sale[]>;
+  // captivatorsForSubsidiary(id_subsidiary: string, date: string): Promise<Sale[]>;
+
   validSignal(id: string, status: Boolean): Promise<void>;
 }
