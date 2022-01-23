@@ -52,6 +52,27 @@ class ComissionRepository implements IComissionRepository {
       throw new AppError(err.detail);
     }
   }
+
+  async findBySubsidiary(
+    subsidiary_id: string,
+    date: string,
+  ): Promise<Comission[]> {
+    try {
+      const comissions = await this.ormRepository.createQueryBuilder("comission")
+        .select()
+        .innerJoinAndSelect("comission.calculation", "calculation")
+        .where("comission.subsidiary_id = :subsidiary_id", {subsidiary_id: subsidiary_id})
+        .andWhere(
+          "to_char(calculation.pay_date, :format) = :date",
+          { format: "yyyy", date: date }
+        )
+        .getMany();
+
+      return comissions;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
 }
 
 export default ComissionRepository;

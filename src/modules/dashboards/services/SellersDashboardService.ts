@@ -10,6 +10,7 @@ import IPropertyRepository from '@modules/sales/repositories/IPropertyRepository
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 import IComissionRepository from '@modules/finances/repositories/IComissionRepository';
 import { calculate_vgv } from '@shared/utils/calculate_vgv';
+import formated_strings from '@shared/utils/formated_strings';
 
 @injectable()
 class SellersDashboardService {
@@ -144,6 +145,23 @@ class SellersDashboardService {
       }
     });
 
+    // Por Bairro
+    const all_neighborhoods = sales_paid.map(sale => formated_strings(sale.realty.neighborhood));
+    const neighborhoods = all_neighborhoods.filter(
+      (neighbor, index) => all_neighborhoods.indexOf(neighbor) === index
+    ).sort();
+
+    const quantity_neighborhoods = neighborhoods.map(neighbor => {
+      const quantity = sales_paid.filter(
+        sale => formated_strings(sale.realty.neighborhood) === neighbor
+      ).length;
+
+      return {
+        neighborhood: neighbor,
+        quantity: quantity
+      }
+    }).sort((a ,b) => b.quantity - a.quantity);
+
     /* perfil do cliente comprador */
     // GENERO
     const genders = ["FEMININO", "MASCULINO", "OUTRO"].map(
@@ -203,7 +221,6 @@ class SellersDashboardService {
       }
     });
 
-
     return {
       quantity: {
         sales: sales_sellers.length,
@@ -237,6 +254,7 @@ class SellersDashboardService {
         },
         origins: origin_sales,
         properties: properties_sales,
+        neighborhoods: quantity_neighborhoods,
       },
       client: {
         genders: genders,

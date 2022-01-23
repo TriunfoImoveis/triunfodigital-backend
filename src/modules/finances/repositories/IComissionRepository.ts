@@ -6,4 +6,8 @@ export default interface IComissionRepository {
         user_id: string,
         date: string,
     ): Promise<Comission[]>;
+    findBySubsidiary(
+        subsidiary_id: string,
+        date: string,
+    ): Promise<Comission[]>;
 }
