@@ -11,7 +11,7 @@ const CURRENT_YEAR = new Date().getFullYear()
 dashboardRouter.get('/sellers', celebrate({
   [Segments.QUERY]: {
     user: Joi.string().uuid().required(),
-    year: Joi.number().min(2020).max(CURRENT_YEAR).default(CURRENT_YEAR),
+    ano: Joi.number().min(2020).max(CURRENT_YEAR).default(CURRENT_YEAR),
   },
 }), dashboardController.dashboard_sellers);
 

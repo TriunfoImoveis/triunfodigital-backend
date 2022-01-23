@@ -8,13 +8,13 @@ class DashboardController {
   async dashboard_sellers(request: Request, response: Response): Promise<Response> {
     const {
       user,
-      year,
+      ano,
     } = request.query;
 
     const sellerDashboardService = container.resolve(SellersDashboardService);
     const sellerDashboard = await sellerDashboardService.execute({
       corretor: user as string,
-      ano: Number(year),
+      ano: Number(ano),
     });
 
     return response.json(sellerDashboard);
