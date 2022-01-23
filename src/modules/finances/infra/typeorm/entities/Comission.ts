@@ -8,6 +8,7 @@ import {
 
 import User from "@modules/users/infra/typeorm/entities/User";
 import Calculator from "./Calculator";
+import Subsidiary from "@modules/organizations/infra/typeorm/entities/Subsidiary";
 
 export enum ParticipantType {
   VEN = "VENDEDOR",
@@ -47,6 +48,10 @@ class Comission {
   @ManyToOne(type => User, {nullable: true})
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @ManyToOne(type => Subsidiary, {nullable: true})
+  @JoinColumn({ name: 'subsidiary_id' })
+  subsidiary: Subsidiary;
 }
 
 export default Comission;

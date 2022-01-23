@@ -49,6 +49,7 @@ calculationRoutes.post('/', celebrate({
         tax_value: Joi.number().min(0).messages(validatorFields({name: "'valor do imposto'"})),
         comission_liquid: Joi.number().min(0).required().messages(validatorFields({name: "'comissão liquida'"})),
         user: Joi.string().uuid().messages(validatorFields({name: "'usuário participante'"})),
+        subsidiary: Joi.string().uuid().messages(validatorFields({name: "'empresa participante'"})),
       }).required(),
     ).min(3).required().messages(validatorFields({name: "'comissões dos participantes'", min: 3})),
     pay_date: Joi.date().iso().default(new Date()).messages(validatorFields({name: "'data de pagamento'"})),
