@@ -11,14 +11,14 @@ class DeleteDespesaService {
     private despesasRepository: IDespesaRepository,
   ) {}
 
-  public async execute(id: string): Promise<void> {
-    const despesa = await this.despesasRepository.findById(id);
+  public async execute(ids: string[]): Promise<void> {
+    ids.forEach(async (id) => {
+      const despesa = await this.despesasRepository.findById(id);
 
-    if (!despesa) {
-        throw new AppError("Item não encontrado.", 404);
-    }
-
-    await this.despesasRepository.delete(id);
+      if (despesa) {
+        await this.despesasRepository.delete(id);
+      }
+    });
   }
 }
 

@@ -81,10 +81,10 @@ class ExpenseController {
   }
 
   async delete(request: Request, response: Response): Promise<Response> {
-    const {id} = request.params;
+    const { ids } = request.body;
 
     const deleteExpenseService = container.resolve(DeleteExpenseService);
-    await deleteExpenseService.execute(id);
+    await deleteExpenseService.execute(ids);
 
     return response.status(204).send();
   }
