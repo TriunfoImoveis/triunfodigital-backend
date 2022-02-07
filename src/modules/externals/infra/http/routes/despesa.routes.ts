@@ -98,10 +98,12 @@ despesaRouter.put(
 );
 
 despesaRouter.delete(
-    '/:id',
+    '/',
     celebrate({
-        [Segments.PARAMS]: {
-            id: Joi.string().uuid(),
+        [Segments.BODY]: {
+            ids: Joi.array().min(1).items(
+                Joi.string().uuid()
+            ).required(),
         },
     }),
     despesaController.delete,

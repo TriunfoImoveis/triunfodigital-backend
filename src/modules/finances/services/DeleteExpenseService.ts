@@ -11,14 +11,14 @@ class DeleteExpenseService {
     private expenseRepository: IExpenseRepository,
   ) {}
 
-  public async execute(id: string): Promise<void> {
-    const expenseExists = await this.expenseRepository.findById(id);
+  public async execute(ids: string[]): Promise<void> {
+    ids.forEach(async (id) => {
+      const expenseExists = await this.expenseRepository.findById(id);
 
-    if (!expenseExists) {
-      throw new AppError("Despesa não existe.", 404);
-    }
-    
-    await this.expenseRepository.delete(id);
+      if (expenseExists) {
+        await this.expenseRepository.delete(id);
+      }
+    });
   }
 }
 
