@@ -100,10 +100,8 @@ despesaRouter.put(
 despesaRouter.delete(
     '/',
     celebrate({
-        [Segments.BODY]: {
-            ids: Joi.array().min(1).items(
-                Joi.string().uuid()
-            ).required(),
+        [Segments.QUERY]: {
+            ids: Joi.string().required(),
         },
     }),
     despesaController.delete,

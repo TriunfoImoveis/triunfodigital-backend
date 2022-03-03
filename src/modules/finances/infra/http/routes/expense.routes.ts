@@ -111,10 +111,8 @@ expenseRoutes.put('/:id', celebrate({
 }), expenseController.update);
 
 expenseRoutes.delete('/', celebrate({
-  [Segments.BODY]: {
-    ids: Joi.array().min(1).items(
-        Joi.string().uuid()
-    ).required(),
+  [Segments.QUERY]: {
+    ids: Joi.string().required(),
   }
 }), expenseController.delete);
 
