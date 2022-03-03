@@ -1,9 +1,15 @@
 export default interface IResponseSellersDashboardDTO {
-    quantity_sales: number,
     ticket_medium: number,
-    comission: number,
+    comission: {
+        total: number,
+        months: {
+            month: string,
+            comission: number
+        }[],
+    },
     vgv: {
         total: number,
+        quantity: number,
         months: {
             month: string,
             vgv: number
