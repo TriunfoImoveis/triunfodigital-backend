@@ -34,6 +34,7 @@ class ComissionRepository implements IComissionRepository {
 
   async findByUser(
     user_id: string,
+    format_date: string,
     date: string,
   ): Promise<Comission[]> {
     try {
@@ -43,7 +44,7 @@ class ComissionRepository implements IComissionRepository {
         .where("comission.user_id = :user_id", {user_id: user_id})
         .andWhere(
           "to_char(calculation.pay_date, :format) = :date",
-          { format: "yyyy", date: date }
+          { format: format_date, date: date }
         )
         .getMany();
 

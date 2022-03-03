@@ -1,16 +1,19 @@
 export default interface IResponseSellersDashboardDTO {
-    quantity: {
-        sales: number,
-        captivators: number,
-    },
     ticket_medium: {
         sales: number,
         captivators: number,
     },
-    comission: number,
+    comission: {
+        total: number,
+        months: {
+            month: string,
+            comission: number
+        }[],
+    },
     vgv: {
         sales: {
             total: number,
+            quantity: number,
             months: {
                 month: string,
                 vgv: number
@@ -18,6 +21,7 @@ export default interface IResponseSellersDashboardDTO {
         },
         captivators: {
             total: number,
+            quantity: number,
             months: {
                 month: string,
                 vgv: number,
