@@ -107,6 +107,17 @@ despesaRouter.delete(
     despesaController.delete,
 );
 
-despesaRouter.get('/export/excel', despesaController.exportExcel);
+despesaRouter.get('/export/excel',
+    celebrate({
+        [Segments.QUERY]: {
+            start_date: Joi.date().iso().default(new Date(2021, 1, 1))
+                .messages(validatorFields({name: "'data inicio'"})),
+            end_date: Joi.date().iso().default(CURRENT_DATE)
+                .greater(Joi.ref('start_date'))
+                .messages(validatorFields({name: "'data fim'"})),
+        },
+    }),
+    despesaController.exportExcel,
+);
 
 export default despesaRouter;

@@ -85,9 +85,13 @@ class DespesaController {
     }
 
     async exportExcel(request: Request, response: Response): Promise<Response> {
+        const { start_date, end_date } = request.query;
     
         const exportSaleService = container.resolve(ExportDespesaService);
-        const link_url = await exportSaleService.execute();
+        const link_url = await exportSaleService.execute({
+            start_date: start_date as string,
+            end_date: end_date as string
+        });
     
         return response.status(201).json(link_url);
     }
