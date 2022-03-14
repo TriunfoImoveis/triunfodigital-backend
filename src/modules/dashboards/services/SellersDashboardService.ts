@@ -61,6 +61,7 @@ class SellersDashboardService {
         return {
           month: month,
           vgv: vgv,
+          quantity: sales.length
         };
       })
     );
@@ -83,24 +84,42 @@ class SellersDashboardService {
         return {
           month: month,
           vgv: vgv,
+          quantity: sales.length
         };
       })
     );
 
+    // Tick Medium
     const ticket_medium_sales = Number((vgv_sellers/12).toFixed(2));
     const ticket_medium_captivators = Number((vgv_captivators/12).toFixed(2));
 
     // Calculo de Comissões
     const comissions = await this.comissionRepository.findByUser(
       corretor, 
+      "yyyy",
       ano_formated,
     );
+    const total_comissions = comissions.reduce(
+      (total, comission) => total += Number(comission.comission_liquid), 
+    0);
+    const comissions_for_month = await Promise.all(
+      months.map(async month => {
+        const comissions = await this.comissionRepository.findByUser(
+          corretor, 
+          "yyyyMM",
+          ano_formated+month,
+        );
 
-    var total_comissions = 0;
-    comissions.forEach(
-      comission => total_comissions += Number(comission.comission_liquid)
+        const total_comission = comissions.reduce(
+          (total, comission) => total += Number(comission.comission_liquid), 
+        0);
+
+        return {
+          month: month,
+          comission: total_comission
+        };
+      })
     );
-
 
     // Vendas
     const sales = await this.salesRepository.salesForDashboard(corretor, ano_formated);
@@ -222,22 +241,23 @@ class SellersDashboardService {
     });
 
     return {
-      quantity: {
-        sales: sales_sellers.length,
-        captivators: sales_captivators.length,
-      },
       ticket_medium: {
         sales: ticket_medium_sales,
         captivators: ticket_medium_captivators,
       },
-      comission: total_comissions,
+      comission: {
+        total: total_comissions,
+        months: comissions_for_month
+      },
       vgv: {
         sales: {
           total: vgv_sellers,
+          quantity: sales_sellers.length,
           months: vgv_sellers_for_month,
         },
         captivators: {
           total: vgv_captivators,
+          quantity: sales_captivators.length,
           months: vgv_captivators_for_month,
         },
       },

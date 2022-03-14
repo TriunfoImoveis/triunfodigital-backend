@@ -8,7 +8,7 @@ import INotValidSaleDTO from '@modules/sales/dtos/INotValidSaleDTO';
 import { Status } from '@modules/sales/infra/typeorm/entities/Sale';
 import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
 import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
-import mailQueue from "@shared/container/providers/JobProvider/implementations/Queue";
+// import mailQueue from "@shared/container/providers/JobProvider/implementations/Queue";
 
 @injectable()
 class NotValidSaleService {
@@ -32,10 +32,7 @@ class NotValidSaleService {
 
     if (sale.installments.length !== 0) {
       sale.installments.forEach(async (installment)=>{
-        if (
-          (installment.status === StatusInstallment.PEN) || 
-          (installment.status === StatusInstallment.VEN)
-        ) {
+        if (installment.status !== StatusInstallment.LIQ) {
           await this.installmentsRepository.update(
             installment.id, 
             {

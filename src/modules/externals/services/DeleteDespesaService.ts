@@ -11,8 +11,10 @@ class DeleteDespesaService {
     private despesasRepository: IDespesaRepository,
   ) {}
 
-  public async execute(ids: string[]): Promise<void> {
-    ids.forEach(async (id) => {
+  public async execute(ids: string): Promise<void> {
+    const list_ids = ids.split(",");
+
+    list_ids.forEach(async (id) => {
       const despesa = await this.despesasRepository.findById(id);
 
       if (despesa) {

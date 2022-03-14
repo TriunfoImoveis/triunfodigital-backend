@@ -76,18 +76,22 @@ class DespesaController {
     }
 
     async delete(request: Request, response: Response): Promise<Response> {
-        const { ids } = request.body;
-        const deleteDespesaService = container.resolve(DeleteDespesaService);
+        const { ids } = request.query;
 
-        await deleteDespesaService.execute(ids);
+        const deleteDespesaService = container.resolve(DeleteDespesaService);
+        await deleteDespesaService.execute(ids as string);
 
         return response.status(204).send();
     }
 
     async exportExcel(request: Request, response: Response): Promise<Response> {
+        const { start_date, end_date } = request.query;
     
         const exportSaleService = container.resolve(ExportDespesaService);
-        const link_url = await exportSaleService.execute();
+        const link_url = await exportSaleService.execute({
+            start_date: start_date as string,
+            end_date: end_date as string
+        });
     
         return response.status(201).json(link_url);
     }

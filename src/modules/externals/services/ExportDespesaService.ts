@@ -5,6 +5,11 @@ import IDespesaRepository from "@modules/externals/repositories/IDespesaReposito
 import IExpenseRepository from "@modules/finances/repositories/IExpenseRepository";
 import IStorageProvider from "@shared/container/providers/StorageProvider/models/IStorageProvider";
 
+
+interface IRequestDTO {
+  start_date: string;
+  end_date: string;
+}
 interface IResponseDTO {
   link_url: string;
 }
@@ -22,9 +27,21 @@ class ExportDespesaService {
     private storagePrivider: IStorageProvider,
   ) {}
 
-  public async execute(): Promise<IResponseDTO | undefined> {
-    const despesas = await this.despesasRepository.findAll();
-    const expenses = await this.expenseRepository.findByStatus("PAGO");
+  public async execute({
+    start_date, end_date
+  }: IRequestDTO): Promise<IResponseDTO | undefined> {
+    const despesas = await this.despesasRepository.findByFilters({
+      escritorio: "%",
+      conta: "%",
+      data_inicio: start_date,
+      data_fim: end_date
+    });
+    const expenses = await this.expenseRepository.findByFilters({
+      escritorio: "%",
+      conta: "%",
+      data_inicio: start_date,
+      data_fim: end_date
+    });
 
     const workSheetColumnNames = [
       { header: 'FILIAL', key: 'subsidiary', width: 20 },

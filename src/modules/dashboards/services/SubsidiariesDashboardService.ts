@@ -65,13 +65,30 @@ class SubsidiariesDashboardService {
 
     // Comissão
     const comissions = await this.comissionRepository.findBySubsidiary(
-      subsidiary, 
+      subsidiary,
+      "yyyy", 
       year_formated,
     );
+    const total_comissions = comissions.reduce(
+      (total, comission) => total += Number(comission.comission_liquid), 0
+    );
+    const comissions_for_month = await Promise.all(
+      months.map(async month => {
+        const comissions = await this.comissionRepository.findBySubsidiary(
+          subsidiary, 
+          "yyyyMM",
+          year_formated+month,
+        );
 
-    var total_comissions = 0;
-    comissions.forEach(
-      comission => total_comissions += Number(comission.comission_liquid)
+        const total_comission = comissions.reduce(
+          (total, comission) => total += Number(comission.comission_liquid), 
+        0);
+
+        return {
+          month: month,
+          comission: total_comission
+        };
+      })
     );
 
     // Vgv por mes
@@ -204,11 +221,14 @@ class SubsidiariesDashboardService {
 
 
     return {
-      quantity_sales: QUANTITY_SALES,
       ticket_medium: ticket_medium,
-      comission: total_comissions,
+      comission: {
+        total: total_comissions,
+        months: comissions_for_month
+      },
       vgv: {
         total: vgv_total,
+        quantity: QUANTITY_SALES,
         months: vgv_for_month,
       },
       sales: {
