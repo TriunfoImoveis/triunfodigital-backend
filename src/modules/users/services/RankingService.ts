@@ -43,13 +43,24 @@ class RankingService {
       var dateFormated = date;
     }
 
-    // Verifica se é ranking de Corretores ou Captadores e filtra os usuários
-    var users = await this.usersRepository.findUsers({
+    // Busca usuarios Corretores
+    const usersSellers = await this.usersRepository.findUsers({
       city,
       office: "Corretor",
       departament: "%",
       name: "%"
     });
+
+    // Busca usuarios Coordenadores
+    const usersCoordinators = await this.usersRepository.findUsers({
+      city,
+      office: "Coordenador",
+      departament: "%",
+      name: "%"
+    });
+
+    var users = usersSellers.concat(usersCoordinators);
+
     // Gera o ranking e VGV de cada usuário (Corretores ou captadores)
     var ranking: IResponseRankingDTO[];
     if (user === "Captador") {
