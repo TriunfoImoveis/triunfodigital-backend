@@ -40,7 +40,7 @@ class Client {
   @Column({ type: 'varchar', length: 150 })
   email: string;
 
-  @Column({ type: 'varchar', length: 11 })
+  @Column({ type: 'varchar', length: 11, nullable: true })
   phone: string;
 
   @Column({ type: 'varchar', length: 14, nullable: true })

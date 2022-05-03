@@ -73,7 +73,7 @@ saleRoutes.post('/new', celebrate({
       }),
       email: Joi.string().email().required()
         .messages(validatorFields({name: "'email do comprador'"})),
-      phone: Joi.string().pattern(/^[0-9]{11,11}$/).required()
+      phone: Joi.string().pattern(/^[0-9]{11,11}$/)
         .messages(validatorFields({name: "'telefone do comprador'", max: 11})),
       whatsapp: Joi.string().messages(validatorFields({name: "'whatsapp do comprador'"})),
       date_birth: Joi.date().iso().messages(
@@ -169,7 +169,7 @@ saleRoutes.post('/used', celebrate({
       }),
       email: Joi.string().email().required()
         .messages(validatorFields({name: "'email do comprador'"})),
-      phone: Joi.string().pattern(/^[0-9]{11,11}$/).required()
+      phone: Joi.string().pattern(/^[0-9]{11,11}$/)
         .messages(validatorFields({name: "'telefone do comprador'", max: 11})),
       whatsapp: Joi.string().messages(validatorFields({name: "'whatsapp do comprador'"})),
       date_birth: Joi.date().iso()
@@ -208,7 +208,7 @@ saleRoutes.post('/used', celebrate({
       }),
       email: Joi.string().email().required()
         .messages(validatorFields({name: "'email do vendedor'"})),
-      phone: Joi.string().pattern(/^[0-9]{11,11}$/).required()
+      phone: Joi.string().pattern(/^[0-9]{11,11}$/)
         .messages(validatorFields({name: "'telefone do vendedor'", max: 11})),
       whatsapp: Joi.string()
         .messages(validatorFields({name: "'whatsapp do vendedor'"})),
