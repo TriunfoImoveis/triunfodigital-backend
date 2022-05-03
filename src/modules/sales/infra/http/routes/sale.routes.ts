@@ -99,8 +99,8 @@ saleRoutes.post('/new', celebrate({
     }).required().messages(validatorFields({name: "'cliente comprador'"})),
     user_coordinator: Joi.string().uuid()
       .messages(validatorFields({name: "'coordenador'"})),
-    users_directors: Joi.array().length(2).required()
-      .messages(validatorFields({name: "'diretor'", max: 2})),
+    users_directors: Joi.array().min(1).required()
+      .messages(validatorFields({name: "'diretor'", min: 1})),
     users_sellers: Joi.array().min(1).required()
       .messages(validatorFields({name: "'corretor'", min: 1})),
     value_signal: Joi.number().positive().required()
@@ -233,8 +233,8 @@ saleRoutes.post('/used', celebrate({
     }).required().messages(validatorFields({name: "'cliente vendedor'"})),
     user_coordinator: Joi.string().uuid()
       .messages(validatorFields({name: "'coordenador'"})),
-    users_directors: Joi.array().length(2).required()
-      .messages(validatorFields({name: "'diretor'", max: 2})),
+    users_directors: Joi.array().min(1).required()
+      .messages(validatorFields({name: "'diretor'", min: 1})),
     users_captivators: Joi.array().min(1).required()
       .messages(validatorFields({name: "'captador'", min: 1})),
     users_sellers: Joi.array().min(1).required()
