@@ -1,11 +1,8 @@
 import { inject, injectable } from 'tsyringe';
-import { format, parseISO } from 'date-fns';
-import path from 'path';
 
 import AppError from '@shared/errors/AppError';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import { Status } from '@modules/sales/infra/typeorm/entities/Sale';
-import mailQueue from "@shared/container/providers/JobProvider/implementations/Queue";
 import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
 
 @injectable()
@@ -59,51 +56,6 @@ class ValidSaleService {
     }
 
     await this.salesRepository.validSale(id, status);
-    
-
-    // Envia e-mail para os corretores da venda.
-    // let listEmails: string[] = [];
-    // sale.sale_has_sellers.map(user => {
-    //   if (user.validated_account) {
-    //     listEmails.push(user.email);
-    //   }
-    // });
-
-    // Verifica se existem e-mails confirmados e faz o processo de envio dos e-mails
-    // if (listEmails.length > 0) {
-    //   const pathSaleTemplate = path.resolve(
-    //     __dirname, 
-    //     '..', 
-    //     'views',
-    //     'valid_sale.hbs'
-    //   );
-
-    //   const nameSellers = sale.sale_has_sellers.map(seller => {
-    //     return seller.name;
-    //   });
-
-    //   const dateFormated = format(parseISO(sale.sale_date.toString()), 'dd/MM/yyyy');
-
-      // Adicionar job ValidSaleJob na fila
-      // await mailQueue.add('ValidSaleJob', 
-      //   {
-      //     to_users: listEmails.toString(),
-      //     subject: "[Triunfo Digital] Venda Validada",
-      //     file: pathSaleTemplate,
-      //     variables: {
-      //       type: sale.sale_type,
-      //       date: dateFormated,
-      //       enterprise: sale.realty.enterprise,
-      //       value: Number(sale.realty_ammount).toLocaleString(
-      //         'pt-BR', { 
-      //           style: 'currency', 
-      //           currency: 'BRL' 
-      //         }
-      //       ),
-      //       sellers: nameSellers,
-      //   }
-      // });
-    // }
   }
 }
 

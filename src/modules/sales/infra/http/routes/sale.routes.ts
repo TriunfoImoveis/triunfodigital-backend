@@ -73,7 +73,7 @@ saleRoutes.post('/new', celebrate({
       }),
       email: Joi.string().email().required()
         .messages(validatorFields({name: "'email do comprador'"})),
-      phone: Joi.string().pattern(/^[0-9]{11,11}$/).required()
+      phone: Joi.string().pattern(/^[0-9]{11,11}$/)
         .messages(validatorFields({name: "'telefone do comprador'", max: 11})),
       whatsapp: Joi.string().messages(validatorFields({name: "'whatsapp do comprador'"})),
       date_birth: Joi.date().iso().messages(
@@ -99,8 +99,8 @@ saleRoutes.post('/new', celebrate({
     }).required().messages(validatorFields({name: "'cliente comprador'"})),
     user_coordinator: Joi.string().uuid()
       .messages(validatorFields({name: "'coordenador'"})),
-    users_directors: Joi.array().length(2).required()
-      .messages(validatorFields({name: "'diretor'", max: 2})),
+    users_directors: Joi.array().min(1).required()
+      .messages(validatorFields({name: "'diretor'", min: 1})),
     users_sellers: Joi.array().min(1).required()
       .messages(validatorFields({name: "'corretor'", min: 1})),
     value_signal: Joi.number().positive().required()
@@ -169,7 +169,7 @@ saleRoutes.post('/used', celebrate({
       }),
       email: Joi.string().email().required()
         .messages(validatorFields({name: "'email do comprador'"})),
-      phone: Joi.string().pattern(/^[0-9]{11,11}$/).required()
+      phone: Joi.string().pattern(/^[0-9]{11,11}$/)
         .messages(validatorFields({name: "'telefone do comprador'", max: 11})),
       whatsapp: Joi.string().messages(validatorFields({name: "'whatsapp do comprador'"})),
       date_birth: Joi.date().iso()
@@ -208,7 +208,7 @@ saleRoutes.post('/used', celebrate({
       }),
       email: Joi.string().email().required()
         .messages(validatorFields({name: "'email do vendedor'"})),
-      phone: Joi.string().pattern(/^[0-9]{11,11}$/).required()
+      phone: Joi.string().pattern(/^[0-9]{11,11}$/)
         .messages(validatorFields({name: "'telefone do vendedor'", max: 11})),
       whatsapp: Joi.string()
         .messages(validatorFields({name: "'whatsapp do vendedor'"})),
@@ -233,8 +233,8 @@ saleRoutes.post('/used', celebrate({
     }).required().messages(validatorFields({name: "'cliente vendedor'"})),
     user_coordinator: Joi.string().uuid()
       .messages(validatorFields({name: "'coordenador'"})),
-    users_directors: Joi.array().length(2).required()
-      .messages(validatorFields({name: "'diretor'", max: 2})),
+    users_directors: Joi.array().min(1).required()
+      .messages(validatorFields({name: "'diretor'", min: 1})),
     users_captivators: Joi.array().min(1).required()
       .messages(validatorFields({name: "'captador'", min: 1})),
     users_sellers: Joi.array().min(1).required()
@@ -418,10 +418,10 @@ saleRoutes.put('/:id', celebrate({
       .messages(validatorFields({name: "'data de pagamento do sinal'"})),
     observation: Joi.string().messages(validatorFields({name: "'observação'"})),
     status: Joi.string().valid(
-      'PENDENTE', 'PAGO_TOTAL'
+      'NAO_VALIDADO', 'PENDENTE', 'PAGO_TOTAL'
     ).messages(validatorFields({
       name: "'status'",
-      ref: "[PENDENTE, PAGO_TOTAL]"
+      ref: "[NAO_VALIDADO, PENDENTE, PAGO_TOTAL]"
     })),
   }
 }), saleController.update);
