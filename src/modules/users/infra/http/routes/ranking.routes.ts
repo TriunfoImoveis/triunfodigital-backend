@@ -14,7 +14,7 @@ rankingRouter.use(ensuredAuthenticated);
 
 rankingRouter.get('/', celebrate({
   [Segments.QUERY]: {
-    year: Joi.number().min(2020).max(CURRENT_YEAR).default(CURRENT_YEAR),
+    year: Joi.number().default(CURRENT_YEAR),
     month: Joi.number().min(1).max(12).optional()
       .messages(
         validatorFields({name: "'Mês'", min: 1, max: 12})
