@@ -17,6 +17,13 @@ class OriginController {
 
     return response.json(newOrigin);
   }
+  async delete(request: Request, response: Response): Promise<Response> {
+    const id = request.params?.id;
+    const originsRepository = new OriginsRepository();
+    await originsRepository.delete(id);
+
+    return response.status(204).send();
+  }
 }
 
 export default OriginController;

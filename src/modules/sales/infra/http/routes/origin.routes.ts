@@ -19,5 +19,10 @@ originRoutes.post('/', celebrate({
       .messages(validatorFields({name: "'nome'"})),
   }
 }), originController.create);
+originRoutes.post('/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().required(),
+  }
+}), originController.delete);
 
 export default originRoutes;
