@@ -6,6 +6,11 @@ import OriginSale from "@modules/sales/infra/typeorm/entities/OriginSale";
 import ICreateOriginDTO from "@modules/sales/dtos/ICreateOriginDTO";
 import { response } from "express";
 
+interface UpdateData {
+  id: string,
+  name: string
+}
+
 class OriginsRepository implements IOriginRepository {
   private ormRepository: Repository<OriginSale>;
 
@@ -14,6 +19,19 @@ class OriginsRepository implements IOriginRepository {
   }
 
   async findAll(): Promise<OriginSale[]> {
+    try {
+      const origins = await this.ormRepository.find({
+        order: {
+          name: "ASC",
+        },
+      });
+
+      return origins;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+  async findAllActive(): Promise<OriginSale[]> {
     try {
       const origins = await this.ormRepository.find({
         where: {
@@ -50,13 +68,46 @@ class OriginsRepository implements IOriginRepository {
       throw new AppError(err.detail);
     }
   }
-  async delete(id: string): Promise<void> {
+  async update({id, name}: UpdateData): Promise<OriginSale> {
     try {
-      const origin = this.ormRepository.findOne(id);
+      const origin = await this.ormRepository.findOne(id);
+      const updateOrigin = {
+        ...origin,
+        name
+      }
+
+      const updatedOrigin = await this.ormRepository.save(updateOrigin);
+
+      return updatedOrigin;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async active(id: string): Promise<void> {
+    try {
+      const origin = await this.ormRepository.findOne(id);
+      const activateOrigin = {
+        ...origin,
+        active: true
+      }
+
+      await this.ormRepository.save(activateOrigin);
+
+      return;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async deactivate(id: string): Promise<void> {
+    try {
+      const origin = await this.ormRepository.findOne(id);
       const desativatedOrigin = {
         ...origin,
         active: false
       }
+
       await this.ormRepository.save(desativatedOrigin);
 
       return;

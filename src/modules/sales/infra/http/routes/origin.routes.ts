@@ -10,6 +10,7 @@ const originRoutes = Router();
 const originController = new OriginController();
 
 originRoutes.get('/', originController.index);
+originRoutes.get('/all', originController.showAll);
 
 originRoutes.use(ensuredAthenticated);
 
@@ -19,10 +20,27 @@ originRoutes.post('/', celebrate({
       .messages(validatorFields({name: "'nome'"})),
   }
 }), originController.create);
-originRoutes.post('/:id', celebrate({
+
+originRoutes.put('/update/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().required(),
+  },
+  [Segments.BODY]: {
+    name: Joi.string().required()
+      .messages(validatorFields({name: "'nome'"})),
+  }
+}), originController.update);
+
+originRoutes.put('/active/:id', celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().required(),
   }
-}), originController.delete);
+}), originController.activate);
+
+originRoutes.put('/deactivate/:id', celebrate({
+  [Segments.PARAMS]: {
+    id: Joi.string().required(),
+  }
+}), originController.deactivate);
 
 export default originRoutes;
