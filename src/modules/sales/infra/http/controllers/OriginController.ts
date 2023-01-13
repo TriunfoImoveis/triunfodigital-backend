@@ -5,6 +5,13 @@ import OriginsRepository from "@modules/sales/infra/typeorm/repositories/OriginR
 class OriginController {
   async index(request: Request, response: Response): Promise<Response> {
     const originsRepository = new OriginsRepository();
+    const origins = await originsRepository.findAllActive();
+
+    return response.json(origins);
+  }
+
+  async showAll(request: Request, response: Response): Promise<Response> {
+    const originsRepository = new OriginsRepository();
     const origins = await originsRepository.findAll();
 
     return response.json(origins);
@@ -17,10 +24,25 @@ class OriginController {
 
     return response.json(newOrigin);
   }
-  async delete(request: Request, response: Response): Promise<Response> {
-    const id = request.params?.id;
+  async update(request: Request, response: Response): Promise<Response> {
+    const {id} = request.params;
+    const { name } = request.body;
     const originsRepository = new OriginsRepository();
-    await originsRepository.delete(id);
+    const updated = await originsRepository.update({id, name});
+
+    return response.json(updated);
+  }
+  async activate(request: Request, response: Response): Promise<Response> {
+    const {id} = request.params;
+    const originsRepository = new OriginsRepository();
+    await originsRepository.active(id);
+
+    return response.status(204).send();
+  }
+  async deactivate(request: Request, response: Response): Promise<Response> {
+    const {id} = request.params;
+    const originsRepository = new OriginsRepository();
+    await originsRepository.deactivate(id);
 
     return response.status(204).send();
   }
