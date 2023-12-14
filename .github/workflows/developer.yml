@@ -10,24 +10,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
-      #Instalar Node 
+
+      #Instalar Node
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.2
-        with: 
+        with:
           key: 12.x
-          
-      #Instalar dependências NPM/Yarn 
+
+      #Instalar dependências NPM/Yarn
       - name: Install dependencies
         run: yarn
-      
+
       #Executar a build
       - name: Run build
         run: yarn build
-    
+
     #Copia os arquivos para o servidor
       - name: copy files to Digital Ocean
-        uses: appleboy/scp-action@master
+        uses: appleboy/scp-action@v0.1.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -35,9 +35,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: ".,!node_modules"
           target: "~/app/developer"
-          
-      #Instala as dependencias, roda as migrations e restar do servidor    
-      - name: Instala as Depependências no Servidor 
+
+      #Instala as dependencias, roda as migrations e restar do servidor
+      - name: Instala as Depependências no Servidor
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -50,4 +50,4 @@ jobs:
             ./node_modules/.bin/typeorm migration:run
             pm2 restart api-dev
             pm2 restart job-dev
-     
+
