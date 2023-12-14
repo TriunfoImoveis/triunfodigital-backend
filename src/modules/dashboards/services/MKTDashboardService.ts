@@ -15,9 +15,9 @@ class SellersDashboardService {
     const sales_sellers = await this.salesRepository.findAllWithoutFilters();
 
     const mktSales = sales_sellers.map(sale => {
-      const directores = sale.users_directors.map(director => director.name).join(',')
-      const captivators = sale.sale_has_captivators.map(captivator => captivator.name).join(',')
-      const selers = sale.sale_has_sellers.map(seller => seller?.name).join(',')
+      const directores = sale.users_directors ? sale.users_directors.map(director => director.name).join(',') : '';
+      const captivators = sale.sale_has_captivators ? sale.sale_has_captivators.map(captivator => captivator.name).join(',') : '';
+      const selers =  sale.sale_has_sellers ? sale.sale_has_sellers.map(seller => seller.name).join(',') : '';
       return {
         'FILIAL': sale.realty.city,
         'TIPO DE VENDA': sale.sale_type,
