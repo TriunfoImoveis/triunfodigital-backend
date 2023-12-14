@@ -22,4 +22,6 @@ dashboardRouter.get('/subsidiaries', celebrate({
   },
 }), dashboardController.dashboard_subsidiaries);
 
+dashboardRouter.get('/mkt/sales', dashboardController.dashboard_mkt)
+
 export default dashboardRouter;
