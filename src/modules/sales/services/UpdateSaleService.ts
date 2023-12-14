@@ -33,12 +33,12 @@ class UpdateSaleService {
      } else if (saleExists.status === Status.CA) {
       throw new AppError(`Venda com o Status de ${saleExists.status} não pode ser atualizada.`, 400);
     }
-    
+
     // Atualizar o imóvel
     if (body.realty) {
       const realty = saleExists.realty;
       await this.realtiesRepository.update(
-        realty.id, 
+        realty.id,
         body.realty
       );
       delete body.realty;
@@ -48,7 +48,7 @@ class UpdateSaleService {
     if (body.client_buyer) {
       if (body.client_buyer.date_birth) {
         const ajusted_date = add(
-          body.client_buyer.date_birth, 
+          body.client_buyer.date_birth,
           {hours: 3}
         )
         body.client_buyer.date_birth = ajusted_date;
@@ -56,7 +56,7 @@ class UpdateSaleService {
 
       const client_buyer = saleExists.client_buyer;
       await this.clientsRepository.update(
-        client_buyer.id, 
+        client_buyer.id,
         body.client_buyer
       );
       delete body.client_buyer;
@@ -66,7 +66,7 @@ class UpdateSaleService {
     if (body.client_seller) {
       if (body.client_seller.date_birth) {
         const ajusted_date = add(
-          body.client_seller.date_birth, 
+          body.client_seller.date_birth,
           {hours: 3}
         )
         body.client_seller.date_birth = ajusted_date;
@@ -74,7 +74,7 @@ class UpdateSaleService {
 
       const client_seller = saleExists.client_seller;
       await this.clientsRepository.update(
-        client_seller.id, 
+        client_seller.id,
         body.client_seller
       );
       delete body.client_seller;
@@ -84,19 +84,18 @@ class UpdateSaleService {
     if (Object.keys(body).length !== 0) {
       if (body.sale_date) {
         const ajusted_date = add(
-          body.sale_date, 
+          body.sale_date,
           {hours: 3}
         )
         body.sale_date = ajusted_date;
       }
       if (body.pay_date_signal) {
         const ajusted_date = add(
-          body.pay_date_signal, 
+          body.pay_date_signal,
           {hours: 3}
         )
         body.pay_date_signal = ajusted_date;
       }
-
       await this.salesRepository.update(id, body);
     }
   }
