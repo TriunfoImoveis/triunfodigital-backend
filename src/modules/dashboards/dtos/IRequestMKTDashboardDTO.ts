@@ -1,7 +1,7 @@
-import Sale, { Status } from "@modules/sales/infra/typeorm/entities/Sale";
 
 interface MKTSales {
   'FILIAL': string,
+  'CIDADE': string,
   'TIPO DE VENDA': string,
   'DATA DA VENDA': Date,
   'VALOR DA VENDA': Number,
