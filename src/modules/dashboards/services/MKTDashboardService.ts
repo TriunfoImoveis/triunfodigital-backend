@@ -1,5 +1,4 @@
 import { inject, injectable } from 'tsyringe';
-import { differenceInYears } from 'date-fns';
 
 import IRequestMKTDashboardDTO from '@modules/dashboards/dtos/IRequestMKTDashboardDTO';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
@@ -19,7 +18,8 @@ class SellersDashboardService {
       const captivators = sale.sale_has_captivators ? sale.sale_has_captivators.map(captivator => captivator.name).join(',') : '';
       const selers =  sale.sale_has_sellers ? sale.sale_has_sellers.map(seller => seller.name).join(',') : '';
       return {
-        'FILIAL': sale.realty.city,
+        'FILIAL': sale.realty.state,
+        'CIDADE': sale.realty.city,
         'TIPO DE VENDA': sale.sale_type,
         'DATA DA VENDA': sale.sale_date,
         'VALOR DA VENDA': sale.realty_ammount,
