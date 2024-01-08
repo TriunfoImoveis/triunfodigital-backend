@@ -37,7 +37,7 @@ class SaleRepository implements ISaleRepository {
       .leftJoinAndSelect("sale.installments", "installments")
       .innerJoinAndSelect("sellers.subsidiary", "subsidiary")
       .getMany();
-      
+
       return sales;
     } catch (err) {
       throw new AppError(err.detail);
@@ -63,14 +63,11 @@ class SaleRepository implements ISaleRepository {
       .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
       .leftJoinAndSelect("sale.motive", "motive")
       .leftJoinAndSelect("sale.installments", "installments")
-      .innerJoinAndSelect(
-        "sellers.subsidiary", "subsidiary", "subsidiary.city LIKE :city", {city: city+'%'}
-      )
       .where("sale.status = :status", {status})
       .andWhere("sellers.name ILIKE :name", { name: name+"%" })
       .orderBy("sale.sale_date", "DESC")
       .getMany();
-      
+
       return sales;
     } catch (err) {
       throw new AppError(err.detail);
@@ -105,7 +102,7 @@ class SaleRepository implements ISaleRepository {
 
 
   async createSaleNew(
-    data: ICreateSaleNewDTO, 
+    data: ICreateSaleNewDTO,
     installments: ICreateInstallmentDTO[]
   ): Promise<Sale | undefined> {
     const connection = getConnection();
@@ -235,8 +232,8 @@ class SaleRepository implements ISaleRepository {
   }
 
   async salesForUserSellers(
-    id: string, 
-    format_date: string, 
+    id: string,
+    format_date: string,
     date: string
   ): Promise<Sale[]> {
     try {
@@ -268,8 +265,8 @@ class SaleRepository implements ISaleRepository {
   }
 
   async salesForUserCaptivators(
-    id: string, 
-    format_date: string, 
+    id: string,
+    format_date: string,
     date: string
   ): Promise<Sale[]> {
     try {
@@ -301,7 +298,7 @@ class SaleRepository implements ISaleRepository {
   }
 
   async validSale(
-    id: string, 
+    id: string,
     status: Status
   ): Promise<void> {
     try {
@@ -319,7 +316,7 @@ class SaleRepository implements ISaleRepository {
       another_motive,
     } = data;
     try {
-      await this.ormRepository.update(id, { 
+      await this.ormRepository.update(id, {
         status,
         motive,
         another_motive,
@@ -332,7 +329,7 @@ class SaleRepository implements ISaleRepository {
   async validSignal(id: string, status: Boolean): Promise<void> {
     try {
       await this.ormRepository.update(
-        id, 
+        id,
         {
           payment_signal: status
         });
@@ -372,10 +369,10 @@ class SaleRepository implements ISaleRepository {
       throw new AppError(err.detail);
     }
   }
-  
+
   async salesForSubsidiary(
-    id_subsidiary: string, 
-    format_date: string, 
+    id_subsidiary: string,
+    format_date: string,
     date: string
   ): Promise<Sale[]> {
     try {
