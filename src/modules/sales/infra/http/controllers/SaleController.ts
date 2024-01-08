@@ -34,7 +34,7 @@ class SaleController {
       status: status as string,
     });
 
-    if (state && state?.length > 0) {
+    if (state && state.length > 0) {
       sales = sales.filter(sale => sale.realty.state === state)
     }
 
