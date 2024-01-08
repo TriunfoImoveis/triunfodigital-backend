@@ -13,17 +13,11 @@ class ListSaleService {
 
   public async execute({name, city, status}: IRequestSaleDTO): Promise<Sale[]> {
 
-    let listSales = []
-
-    listSales = await this.salesRepository.findAll({
+    const listSales = await this.salesRepository.findAll({
       name,
       city,
       status,
     });
-
-    if (city.length > 0) {
-      listSales = listSales.filter(sale => sale.realty.city === city)
-    }
 
     return listSales;
   }

@@ -15,17 +15,28 @@ import ShowSaleService from '@modules/sales/services/ShowSaleService';
 import ExportSaleService from '@modules/sales/services/ExportSaleService';
 import ListSaleService from '@modules/sales/services/ListSaleService';
 
+interface QueryParams {
+  name?: string;
+  city?: string;
+  status: string;
+  state?: string
+}
 class SaleController {
 
-  async index(request: Request, response: Response): Promise<Response> {
-    const {name, city, status} = request.query;
+  async index(request: Request<{}, {}, {}, QueryParams>, response: Response): Promise<Response> {
+    const {name, city, status, state} = request.query;
 
     const listSaleService = container.resolve(ListSaleService);
-    const sales = await listSaleService.execute({
+    let sales = []
+    sales = await listSaleService.execute({
       name: name as string,
       city: city as string,
       status: status as string,
     });
+
+    if (state && state?.length > 0) {
+      sales = sales.filter(sale => sale.realty.state === state)
+    }
 
     return response.json(classToClass(sales));
   }

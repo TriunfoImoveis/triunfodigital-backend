@@ -14,6 +14,7 @@ saleRoutes.get('/', celebrate({
   [Segments.QUERY]: {
     name: Joi.string().default(''),
     city: Joi.string().default(''),
+    state: Joi.string().default(''),
     status: Joi.string().valid(
       'NAO_VALIDADO', 'CAIU', 'PENDENTE', 'PAGO_TOTAL'
     ).required(),
