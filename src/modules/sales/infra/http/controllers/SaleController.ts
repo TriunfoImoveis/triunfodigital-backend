@@ -18,13 +18,15 @@ import ListSaleService from '@modules/sales/services/ListSaleService';
 class SaleController {
 
   async index(request: Request, response: Response): Promise<Response> {
-    const {name, city, status} = request.query;
+    const {name, subsidiaryId, status, month, year} = request.query;
 
     const listSaleService = container.resolve(ListSaleService);
     const sales = await listSaleService.execute({
       name: name as string,
-      city: city as string,
+      subsidiaryId: subsidiaryId as string,
       status: status as string,
+      month: month as string,
+      year: year as string,
     });
 
     return response.json(classToClass(sales));

@@ -13,12 +13,12 @@ const saleController = new SaleController();
 saleRoutes.get('/', celebrate({
   [Segments.QUERY]: {
     name: Joi.string().default(''),
-    city: Joi.string().default('').valid(
-      'São Luís', 'Fortaleza', 'Teresina'
-    ),
+    subsidiaryId: Joi.string().default(''),
+    month: Joi.string().default(''),
+    year: Joi.string().default(''),
     status: Joi.string().valid(
       'NAO_VALIDADO', 'CAIU', 'PENDENTE', 'PAGO_TOTAL'
-    ).required(),
+    ).default(''),
   }
 }), saleController.index);
 
@@ -85,14 +85,14 @@ saleRoutes.post('/new', celebrate({
       civil_status: Joi.string().valid(
           'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
         ).messages(validatorFields({
-          name: "'estado civil do comprador'", 
+          name: "'estado civil do comprador'",
           ref: "[CASADO(A), DIVORCIADO(A), SOLTEIRO(A), VIUVO(A)]"
         })),
       number_children: Joi.number().integer().min(0)
         .messages(validatorFields({name: "'nº de filhos do comprador'", min: 0})),
       gender: Joi.string().valid('MASCULINO', 'FEMININO', 'OUTRO')
         .messages(validatorFields({
-          name: "'gênero do comprador'", 
+          name: "'gênero do comprador'",
           ref: "[MASCULINO, FEMININO, OUTRO]"
         })),
       address: Joi.string().messages(validatorFields({name: "'endereço do comprador'"})),
@@ -179,14 +179,14 @@ saleRoutes.post('/used', celebrate({
       civil_status: Joi.string().valid(
           'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
         ).messages(validatorFields({
-          name: "'estado civil do comprador'", 
+          name: "'estado civil do comprador'",
           ref: "[CASADO(A), DIVORCIADO(A), SOLTEIRO(A), VIUVO(A)]"
         })),
       number_children: Joi.number().integer().min(0)
         .messages(validatorFields({name: "'nº de filhos do comprador'", min: 0})),
       gender: Joi.string().valid('MASCULINO', 'FEMININO', 'OUTRO')
         .messages(validatorFields({
-          name: "'gênero do comprador'", 
+          name: "'gênero do comprador'",
           ref: "[MASCULINO, FEMININO, OUTRO]"
         })),
       address: Joi.string().messages(validatorFields({name: "'endereço do comprador'"})),
@@ -219,14 +219,14 @@ saleRoutes.post('/used', celebrate({
       civil_status: Joi.string().valid(
           'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
         ).messages(validatorFields({
-          name: "'estado civil do vendedor'", 
+          name: "'estado civil do vendedor'",
           ref: "[CASADO(A), DIVORCIADO(A), SOLTEIRO(A), VIUVO(A)]"
         })),
       number_children: Joi.number().integer().min(0)
         .messages(validatorFields({name: "'nº de filhos do vendedor'", min: 0})),
       gender: Joi.string().valid('MASCULINO', 'FEMININO', 'OUTRO')
         .messages(validatorFields({
-          name: "'gênero do vendedor'", 
+          name: "'gênero do vendedor'",
           ref: "[MASCULINO, FEMININO, OUTRO]"
         })),
       address: Joi.string().messages(validatorFields({name: "'endereço do vendedor'"})),
@@ -350,14 +350,14 @@ saleRoutes.put('/:id', celebrate({
           'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
         )
         .messages(validatorFields({
-          name: "'estado civil do comprador'", 
+          name: "'estado civil do comprador'",
           ref: "[CASADO(A), DIVORCIADO(A), SOLTEIRO(A), VIUVO(A)]"
         })),
       number_children: Joi.number().integer().min(0)
         .messages(validatorFields({name: "'nº de filhos do comprador'", min: 0})),
       gender: Joi.string().valid('MASCULINO', 'FEMININO', 'OUTRO')
         .messages(validatorFields({
-          name: "'gênero do comprador'", 
+          name: "'gênero do comprador'",
           ref: "[MASCULINO, FEMININO, OUTRO]"
         })),
       address: Joi.string().messages(validatorFields({name: "'endereço do comprador'"})),
@@ -392,14 +392,14 @@ saleRoutes.put('/:id', celebrate({
           'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
         )
         .messages(validatorFields({
-          name: "'estado civil do vendedor'", 
+          name: "'estado civil do vendedor'",
           ref: "[CASADO(A), DIVORCIADO(A), SOLTEIRO(A), VIUVO(A)]"
         })),
       number_children: Joi.number().integer().min(0)
         .messages(validatorFields({name: "'nº de filhos do vendedor'", min: 0})),
       gender: Joi.string().valid('MASCULINO', 'FEMININO', 'OUTRO')
         .messages(validatorFields({
-          name: "'gênero do vendedor'", 
+          name: "'gênero do vendedor'",
           ref: "[MASCULINO, FEMININO, OUTRO]"
         })),
       address: Joi.string().messages(validatorFields({name: "'endereço do vendedor'"})),
