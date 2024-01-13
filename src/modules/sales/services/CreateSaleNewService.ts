@@ -40,13 +40,14 @@ class CreateSaleNewService {
     value_signal,
     pay_date_signal,
     observation,
+    subsidiary_id
   }: ICreateSaleNewDTO, installments: ICreateInstallmentDTO[]): Promise<Sale> {
 
     var totalValueInstallments = 0;
     installments.map(
       (installment) => {
         installment.due_date = add(
-          installment.due_date, 
+          installment.due_date,
           {hours: 3}
         )
         totalValueInstallments += Number(installment.value);
@@ -55,7 +56,7 @@ class CreateSaleNewService {
     // Comparar o total das parcelas com o valor da comissão.
     if (totalValueInstallments > commission) {
       throw new AppError(
-        "O valor total das parcelas não pode ser maior que o valor da comissão.", 
+        "O valor total das parcelas não pode ser maior que o valor da comissão.",
         400
       );
     }
@@ -81,6 +82,7 @@ class CreateSaleNewService {
       value_signal,
       pay_date_signal: ajusted_date_signal,
       observation,
+      subsidiary_id
     }, installments);
 
     if (sale) {
@@ -109,8 +111,8 @@ class CreateSaleNewService {
           });
 
           const pathSaleTemplate = path.resolve(
-            __dirname, 
-            '..', 
+            __dirname,
+            '..',
             'views',
             'register_sale.hbs'
           );
@@ -125,9 +127,9 @@ class CreateSaleNewService {
                 date: format(sale.sale_date, 'dd/MM/yyyy'),
                 enterprise: sale.realty.enterprise,
                 value: sale.realty_ammount.toLocaleString(
-                  'pt-BR', { 
-                    style: 'currency', 
-                    currency: 'BRL' 
+                  'pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
                   }
                 ),
                 sellers: nameSellers,

@@ -24,4 +24,5 @@ export default interface ICreateSaleNewDTO {
   value_signal: number;
   pay_date_signal: Date;
   observation?: string;
+  subsidiary_id: string;
 }

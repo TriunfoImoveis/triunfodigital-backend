@@ -117,7 +117,8 @@ saleRoutes.post('/new', celebrate({
         due_date: Joi.date().iso().required()
           .messages(validatorFields({name: "'data de vencimento'"})),
       })
-    ).min(1).required().messages(validatorFields({name: "'parcelas'", min: 1}))
+    ).min(1).required().messages(validatorFields({name: "'parcelas'", min: 1})),
+    subsidiary_id: Joi.string().uuid().required().messages(validatorFields({name: "'Filial'"})),
   }
 }), saleController.createSaleNew);
 
@@ -253,7 +254,8 @@ saleRoutes.post('/used', celebrate({
         due_date: Joi.date().iso().required()
           .messages(validatorFields({name: "'data de vencimento'"})),
       })
-    ).min(1).required().messages(validatorFields({name: "'parcelas'", min: 1}))
+    ).min(1).required().messages(validatorFields({name: "'parcelas'", min: 1})),
+    subsidiary_id: Joi.string().uuid().required().messages(validatorFields({name: "'Filial'"})),
   }
 }), saleController.createSaleUsed);
 
