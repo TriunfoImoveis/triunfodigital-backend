@@ -1,6 +1,7 @@
 import User from "@modules/users/infra/typeorm/entities/User";
 import Client from "@modules/sales/infra/typeorm/entities/Client";
 import OriginSale from "@modules/sales/infra/typeorm/entities/OriginSale";
+import Subsidiary from "@modules/organizations/infra/typeorm/entities/Subsidiary";
 import Realty from "@modules/sales/infra/typeorm/entities/Realty";
 import { SaleType } from "@modules/sales/infra/typeorm/entities/Sale";
 import PaymentType from "@modules/sales/infra/typeorm/entities/PaymentType";
@@ -24,5 +25,5 @@ export default interface ICreateSaleUsedDTO {
   value_signal: number;
   pay_date_signal: Date;
   observation?: string;
-  subsidiary_id: string;
+  subsidiary: Subsidiary;
 }

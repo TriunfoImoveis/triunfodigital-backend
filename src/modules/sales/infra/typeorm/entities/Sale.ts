@@ -159,7 +159,7 @@ class Sale {
   @OneToMany(type => Installment, installment => installment.sale)
   installments: Installment[];
 
-  @ManyToOne(type => Subsidiary, subsidiary => subsidiary.id, {nullable: true})
+  @ManyToOne(type => Subsidiary, {nullable: true})
   @JoinColumn({name: 'subsidiary_id'})
   subsidiary: Subsidiary;
 }

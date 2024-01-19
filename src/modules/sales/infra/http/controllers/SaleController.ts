@@ -62,7 +62,7 @@ class SaleController {
       pay_date_signal,
       observation,
       installments,
-      subsidiary_id,
+      subsidiary,
     } = request.body;
 
     const createRealtyService = container.resolve(CreateRealtyService);
@@ -110,7 +110,7 @@ class SaleController {
       value_signal,
       pay_date_signal,
       observation,
-      subsidiary_id
+      subsidiary
     }, installments);
 
     return response.json(sale);
@@ -137,7 +137,7 @@ class SaleController {
       pay_date_signal,
       installments,
       observation,
-      subsidiary_id
+      subsidiary
     } = request.body;
 
     const createRealtyService = container.resolve(CreateRealtyService);
@@ -201,7 +201,7 @@ class SaleController {
       value_signal,
       pay_date_signal,
       observation,
-      subsidiary_id
+      subsidiary
     }, installments);
 
     return response.json(sale);

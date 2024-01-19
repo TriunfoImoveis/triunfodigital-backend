@@ -13,12 +13,12 @@ const saleController = new SaleController();
 saleRoutes.get('/', celebrate({
   [Segments.QUERY]: {
     name: Joi.string().default(''),
-    subsidiaryId: Joi.string().default(''),
-    month: Joi.string().default(''),
-    year: Joi.string().default(''),
+    subsidiaryId: Joi.string().allow(''),
+    month: Joi.string().allow(''),
+    year: Joi.string().allow(''),
     status: Joi.string().valid(
       'NAO_VALIDADO', 'CAIU', 'PENDENTE', 'PAGO_TOTAL'
-    ).default(''),
+    ).allow(''),
   }
 }), saleController.index);
 
@@ -118,7 +118,7 @@ saleRoutes.post('/new', celebrate({
           .messages(validatorFields({name: "'data de vencimento'"})),
       })
     ).min(1).required().messages(validatorFields({name: "'parcelas'", min: 1})),
-    subsidiary_id: Joi.string().uuid().required().messages(validatorFields({name: "'Filial'"})),
+    subsidiary: Joi.string().uuid().required().messages(validatorFields({name: "'Filial'"})),
   }
 }), saleController.createSaleNew);
 

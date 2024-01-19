@@ -54,6 +54,7 @@ class SaleRepository implements ISaleRepository {
       .leftJoinAndSelect("sale.company", "company")
       .innerJoinAndSelect("sale.payment_type", "payment")
       .innerJoinAndSelect("sale.realty", "realty")
+      .innerJoinAndSelect("realty.property", "property")
       .leftJoinAndSelect("sale.builder", "builder")
       .leftJoinAndSelect("sale.subsidiary", "subsidiary")
       .innerJoinAndSelect("sale.client_buyer", "client_buyer")
@@ -76,9 +77,11 @@ class SaleRepository implements ISaleRepository {
           qb.andWhere("sellers.name ILIKE :name", { name: name+"%" })
         }
 
-        if (month && year) {
+        if (month) {
           qb.andWhere('EXTRACT(MONTH FROM sale.sale_date) = :month', { month: month })
-          .andWhere('EXTRACT(YEAR FROM sale.sale_date) = :year', { year: year })
+        }
+        if (year) {
+          qb.andWhere('EXTRACT(YEAR FROM sale.sale_date) = :year', { year: year })
         }
       }))
       .orderBy("sale.sale_date", "DESC")
@@ -108,6 +111,7 @@ class SaleRepository implements ISaleRepository {
           'sale_has_sellers',
           'motive',
           'installments',
+          'subsidiary'
         ],
 
       });
@@ -373,7 +377,7 @@ class SaleRepository implements ISaleRepository {
         .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
         .leftJoinAndSelect("sale.motive", "motive")
         .leftJoinAndSelect("sale.installments", "installments")
-        .innerJoinAndSelect("sellers.subsidiary", "subsidiary")
+        .innerJoinAndSelect("sale.subsidiary", "subsidiary")
         .where("sellers.id = :id_user", { id_user: id })
         .andWhere(
           "to_char(sale.sale_date, :format) = :date",
@@ -409,7 +413,7 @@ class SaleRepository implements ISaleRepository {
         .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
         .leftJoinAndSelect("sale.motive", "motive")
         .leftJoinAndSelect("sale.installments", "installments")
-        .innerJoinAndSelect("sellers.subsidiary", "subsidiary")
+        .innerJoinAndSelect("sale.subsidiary", "subsidiary")
         .where("subsidiary.id = :id", { id: id_subsidiary })
         .andWhere(
           "to_char(sale.sale_date, :format) = :date",
