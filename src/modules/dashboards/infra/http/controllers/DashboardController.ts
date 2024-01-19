@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import SellersDashboardService from '@modules/dashboards/services/SellersDashboardService';
 import SubsidiariesDashboardService from '@modules/dashboards/services/SubsidiariesDashboardService';
+import MKTDashboardService from '@modules/dashboards/services/MKTDashboardService';
 
 class DashboardController {
   async dashboard_sellers(request: Request, response: Response): Promise<Response> {
@@ -33,6 +34,13 @@ class DashboardController {
     });
 
     return response.json(subsidiariesDashboard);
+  }
+
+  async dashboard_mkt(request: Request, response: Response): Promise<Response> {
+    const sellerDashboardService = container.resolve(MKTDashboardService);
+    const sellerDashboard = await sellerDashboardService.execute();
+
+    return response.json(sellerDashboard);
   }
 }
 
