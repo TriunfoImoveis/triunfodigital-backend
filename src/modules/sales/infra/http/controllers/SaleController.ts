@@ -14,6 +14,7 @@ import ValidSignalService from '@modules/sales/services/ValidSignalService';
 import ShowSaleService from '@modules/sales/services/ShowSaleService';
 import ExportSaleService from '@modules/sales/services/ExportSaleService';
 import ListSaleService from '@modules/sales/services/ListSaleService';
+import UpdateSaleSubsidiaryService from '@modules/sales/services/UpdateSaleSubsidiaryService';
 
 class SaleController {
 
@@ -260,6 +261,15 @@ class SaleController {
     });
 
     return response.status(201).json(link_url);
+  }
+
+  async updateSaleSubsidiary(request: Request, response: Response): Promise<Response> {
+    const {subsidiaryId} = request.body;
+    const updateSaleSubsidiaryService = container.resolve(UpdateSaleSubsidiaryService);
+    await updateSaleSubsidiaryService.execute({
+      id: subsidiaryId
+    })
+    return response.status(200).send();
   }
 }
 

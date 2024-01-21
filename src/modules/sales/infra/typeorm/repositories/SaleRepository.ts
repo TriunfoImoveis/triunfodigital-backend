@@ -31,9 +31,11 @@ class SaleRepository implements ISaleRepository {
       .innerJoinAndSelect("sale.client_buyer", "client_buyer")
       .leftJoinAndSelect("sale.client_seller", "client_seller")
       .innerJoinAndSelect("sale.users_directors", "directors")
+      .leftJoinAndSelect("directors.subsidiary", "directors_subsidiary")
       .leftJoinAndSelect("sale.user_coordinator", "coordinator")
       .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
       .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
+      .leftJoinAndSelect("sellers.subsidiary", "sellers_subsidiary")
       .leftJoinAndSelect("sale.motive", "motive")
       .leftJoinAndSelect("sale.installments", "installments")
       .getMany();
@@ -60,9 +62,11 @@ class SaleRepository implements ISaleRepository {
       .innerJoinAndSelect("sale.client_buyer", "client_buyer")
       .leftJoinAndSelect("sale.client_seller", "client_seller")
       .innerJoinAndSelect("sale.users_directors", "directors")
+      .leftJoinAndSelect("directors.subsidiary", "directors_subsidiary")
       .leftJoinAndSelect("sale.user_coordinator", "coordinator")
       .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
       .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
+      .leftJoinAndSelect("sellers.subsidiary", "sellers_subsidiary")
       .leftJoinAndSelect("sale.motive", "motive")
       .leftJoinAndSelect("sale.installments", "installments")
       .where(new Brackets(qb => {
