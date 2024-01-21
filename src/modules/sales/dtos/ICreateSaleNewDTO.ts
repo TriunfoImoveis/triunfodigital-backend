@@ -3,6 +3,7 @@ import Builder from "@modules/sales/infra/typeorm/entities/Builder";
 import Client from "@modules/sales/infra/typeorm/entities/Client";
 import OriginSale from "@modules/sales/infra/typeorm/entities/OriginSale";
 import Realty from "@modules/sales/infra/typeorm/entities/Realty";
+import Subsidiary from "@modules/organizations/infra/typeorm/entities/Subsidiary";
 import { SaleType } from "@modules/sales/infra/typeorm/entities/Sale";
 import PaymentType from "@modules/sales/infra/typeorm/entities/PaymentType";
 
@@ -24,4 +25,5 @@ export default interface ICreateSaleNewDTO {
   value_signal: number;
   pay_date_signal: Date;
   observation?: string;
+  subsidiary: Subsidiary;
 }

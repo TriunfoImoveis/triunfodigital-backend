@@ -19,6 +19,7 @@ import Motive from "./Motive";
 import OriginSale from "./OriginSale";
 import PaymentType from "./PaymentType";
 import Realty from "./Realty";
+import Subsidiary from "@modules/organizations/infra/typeorm/entities/Subsidiary";
 
 
 export enum SaleType {
@@ -157,6 +158,10 @@ class Sale {
 
   @OneToMany(type => Installment, installment => installment.sale)
   installments: Installment[];
+
+  @ManyToOne(type => Subsidiary, {nullable: true})
+  @JoinColumn({name: 'subsidiary_id'})
+  subsidiary: Subsidiary;
 }
 
 export default Sale;

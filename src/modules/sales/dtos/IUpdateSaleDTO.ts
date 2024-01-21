@@ -1,4 +1,5 @@
 import User from "@modules/users/infra/typeorm/entities/User";
+import Subsidiary from "@modules/organizations/infra/typeorm/entities/Subsidiary";
 import Client from "@modules/sales/infra/typeorm/entities/Client";
 import OriginSale from "@modules/sales/infra/typeorm/entities/OriginSale";
 import Realty from "@modules/sales/infra/typeorm/entities/Realty";
@@ -6,6 +7,7 @@ import { SaleType, Status } from "@modules/sales/infra/typeorm/entities/Sale";
 import PaymentType from "@modules/sales/infra/typeorm/entities/PaymentType";
 import Company from "@modules/organizations/infra/typeorm/entities/Company";
 import Builder from "@modules/sales/infra/typeorm/entities/Builder";
+import { subscriptionARN } from "aws-sdk/clients/sns";
 
 export default interface IUpdateSaleDTO {
   sale_type?: SaleType;
@@ -29,5 +31,6 @@ export default interface IUpdateSaleDTO {
   value_signal?: number;
   pay_date_signal?: Date;
   observation?: string;
-  status?: Status; 
+  status?: Status;
+  subsidiary?: Subsidiary;
 }

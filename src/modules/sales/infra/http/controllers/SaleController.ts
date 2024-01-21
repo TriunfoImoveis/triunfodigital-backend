@@ -14,29 +14,21 @@ import ValidSignalService from '@modules/sales/services/ValidSignalService';
 import ShowSaleService from '@modules/sales/services/ShowSaleService';
 import ExportSaleService from '@modules/sales/services/ExportSaleService';
 import ListSaleService from '@modules/sales/services/ListSaleService';
+import UpdateSaleSubsidiaryService from '@modules/sales/services/UpdateSaleSubsidiaryService';
 
-interface QueryParams {
-  name?: string;
-  city?: string;
-  status: string;
-  state?: string
-}
 class SaleController {
 
-  async index(request: Request<{}, {}, {}, QueryParams>, response: Response): Promise<Response> {
-    const {name, city, status, state} = request.query;
+  async index(request: Request, response: Response): Promise<Response> {
+    const {name, subsidiaryId, status, month, year} = request.query;
 
     const listSaleService = container.resolve(ListSaleService);
-    let sales = []
-    sales = await listSaleService.execute({
+    const sales = await listSaleService.execute({
       name: name as string,
-      city: city as string,
+      subsidiaryId: subsidiaryId as string,
       status: status as string,
+      month: month as string,
+      year: year as string,
     });
-
-    if (state && state.length > 0) {
-      sales = sales.filter(sale => sale.realty.state === state)
-    }
 
     return response.json(classToClass(sales));
   }
@@ -71,6 +63,7 @@ class SaleController {
       pay_date_signal,
       observation,
       installments,
+      subsidiary,
     } = request.body;
 
     const createRealtyService = container.resolve(CreateRealtyService);
@@ -118,6 +111,7 @@ class SaleController {
       value_signal,
       pay_date_signal,
       observation,
+      subsidiary
     }, installments);
 
     return response.json(sale);
@@ -144,6 +138,7 @@ class SaleController {
       pay_date_signal,
       installments,
       observation,
+      subsidiary
     } = request.body;
 
     const createRealtyService = container.resolve(CreateRealtyService);
@@ -207,6 +202,7 @@ class SaleController {
       value_signal,
       pay_date_signal,
       observation,
+      subsidiary
     }, installments);
 
     return response.json(sale);
@@ -265,6 +261,15 @@ class SaleController {
     });
 
     return response.status(201).json(link_url);
+  }
+
+  async updateSaleSubsidiary(request: Request, response: Response): Promise<Response> {
+    const {subsidiaryId} = request.body;
+    const updateSaleSubsidiaryService = container.resolve(UpdateSaleSubsidiaryService);
+    await updateSaleSubsidiaryService.execute({
+      id: subsidiaryId
+    })
+    return response.status(200).send();
   }
 }
 

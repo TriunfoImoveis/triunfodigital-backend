@@ -30,7 +30,7 @@ class ExportSaleService {
   ) { }
 
   public async execute({state}: IRequestRepository): Promise<IResponseDTO | undefined> {
-    let sales = await this.salesRepository.findAllWithoutFilters();
+    let sales = await this.salesRepository.findAll({});
     if (state.length > 0 ) {
       sales = sales.filter(item => item.realty.state === state)
     }
@@ -100,9 +100,7 @@ class ExportSaleService {
         clientBuyer_datebirth = date_birth ? parseISO(date_birth.toString()) : null;
       }
 
-      const subsidiary = sale.sale_has_sellers.reduce((seller) => {
-        return seller;
-      });
+      const subsidiary = sale.subsidiary;
 
       const directors = sale.users_directors.map((director) => {
         return director.name;
@@ -130,7 +128,7 @@ class ExportSaleService {
       })
 
       const sales = {
-        subsidiary: subsidiary.subsidiary.city,
+        subsidiary: subsidiary ? subsidiary.name : '',
         sale_type: sale.sale_type,
         sale_date: parseISO(sale.sale_date.toString()),
         sale_value: Number(sale.realty_ammount),
@@ -140,7 +138,7 @@ class ExportSaleService {
         value_signal: sale.value_signal ? Number(sale.value_signal) : null,
         pay_date_signal: sale.pay_date_signal ? parseISO(sale.pay_date_signal.toString()) : null,
         origin: sale.origin.name,
-        property_type: sale.realty.property.name,
+        property_type: sale.realty.property ? sale.realty.property.name : '',
         realty: `${sale.realty.enterprise} - ${sale.realty.unit}`,
         neighborhood: sale.realty.neighborhood,
         builder: sale.builder ? sale.builder.name : null,

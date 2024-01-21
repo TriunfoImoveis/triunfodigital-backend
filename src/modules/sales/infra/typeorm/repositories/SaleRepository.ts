@@ -1,4 +1,4 @@
-import { getRepository, Repository, getConnection } from "typeorm";
+import { getRepository, Repository, getConnection, Brackets } from "typeorm";
 
 import AppError from '@shared/errors/AppError';
 import Sale, { Status } from "@modules/sales/infra/typeorm/entities/Sale";
@@ -27,15 +27,17 @@ class SaleRepository implements ISaleRepository {
       .innerJoinAndSelect("sale.realty", "realty")
       .innerJoinAndSelect("realty.property", "property")
       .leftJoinAndSelect("sale.builder", "builder")
+      .leftJoinAndSelect("sale.subsidiary", "subsidiary")
       .innerJoinAndSelect("sale.client_buyer", "client_buyer")
       .leftJoinAndSelect("sale.client_seller", "client_seller")
       .innerJoinAndSelect("sale.users_directors", "directors")
+      .leftJoinAndSelect("directors.subsidiary", "directors_subsidiary")
       .leftJoinAndSelect("sale.user_coordinator", "coordinator")
       .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
       .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
+      .leftJoinAndSelect("sellers.subsidiary", "sellers_subsidiary")
       .leftJoinAndSelect("sale.motive", "motive")
       .leftJoinAndSelect("sale.installments", "installments")
-      .innerJoinAndSelect("sellers.subsidiary", "subsidiary")
       .getMany();
 
       return sales;
@@ -46,7 +48,7 @@ class SaleRepository implements ISaleRepository {
 
   async findAll(data: IRequestSaleDTO): Promise<Sale[]> {
     try {
-      const {name, city, status} = data;
+      const {name, status, subsidiaryId, month, year} = data;
 
       const sales = await this.ormRepository.createQueryBuilder("sale")
       .select()
@@ -54,17 +56,38 @@ class SaleRepository implements ISaleRepository {
       .leftJoinAndSelect("sale.company", "company")
       .innerJoinAndSelect("sale.payment_type", "payment")
       .innerJoinAndSelect("sale.realty", "realty")
+      .innerJoinAndSelect("realty.property", "property")
       .leftJoinAndSelect("sale.builder", "builder")
+      .leftJoinAndSelect("sale.subsidiary", "subsidiary")
       .innerJoinAndSelect("sale.client_buyer", "client_buyer")
       .leftJoinAndSelect("sale.client_seller", "client_seller")
       .innerJoinAndSelect("sale.users_directors", "directors")
+      .leftJoinAndSelect("directors.subsidiary", "directors_subsidiary")
       .leftJoinAndSelect("sale.user_coordinator", "coordinator")
       .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
       .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
+      .leftJoinAndSelect("sellers.subsidiary", "sellers_subsidiary")
       .leftJoinAndSelect("sale.motive", "motive")
       .leftJoinAndSelect("sale.installments", "installments")
-      .where("sale.status = :status", {status})
-      .andWhere("sellers.name ILIKE :name", { name: name+"%" })
+      .where(new Brackets(qb => {
+        if (status) {
+          qb.andWhere('sale.status = :status', { status: status })
+        }
+        if(subsidiaryId) {
+          qb.andWhere('sale.subsidiary IS NOT NULL').andWhere('subsidiary.id = :subsidiaryId', { subsidiaryId: subsidiaryId })
+        }
+
+        if (name) {
+          qb.andWhere("sellers.name ILIKE :name", { name: name+"%" })
+        }
+
+        if (month) {
+          qb.andWhere('EXTRACT(MONTH FROM sale.sale_date) = :month', { month: month })
+        }
+        if (year) {
+          qb.andWhere('EXTRACT(YEAR FROM sale.sale_date) = :year', { year: year })
+        }
+      }))
       .orderBy("sale.sale_date", "DESC")
       .getMany();
 
@@ -92,7 +115,9 @@ class SaleRepository implements ISaleRepository {
           'sale_has_sellers',
           'motive',
           'installments',
-        ]
+          'subsidiary'
+        ],
+
       });
       return sale;
     } catch (err) {
@@ -356,7 +381,7 @@ class SaleRepository implements ISaleRepository {
         .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
         .leftJoinAndSelect("sale.motive", "motive")
         .leftJoinAndSelect("sale.installments", "installments")
-        .innerJoinAndSelect("sellers.subsidiary", "subsidiary")
+        .innerJoinAndSelect("sale.subsidiary", "subsidiary")
         .where("sellers.id = :id_user", { id_user: id })
         .andWhere(
           "to_char(sale.sale_date, :format) = :date",
@@ -392,7 +417,7 @@ class SaleRepository implements ISaleRepository {
         .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
         .leftJoinAndSelect("sale.motive", "motive")
         .leftJoinAndSelect("sale.installments", "installments")
-        .innerJoinAndSelect("sellers.subsidiary", "subsidiary")
+        .innerJoinAndSelect("sale.subsidiary", "subsidiary")
         .where("subsidiary.id = :id", { id: id_subsidiary })
         .andWhere(
           "to_char(sale.sale_date, :format) = :date",
