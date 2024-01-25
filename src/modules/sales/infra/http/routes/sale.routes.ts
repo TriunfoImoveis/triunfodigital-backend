@@ -425,6 +425,7 @@ saleRoutes.put('/:id', celebrate({
       name: "'status'",
       ref: "[NAO_VALIDADO, PENDENTE, PAGO_TOTAL]"
     })),
+    subsidiary: Joi.string().uuid()
   }
 }), saleController.update);
 
