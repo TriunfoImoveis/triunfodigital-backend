@@ -12,7 +12,7 @@ const saleController = new SaleController();
 
 saleRoutes.get('/', celebrate({
   [Segments.QUERY]: {
-    name: Joi.string().default(''),
+    name: Joi.string().allow(''),
     subsidiaryId: Joi.string().allow(''),
     month: Joi.string().allow(''),
     year: Joi.string().allow(''),
