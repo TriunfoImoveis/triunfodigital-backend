@@ -5,7 +5,11 @@ import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IStorageProvider from "@shared/container/providers/StorageProvider/models/IStorageProvider";
 
 interface IRequestRepository {
-  state: string,
+  subsidiaryId?: string,
+  name?: string,
+  status?: string,
+  month?: string,
+  year?: string
 }
 interface IResponseDTO {
   link_url: string;
@@ -29,11 +33,14 @@ class ExportSaleService {
     private storagePrivider: IStorageProvider,
   ) { }
 
-  public async execute({state}: IRequestRepository): Promise<IResponseDTO | undefined> {
-    let sales = await this.salesRepository.findAll({});
-    if (state.length > 0 ) {
-      sales = sales.filter(item => item.realty.state === state)
-    }
+  public async execute({subsidiaryId, month, year, name, status}: IRequestRepository): Promise<IResponseDTO | undefined> {
+    let sales = await this.salesRepository.findAll({
+      subsidiaryId,
+      month,
+      year,
+      name,
+      status
+    });
 
     const numberInBRL = (money: number): string => {
       const brl = money.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
