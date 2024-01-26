@@ -181,7 +181,7 @@ class ExportSaleService {
           headers: workSheetColumnNames,
           data: data
         },
-        fileName: 'sales',
+        fileName: `sales-${new Date().getTime()}`,
         refCol: "A1:AF1"
       }
     );
