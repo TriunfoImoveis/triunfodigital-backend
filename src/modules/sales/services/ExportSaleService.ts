@@ -173,6 +173,8 @@ class ExportSaleService {
       return sales;
     });
 
+    await this.storagePrivider.deleteFile('sales');
+
     const filePath = await this.storagePrivider.saveReportFile(
       {
         workSheetData: {
