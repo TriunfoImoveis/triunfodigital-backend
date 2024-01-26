@@ -22,7 +22,17 @@ saleRoutes.get('/', celebrate({
   }
 }), saleController.index);
 
-saleRoutes.get('/export/excel', saleController.exportExcel);
+saleRoutes.get('/export/excel',celebrate({
+  [Segments.QUERY]: {
+    name: Joi.string().allow(''),
+    subsidiaryId: Joi.string().allow(''),
+    month: Joi.string().allow(''),
+    year: Joi.string().allow(''),
+    status: Joi.string().valid(
+      'NAO_VALIDADO', 'CAIU', 'PENDENTE', 'PAGO_TOTAL'
+    ).allow(''),
+  }
+}), saleController.exportExcel);
 
 saleRoutes.post('/new', celebrate({
   [Segments.BODY]: {
