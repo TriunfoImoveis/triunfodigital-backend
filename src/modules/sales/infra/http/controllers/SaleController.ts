@@ -253,11 +253,15 @@ class SaleController {
   }
 
   async exportExcel(request: Request, response: Response): Promise<Response> {
-    const {state} = request.query;
+    const {subsidiaryId, name, status, year, month} = request.query;
 
     const exportSaleService = container.resolve(ExportSaleService);
     const link_url = await exportSaleService.execute({
-      state: state as string || ''
+      subsidiaryId: subsidiaryId as string || '',
+      name: name as string || '',
+      status: status as string || '',
+      year: year as string || '',
+      month: month as string || '',
     });
 
     return response.status(201).json(link_url);
