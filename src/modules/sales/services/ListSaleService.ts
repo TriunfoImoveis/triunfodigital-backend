@@ -11,12 +11,13 @@ class ListSaleService {
     private salesRepository: ISaleRepository,
   ) {}
 
-  public async execute({name, city, status}: IRequestSaleDTO): Promise<Sale[]> {
-    
+  public async execute({name, status, subsidiaryId, month, year}: IRequestSaleDTO): Promise<Sale[]> {
     const listSales = await this.salesRepository.findAll({
-      name, 
-      city, 
+      name,
       status,
+      subsidiaryId,
+      month,
+      year
     });
 
     return listSales;

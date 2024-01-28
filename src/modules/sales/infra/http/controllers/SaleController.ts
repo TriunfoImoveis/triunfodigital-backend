@@ -14,17 +14,20 @@ import ValidSignalService from '@modules/sales/services/ValidSignalService';
 import ShowSaleService from '@modules/sales/services/ShowSaleService';
 import ExportSaleService from '@modules/sales/services/ExportSaleService';
 import ListSaleService from '@modules/sales/services/ListSaleService';
+import UpdateSaleSubsidiaryService from '@modules/sales/services/UpdateSaleSubsidiaryService';
 
 class SaleController {
 
   async index(request: Request, response: Response): Promise<Response> {
-    const {name, city, status} = request.query;
+    const {name, subsidiaryId, status, month, year} = request.query;
 
     const listSaleService = container.resolve(ListSaleService);
     const sales = await listSaleService.execute({
       name: name as string,
-      city: city as string,
+      subsidiaryId: subsidiaryId as string,
       status: status as string,
+      month: month as string,
+      year: year as string,
     });
 
     return response.json(classToClass(sales));
@@ -60,6 +63,7 @@ class SaleController {
       pay_date_signal,
       observation,
       installments,
+      subsidiary,
     } = request.body;
 
     const createRealtyService = container.resolve(CreateRealtyService);
@@ -107,6 +111,7 @@ class SaleController {
       value_signal,
       pay_date_signal,
       observation,
+      subsidiary
     }, installments);
 
     return response.json(sale);
@@ -133,6 +138,7 @@ class SaleController {
       pay_date_signal,
       installments,
       observation,
+      subsidiary
     } = request.body;
 
     const createRealtyService = container.resolve(CreateRealtyService);
@@ -196,6 +202,7 @@ class SaleController {
       value_signal,
       pay_date_signal,
       observation,
+      subsidiary
     }, installments);
 
     return response.json(sale);
@@ -246,14 +253,27 @@ class SaleController {
   }
 
   async exportExcel(request: Request, response: Response): Promise<Response> {
-    const {state} = request.query;
+    const {subsidiaryId, name, status, year, month} = request.query;
 
     const exportSaleService = container.resolve(ExportSaleService);
     const link_url = await exportSaleService.execute({
-      state: state as string || ''
+      subsidiaryId: subsidiaryId as string || '',
+      name: name as string || '',
+      status: status as string || '',
+      year: year as string || '',
+      month: month as string || '',
     });
 
     return response.status(201).json(link_url);
+  }
+
+  async updateSaleSubsidiary(request: Request, response: Response): Promise<Response> {
+    const {subsidiaryId} = request.body;
+    const updateSaleSubsidiaryService = container.resolve(UpdateSaleSubsidiaryService);
+    await updateSaleSubsidiaryService.execute({
+      id: subsidiaryId
+    })
+    return response.status(200).send();
   }
 }
 

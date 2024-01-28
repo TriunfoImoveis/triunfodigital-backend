@@ -41,13 +41,14 @@ class CreateSaleUsedService {
     value_signal,
     pay_date_signal,
     observation,
+    subsidiary
   }: ICreateSaleUsedDTO, installments: ICreateInstallmentDTO[]): Promise<Sale> {
 
     var totalValueInstallments = 0;
     installments.map(
       (installment) => {
         installment.due_date = add(
-          installment.due_date, 
+          installment.due_date,
           {hours: 3}
         )
         totalValueInstallments += Number(installment.value);
@@ -83,6 +84,7 @@ class CreateSaleUsedService {
       value_signal,
       pay_date_signal: ajusted_date_signal,
       observation,
+      subsidiary
     }, installments);
 
     if (sale) {
@@ -111,8 +113,8 @@ class CreateSaleUsedService {
           });
 
           const pathSaleTemplate = path.resolve(
-            __dirname, 
-            '..', 
+            __dirname,
+            '..',
             'views',
             'register_sale.hbs'
           );
@@ -127,13 +129,13 @@ class CreateSaleUsedService {
               date: format(sale.sale_date, 'dd/MM/yyyy'),
               enterprise: sale.realty.enterprise,
               value: sale.realty_ammount.toLocaleString(
-                'pt-BR', { 
-                  style: 'currency', 
-                  currency: 'BRL' 
+                'pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL'
                 }
               ),
               sellers: nameSellers,
-            }    
+            }
           });
         }
       }
