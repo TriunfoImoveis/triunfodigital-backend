@@ -6,6 +6,7 @@ import IRequestUserDTO from '@modules/users/dtos/IRequestUserDTO';
 export default interface IUserRepository {
   findByEmail(email: string): Promise<User | undefined>;
   findById(id: string): Promise<User | undefined>;
+  findUserBySubsidiary(subsidiary: string): Promise<User | undefined>;
   findUsers(
     data: IRequestUserDTO
   ): Promise<User[]>;

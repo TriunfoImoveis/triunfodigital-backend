@@ -1,6 +1,6 @@
 export default interface IRequestUserDTO {
   name?: string;
-  city?: string;
+  subsidiary?: string;
   departament?: string;
   office?: string;
 }

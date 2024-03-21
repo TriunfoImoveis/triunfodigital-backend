@@ -8,7 +8,7 @@ import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 interface IRequestRankingDTO {
   year: number;
   month?: number;
-  city: string;
+  subsidiary: string;
   user: string;
 }
 
@@ -25,7 +25,7 @@ class RankingService {
   public async execute({
     year,
     month,
-    city,
+    subsidiary,
     user,
   }: IRequestRankingDTO): Promise<IResponseRankingDTO[]> {
     // Pega a data atual e o formato Ano e Mês juntos para filtrar as vendas
@@ -45,7 +45,7 @@ class RankingService {
 
     // Busca usuarios Corretores
     const usersSellers = await this.usersRepository.findUsers({
-      city,
+      subsidiary,
       office: "Corretor",
       departament: "%",
       name: "%"
@@ -53,7 +53,7 @@ class RankingService {
 
     // Busca usuarios Coordenadores
     const usersCoordinators = await this.usersRepository.findUsers({
-      city,
+      subsidiary,
       office: "Coordenador",
       departament: "%",
       name: "%"
@@ -72,11 +72,11 @@ class RankingService {
           let vgv = 0;
           await Promise.all(
             sales.map(async (sale) => {
-      
+
               const quantity = await this.usersRepository.quantityCaptivators(sale.id);
               const partialSale = sale.realty_ammount/quantity;
               vgv += partialSale;
-      
+
             })
           );
 
@@ -94,15 +94,15 @@ class RankingService {
       ranking = await Promise.all(
         users.map(async (user) => {
           const sales = await this.salesRepository.salesForUserSellers(user.id, format_date, dateFormated);
-          
+
           let vgv = 0;
           await Promise.all(
             sales.map(async (sale) => {
-      
+
               const quantity = await this.usersRepository.quantitySellers(sale.id);
               const partialSale = sale.realty_ammount/quantity;
               vgv += partialSale;
-      
+
             })
           );
 

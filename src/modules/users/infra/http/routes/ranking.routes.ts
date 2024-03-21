@@ -19,7 +19,7 @@ rankingRouter.get('/', celebrate({
       .messages(
         validatorFields({name: "'Mês'", min: 1, max: 12})
       ),
-    city: Joi.string().required(),
+    subsidiary: Joi.string().required(),
     user: Joi.string().valid('Corretor', 'Captador').required(),
   }
 }), rankingController.index);

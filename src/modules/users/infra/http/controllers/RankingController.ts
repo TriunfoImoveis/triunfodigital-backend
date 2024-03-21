@@ -10,7 +10,7 @@ class RankingController {
     const {
       year,
       month,
-      city,
+      subsidiary,
       user,
     } = request.query;
 
@@ -18,7 +18,7 @@ class RankingController {
     const ranking = await rankingService.execute({
       year: Number(year),
       month: month as number | undefined,
-      city: city as string,
+      subsidiary: subsidiary as string,
       user: user as string,
     });
 

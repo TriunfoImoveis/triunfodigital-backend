@@ -14,6 +14,7 @@ class UsersRepository implements IUserRepository {
     this.ormRepository = getRepository(User);
   }
 
+
   async findById(id: string): Promise<User | undefined> {
     try {
       const user = await this.ormRepository.findOne(id, {
@@ -54,6 +55,26 @@ class UsersRepository implements IUserRepository {
           "office",
           "subsidiary",
           "bank_data",
+        ]
+      });
+
+      return user;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async findUserBySubsidiary(subsidiary: string): Promise<User | undefined> {
+    try {
+      const user = await this.ormRepository.findOne({
+        select: [
+          "id",
+          "name",
+          "avatar",
+        ],
+        where: { subsidiary },
+        relations: [
+          "subsidiary",
         ]
       });
 
@@ -109,7 +130,7 @@ class UsersRepository implements IUserRepository {
 
   async findUsers(data: IRequestUserDTO): Promise<User[]> {
     try {
-      const {name, city, departament, office} = data;
+      const {name, subsidiary, departament, office} = data;
       const users = await this.ormRepository.createQueryBuilder("user")
         .select()
         .innerJoinAndSelect("user.office", "office")
@@ -118,7 +139,7 @@ class UsersRepository implements IUserRepository {
         .where("user.active = true")
         .andWhere("user.name ILIKE :name", { name: name+"%" })
         .andWhere("office.name LIKE :office", { office })
-        .andWhere("subsidiary.city LIKE :city", { city })
+        .andWhere("subsidiary.id = :subsidiary", { subsidiary })
         .andWhere("departament.name LIKE :departament", { departament })
         .orderBy("user.name", "ASC")
         .getMany();
