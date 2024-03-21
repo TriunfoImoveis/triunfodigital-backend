@@ -56,8 +56,6 @@ class SellersDashboardService {
           year: ano.toString() !== 'all' ? ano.toString() : '',
           month
         });
-
-        console.log({sales})
         const vgv = await calculate_vgv(sales);
         return {
           month: month,
