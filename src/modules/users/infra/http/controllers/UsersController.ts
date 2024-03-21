@@ -14,14 +14,14 @@ class UsersController {
   async index(request: Request, response: Response): Promise<Response> {
     const {
       name,
-      city,
+      subsidiary,
       departament,
       office
     } = request.query;
 
     if (typeof name !== "string") {
       throw new AppError('Name not is validate string.');
-    } else if (typeof city !== "string") {
+    } else if (typeof subsidiary !== "string") {
       throw new AppError('City not is validate string.');
     } else if (typeof departament !== "string") {
       throw new AppError('Departament not is validate string.');
@@ -33,7 +33,7 @@ class UsersController {
 
     const usersList = await listUserService.execute({
       name,
-      city,
+      subsidiary,
       departament,
       office,
     });
@@ -92,7 +92,7 @@ class UsersController {
     delete request.body.password_confirmation;
 
     const updateUser = container.resolve(UpdateUserService);
-    
+
     const updatedUser = await updateUser.execute({
       id: request.params.id,
       old_password: old_password,

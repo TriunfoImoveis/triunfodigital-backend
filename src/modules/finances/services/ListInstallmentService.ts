@@ -14,10 +14,10 @@ class ListInstallmentService {
 
   public async execute({
     buyer_name,
-    city, 
+    subsidiary,
     status
   }: IRequestInstallmentDTO): Promise<Installment[]> {
-    
+
     var statusFilter: any;
     if (!status) {
       statusFilter = [StatusInstallment.PEN, StatusInstallment.PAG, StatusInstallment.CAI, StatusInstallment.LIQ]
@@ -26,13 +26,13 @@ class ListInstallmentService {
     } else {
       statusFilter = [status];
     }
-    
+
     const listInstallments = await this.installmentsRepository.listFilters({
       buyer_name,
-      city,
+      subsidiary,
       status: statusFilter,
     });
-    
+
     if (status === StatusInstallment.PEN) {
       const installments = listInstallments.filter((installment) => {
         const dateFormated = parseISO(installment.due_date.toString());
@@ -60,7 +60,7 @@ class ListInstallmentService {
         }
       });
     }
-    
+
     return listInstallments;
   }
 }

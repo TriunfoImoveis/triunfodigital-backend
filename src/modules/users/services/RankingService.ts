@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
-import { format, getMonth, getYear } from "date-fns";
-
+import User from '@modules/users/infra/typeorm/entities/User';
 import IUserRepository from "@modules/users/repositories/IUserRepository";
 import IResponseRankingDTO from "@modules/users/dtos/IResponseRankingDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
+import AppError from "@shared/errors/AppError";
 
 interface IRequestRankingDTO {
-  year: number;
-  month?: number;
-  city: string;
+  year?: string;
+  month?: string;
+  subsidiary: string;
   user: string;
 }
 
@@ -25,39 +25,32 @@ class RankingService {
   public async execute({
     year,
     month,
-    city,
+    subsidiary,
     user,
   }: IRequestRankingDTO): Promise<IResponseRankingDTO[]> {
-    // Pega a data atual e o formato Ano e Mês juntos para filtrar as vendas
-    var date = year.toString();
 
-    if (month !== undefined) {
-      let monthFormated = month.toString();
-      if ((month >= 1) && (month <= 9)) {
-        monthFormated = `0${monthFormated}`;
+    let usersSellers: User[] = []
+    let usersCoordinators: User[] = []
+
+    if (!subsidiary || subsidiary === "all") {
+      const [realtors, coordinators] = await Promise.all([
+        this.usersRepository.findUsersRealtors(),
+        this.usersRepository.findUsersCoordinators()
+      ])
+
+      if (!realtors ) {
+        new AppError('error on find users')
       }
-      var format_date = "yyyyMM";
-      var dateFormated = date + monthFormated;
+      if (!coordinators ) {
+        new AppError('error on find users')
+      }
+
+      usersSellers = realtors ? realtors : []
+      usersCoordinators = coordinators ? coordinators : []
     } else {
-      var format_date = "yyyy";
-      var dateFormated = date;
+      usersSellers = await this.usersRepository.findUsersRealtorsBySubsidiary(subsidiary) || []
+      usersCoordinators = await this.usersRepository.findUsersCoordinatorsBySubsidiary(subsidiary) || []
     }
-
-    // Busca usuarios Corretores
-    const usersSellers = await this.usersRepository.findUsers({
-      city,
-      office: "Corretor",
-      departament: "%",
-      name: "%"
-    });
-
-    // Busca usuarios Coordenadores
-    const usersCoordinators = await this.usersRepository.findUsers({
-      city,
-      office: "Coordenador",
-      departament: "%",
-      name: "%"
-    });
 
     var users = usersSellers.concat(usersCoordinators);
 
@@ -67,16 +60,20 @@ class RankingService {
       // Gerar ranking de Corretores Captadores
       ranking = await Promise.all(
         users.map(async (user) => {
-          const sales = await this.salesRepository.salesForUserCaptivators(user.id, format_date, dateFormated);
+          const sales = await this.salesRepository.salesForUserCaptivators({
+            id: user.id,
+            year: year !== 'all' ? year : '',
+            month : month !== 'all' ? month : '',
+          });
 
           let vgv = 0;
           await Promise.all(
             sales.map(async (sale) => {
-      
+
               const quantity = await this.usersRepository.quantityCaptivators(sale.id);
               const partialSale = sale.realty_ammount/quantity;
               vgv += partialSale;
-      
+
             })
           );
 
@@ -93,16 +90,19 @@ class RankingService {
       // Gerar ranking de Corretores Vendedores
       ranking = await Promise.all(
         users.map(async (user) => {
-          const sales = await this.salesRepository.salesForUserSellers(user.id, format_date, dateFormated);
-          
+          const sales = await this.salesRepository.salesForUserSellers({
+            id: user.id,
+            year: year !== 'all' ? year : '',
+            month : month !== 'all' ? month : '',
+          });
           let vgv = 0;
           await Promise.all(
             sales.map(async (sale) => {
-      
+
               const quantity = await this.usersRepository.quantitySellers(sale.id);
               const partialSale = sale.realty_ammount/quantity;
               vgv += partialSale;
-      
+
             })
           );
 

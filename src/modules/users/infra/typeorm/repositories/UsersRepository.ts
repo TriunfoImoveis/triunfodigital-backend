@@ -1,4 +1,4 @@
-import { getRepository, Repository } from 'typeorm';
+import { Brackets, getRepository, Repository } from 'typeorm';
 
 import AppError from "@shared/errors/AppError";
 import ICreateUsersDTO from '@modules/users/dtos/ICreateUsersDTO';
@@ -13,6 +13,7 @@ class UsersRepository implements IUserRepository {
   constructor() {
     this.ormRepository = getRepository(User);
   }
+
 
   async findById(id: string): Promise<User | undefined> {
     try {
@@ -54,6 +55,26 @@ class UsersRepository implements IUserRepository {
           "office",
           "subsidiary",
           "bank_data",
+        ]
+      });
+
+      return user;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async findUserBySubsidiary(subsidiary: string): Promise<User | undefined> {
+    try {
+      const user = await this.ormRepository.findOne({
+        select: [
+          "id",
+          "name",
+          "avatar",
+        ],
+        where: { subsidiary },
+        relations: [
+          "subsidiary",
         ]
       });
 
@@ -109,17 +130,28 @@ class UsersRepository implements IUserRepository {
 
   async findUsers(data: IRequestUserDTO): Promise<User[]> {
     try {
-      const {name, city, departament, office} = data;
+      const { name, subsidiary, departament, office } = data;
       const users = await this.ormRepository.createQueryBuilder("user")
         .select()
         .innerJoinAndSelect("user.office", "office")
         .innerJoinAndSelect("user.subsidiary", "subsidiary")
         .innerJoinAndSelect("user.departament", "departament")
         .where("user.active = true")
-        .andWhere("user.name ILIKE :name", { name: name+"%" })
-        .andWhere("office.name LIKE :office", { office })
-        .andWhere("subsidiary.city LIKE :city", { city })
-        .andWhere("departament.name LIKE :departament", { departament })
+        .andWhere(new Brackets((qb) => {
+          if (name) {
+            qb.andWhere("user.name ILIKE :name", { name: name + "%" })
+          }
+          if (office) {
+            qb.andWhere("office.name LIKE :office", { office })
+          }
+          if (subsidiary) {
+            qb.andWhere("subsidiary.id = :subsidiary", { subsidiary })
+          }
+          if (departament) {
+            qb.andWhere("departament.name LIKE :departament", { departament })
+          }
+        }
+        ))
         .orderBy("user.name", "ASC")
         .getMany();
 
@@ -129,6 +161,58 @@ class UsersRepository implements IUserRepository {
     }
   }
 
+  async findUsersRealtors(): Promise<User[] | undefined> {
+    const users = await this.ormRepository.createQueryBuilder("user")
+      .select()
+      .innerJoinAndSelect("user.office", "office")
+      .innerJoinAndSelect("user.subsidiary", "subsidiary")
+      .innerJoinAndSelect("user.departament", "departament")
+      .where("user.active = true")
+      .andWhere("office.name = :office", { office: 'Corretor' })
+      .orderBy("user.name", "ASC")
+      .getMany();
+
+    return users
+  }
+  async findUsersRealtorsBySubsidiary(subsidiary: string): Promise<User[] | undefined> {
+    const users = await this.ormRepository.createQueryBuilder("user")
+      .select()
+      .innerJoinAndSelect("user.office", "office")
+      .innerJoinAndSelect("user.subsidiary", "subsidiary")
+      .innerJoinAndSelect("user.departament", "departament")
+      .andWhere("office.name = :office", { office: 'Corretor' })
+      .andWhere("subsidiary.id = :subsidiary", { subsidiary })
+      .orderBy("user.name", "ASC")
+      .getMany();
+
+    return users
+  }
+  async findUsersCoordinators(): Promise<User[] | undefined> {
+    const users = await this.ormRepository.createQueryBuilder("user")
+      .select()
+      .innerJoinAndSelect("user.office", "office")
+      .innerJoinAndSelect("user.subsidiary", "subsidiary")
+      .innerJoinAndSelect("user.departament", "departament")
+      .where("office.name = :office", { office: 'Coordenador' })
+      .orderBy("user.name", "ASC")
+      .getMany();
+
+    return users
+  }
+  async findUsersCoordinatorsBySubsidiary(subsidiary: string): Promise<User[] | undefined> {
+    const users = await this.ormRepository.createQueryBuilder("user")
+      .select()
+      .innerJoinAndSelect("user.office", "office")
+      .innerJoinAndSelect("user.subsidiary", "subsidiary")
+      .innerJoinAndSelect("user.departament", "departament")
+      .where("user.active = true")
+      .andWhere("office.name LIKE :office", { office: 'Coordenador' })
+      .andWhere("subsidiary.id = :subsidiary", { subsidiary })
+      .orderBy("user.name", "ASC")
+      .getMany();
+
+    return users
+  }
   async quantitySellers(id_sale: string): Promise<number> {
     try {
       const quantitySellers = await this.ormRepository.createQueryBuilder("user")
