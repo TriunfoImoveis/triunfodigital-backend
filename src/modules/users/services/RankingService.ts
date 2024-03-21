@@ -90,7 +90,6 @@ class RankingService {
       // Gerar ranking de Corretores Vendedores
       ranking = await Promise.all(
         users.map(async (user) => {
-          console.log({year, month})
           const sales = await this.salesRepository.salesForUserSellers({
             id: user.id,
             year: year !== 'all' ? year : '',

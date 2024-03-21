@@ -1,4 +1,4 @@
-import { getRepository, Repository } from 'typeorm';
+import { Brackets, getRepository, Repository } from 'typeorm';
 
 import AppError from '@shared/errors/AppError';
 import ICreateInstallmentDTO from '@modules/finances/dtos/ICreateInstallmentDTO';
@@ -16,7 +16,8 @@ class InstallmentRespository implements IInstallmentRepository {
 
   async listFilters(data: IRequestInstallmentDTO): Promise<Installment[]> {
     try {
-      const {buyer_name, city, status} = data;
+      console.log({data});
+      const {buyer_name, subsidiary, status} = data;
       const listInstallments = await this.ormRepository.createQueryBuilder("i")
         .select()
         .innerJoinAndSelect("i.sale", "sale")
@@ -25,15 +26,23 @@ class InstallmentRespository implements IInstallmentRepository {
         .innerJoinAndSelect("sale.realty", "realty")
         .leftJoinAndSelect("sale.builder", "builder")
         .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
-        .innerJoinAndSelect("sellers.subsidiary", "subsidiary")
+        .innerJoinAndSelect("sale.subsidiary", "subsidiary")
         .leftJoinAndSelect("i.calculation", "calculation")
         .leftJoinAndSelect("calculation.divisions", "divisions")
         .leftJoinAndSelect("divisions.division_type", "division_type")
         .leftJoinAndSelect("calculation.participants", "participants")
         .leftJoinAndSelect("calculation.bank_data", "bank_data")
-        .where("subsidiary.city ILIKE :city", {city: city+"%"})
-        .andWhere("i.status IN (:...status)", {status: status})
-        .andWhere("buyer.name ILIKE :buyer_name", {buyer_name: buyer_name+"%"})
+        .where(new Brackets(qb => {
+          if (subsidiary) {
+            qb.andWhere("subsidiary.id = :subsidiary", {subsidiary})
+          }
+          if (status) {
+            qb.andWhere("i.status IN (:...status)", {status: status})
+          }
+          if (buyer_name) {
+            qb.andWhere("buyer.name ILIKE :buyer_name", {buyer_name: buyer_name+"%"})
+          }
+        }))
         .andWhere("sale.status IN (:...status_sale)", {status_sale: ["PENDENTE", "PAGO_TOTAL", "CAIU"]})
         .orderBy("due_date", "DESC")
         .getMany();
@@ -53,7 +62,7 @@ class InstallmentRespository implements IInstallmentRepository {
       throw new AppError(err.detail);
     }
   }
-  
+
   async delete(installments: Installment[]): Promise<void> {
     try {
       installments.forEach(async (installment)=>{

@@ -100,9 +100,6 @@ class CreateSaleUsedService {
 
         // Enviar e-mail para o Financeiro.
         const users = await this.usersRepository.findUsers({
-          city: '%',
-          departament: '%',
-          name: '%',
           office: 'Gerente',
         });
 

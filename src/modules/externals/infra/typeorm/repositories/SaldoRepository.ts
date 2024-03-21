@@ -15,7 +15,6 @@ class SaldoRepository implements ISaldoRepository {
   async findAllEntrada(): Promise<void> {
     try {
       const saldos = await this.ormRepository.find();
-      console.log(saldos)
     } catch (err) {
       throw new AppError(err.detail);
     }
@@ -24,7 +23,6 @@ class SaldoRepository implements ISaldoRepository {
   async findAllSaida(): Promise<void> {
     try {
       const saldos = await this.ormRepository.find();
-      console.log(saldos)
     } catch (err) {
       throw new AppError(err.detail);
     }
