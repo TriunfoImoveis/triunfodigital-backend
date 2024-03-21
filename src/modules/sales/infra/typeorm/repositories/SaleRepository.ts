@@ -10,6 +10,11 @@ import INotValidSaleDTO from "@modules/sales/dtos/INotValidSaleDTO";
 import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
 import ICreateInstallmentDTO from "@modules/finances/dtos/ICreateInstallmentDTO";
 
+interface ISalesForSalers {
+  id: string
+  month: string
+  year: string
+}
 class SaleRepository implements ISaleRepository {
   private ormRepository: Repository<Sale>;
 
@@ -81,11 +86,11 @@ class SaleRepository implements ISaleRepository {
           qb.andWhere("sellers.name ILIKE :name", { name: name+"%" })
         }
 
-        if (month) {
-          qb.andWhere('EXTRACT(MONTH FROM sale.sale_date) = :month', { month: month })
-        }
         if (year) {
           qb.andWhere('EXTRACT(YEAR FROM sale.sale_date) = :year', { year: year })
+        }
+        if (month) {
+          qb.andWhere('EXTRACT(MONTH FROM sale.sale_date) = :month', { month: month })
         }
       }))
       .orderBy("sale.sale_date", "DESC")
@@ -256,14 +261,11 @@ class SaleRepository implements ISaleRepository {
     }
   }
 
-  async salesForUserSellers(
-    id: string,
-    format_date: string,
-    date: string
-  ): Promise<Sale[]> {
+  async salesForUserSellers(data: ISalesForSalers): Promise<Sale[]> {
+    const { id, year, month } = data;
     try {
       const sales = await this.ormRepository.createQueryBuilder("sale")
-        .select(["sale.id", "sale.realty_ammount"])
+        .select(["sale.id", "sale.realty_ammount", 'sale.sale_date'])
         .innerJoinAndSelect(
           "sale_has_sellers", "sellers",
           "sellers.sale_id = sale.id"
@@ -274,12 +276,18 @@ class SaleRepository implements ISaleRepository {
         )
         .where("user.id = :id_user", { id_user: id })
         .andWhere(
-          "to_char(sale.sale_date, :format) = :date",
-          { format: format_date, date: date }
-        )
-        .andWhere(
           "sale.status IN (:...status)",
           { status: ["PENDENTE", "PAGO_TOTAL"] }
+        ).andWhere(
+          new Brackets(qb => {
+            if (month) {
+              qb.andWhere('EXTRACT(MONTH FROM sale.sale_date) = :month', { month: month })
+            }
+            if(year) {
+              qb.andWhere('EXTRACT(YEAR FROM sale.sale_date) = :year', { year: year })
+            }
+
+          })
         )
         .getMany();
 
@@ -290,10 +298,9 @@ class SaleRepository implements ISaleRepository {
   }
 
   async salesForUserCaptivators(
-    id: string,
-    format_date: string,
-    date: string
+    data: ISalesForSalers
   ): Promise<Sale[]> {
+    const {id, month, year} = data
     try {
       const sales = await this.ormRepository.createQueryBuilder("sale")
         .select(["sale.id", "sale.realty_ammount"])
@@ -307,12 +314,18 @@ class SaleRepository implements ISaleRepository {
         )
         .where("user.id = :id_user", { id_user: id })
         .andWhere(
-          "to_char(sale.sale_date, :format) = :date",
-          { format: format_date, date: date }
-        )
-        .andWhere(
           "sale.status IN (:...status)",
           { status: ["PENDENTE", "PAGO_TOTAL"] }
+        ).andWhere(
+          new Brackets(qb => {
+            if (month) {
+              qb.andWhere('EXTRACT(MONTH FROM sale.sale_date) = :month', { month: month })
+            }
+            if(year) {
+              qb.andWhere('EXTRACT(YEAR FROM sale.sale_date) = :year', { year: year })
+            }
+
+          })
         )
         .getMany();
 

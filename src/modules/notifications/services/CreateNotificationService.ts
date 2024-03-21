@@ -27,8 +27,8 @@ class CreateNotificationService {
   ) {}
 
   public async execute({
-    sale_id, 
-    type, 
+    sale_id,
+    type,
     content
   }: IRequest): Promise<void> {
     const sale = await this.salesRepository.findById(sale_id);
@@ -39,15 +39,12 @@ class CreateNotificationService {
     var users: User[] = [];
     if ((type === 'CREATE') || (type === 'NOTIFICATION')) {
       users = await this.usersRepository.findUsers({
-        city: '%',
-        departament: '%',
-        name: '%',
         office: 'Administrador',
       });
     } else if (type === 'VALIDATION') {
       users = sale.sale_has_sellers;
     }
-    
+
     var room: Room[] = [];
     users.forEach((user) => {
       room.push({
@@ -55,7 +52,7 @@ class CreateNotificationService {
         read: false,
       });
     });
-    
+
     await this.notificationsRepository.create({
       content,
       sale_id: sale.id,

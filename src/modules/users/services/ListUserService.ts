@@ -13,7 +13,6 @@ class ListUserService {
   ) {}
 
   public async execute(data: IRequestUserDTO): Promise<User[]> {
-
     const users = await this.usersRepository.findUsers(data);
 
     return users;

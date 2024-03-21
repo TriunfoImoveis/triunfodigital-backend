@@ -14,7 +14,7 @@ installmentRoutes.use(ensuredAthenticated);
 installmentRoutes.get('/', celebrate({
   [Segments.QUERY]: {
     buyer_name: Joi.string().default(''),
-    city: Joi.string().default(''),
+    subsidiary: Joi.string().default(''),
     status: Joi.string().valid(
       "PENDENTE",
       "VENCIDO",

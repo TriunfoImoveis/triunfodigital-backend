@@ -29,34 +29,33 @@ class SellersDashboardService {
 
     @inject('PropertiesRepository')
     private propertyRepository: IPropertyRepository,
-  ) {}
+  ) { }
 
   public async execute({
     corretor,
     ano,
   }: IRequestSellersDashboardDTO): Promise<IResponseSellersDashboardDTO> {
     const ano_formated = ano.toString();
-    const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+    const months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
 
     const user = await this.usersRepository.findById(corretor);
     if (!user) {
       throw new AppError("Usuário não encontrado!", 404);
     }
-
     // Calculo VGV para corretor vendedor.
-    const sales_sellers = await this.salesRepository.salesForUserSellers(
-      corretor, 
-      "yyyy", 
-      ano_formated
-    );
+    const sales_sellers = await this.salesRepository.salesForUserSellers({
+      id: user.id,
+      year: ano.toString() !== 'all' ? ano.toString() : ''
+    });
+
     const vgv_sellers = await calculate_vgv(sales_sellers);
     const vgv_sellers_for_month = await Promise.all(
       months.map(async month => {
-        const sales = await this.salesRepository.salesForUserSellers(
-          corretor, 
-          "yyyyMM", 
-          ano_formated+month,
-        );
+        const sales = await this.salesRepository.salesForUserSellers({
+          id: user.id,
+          year: ano.toString() !== 'all' ? ano.toString() : '',
+          month
+        });
         const vgv = await calculate_vgv(sales);
         return {
           month: month,
@@ -67,19 +66,19 @@ class SellersDashboardService {
     );
 
     // Calculo VGV para corretor captador.
-    const sales_captivators = await this.salesRepository.salesForUserCaptivators(
-      corretor, 
-      "yyyy", 
-      ano_formated
+    const sales_captivators = await this.salesRepository.salesForUserCaptivators({
+      id: user.id,
+      year: ano.toString(),
+    }
     );
     const vgv_captivators = await calculate_vgv(sales_captivators);
     const vgv_captivators_for_month = await Promise.all(
       months.map(async month => {
-        const sales = await this.salesRepository.salesForUserCaptivators(
-          corretor, 
-          "yyyyMM", 
-          ano_formated+month,
-        );
+        const sales = await this.salesRepository.salesForUserCaptivators({
+          id: user.id,
+          year: ano.toString(),
+          month
+        });
         const vgv = await calculate_vgv(sales);
         return {
           month: month,
@@ -90,29 +89,29 @@ class SellersDashboardService {
     );
 
     // Tick Medium
-    const ticket_medium_sales = Number((vgv_sellers/12).toFixed(2));
-    const ticket_medium_captivators = Number((vgv_captivators/12).toFixed(2));
+    const ticket_medium_sales = Number((vgv_sellers / 12).toFixed(2));
+    const ticket_medium_captivators = Number((vgv_captivators / 12).toFixed(2));
 
     // Calculo de Comissões
     const comissions = await this.comissionRepository.findByUser(
-      corretor, 
+      corretor,
       "yyyy",
       ano_formated,
     );
     const total_comissions = comissions.reduce(
-      (total, comission) => total += Number(comission.comission_liquid), 
-    0);
+      (total, comission) => total += Number(comission.comission_liquid),
+      0);
     const comissions_for_month = await Promise.all(
       months.map(async month => {
         const comissions = await this.comissionRepository.findByUser(
-          corretor, 
+          corretor,
           "yyyyMM",
-          ano_formated+month,
+          ano_formated + month,
         );
 
         const total_comission = comissions.reduce(
-          (total, comission) => total += Number(comission.comission_liquid), 
-        0);
+          (total, comission) => total += Number(comission.comission_liquid),
+          0);
 
         return {
           month: month,
@@ -123,7 +122,7 @@ class SellersDashboardService {
 
     // Vendas
     const sales = await this.salesRepository.salesForDashboard(corretor, ano_formated);
-    
+
     // status
     const sales_nao_validado = sales.filter(sale => sale.status === "NAO_VALIDADO");
     const sales_caiu = sales.filter(sale => sale.status === "CAIU");
@@ -134,9 +133,9 @@ class SellersDashboardService {
 
     // tipo de venda
     const quantity_new = sales_paid.filter(sale => sale.sale_type === "NOVO").length;
-    const percentage_new = Number(((quantity_new/QUANTITY_SALES)*100).toFixed(2));
+    const percentage_new = Number(((quantity_new / QUANTITY_SALES) * 100).toFixed(2));
     const quantity_used = sales_paid.filter(sale => sale.sale_type === "USADO").length;
-    const percentage_used = Number(((quantity_used/QUANTITY_SALES)*100).toFixed(2));
+    const percentage_used = Number(((quantity_used / QUANTITY_SALES) * 100).toFixed(2));
 
     // origem da venda
     const origins = await this.originsRepository.findAll();
@@ -145,7 +144,7 @@ class SellersDashboardService {
       sales_paid.filter(
         sale => sale.origin.id === origin.id
       ).forEach(sale => total += Number(sale.realty_ammount));
-      return { 
+      return {
         origin: origin.name,
         value: total,
       }
@@ -157,8 +156,8 @@ class SellersDashboardService {
       const quantity = sales_paid.filter(
         sale => sale.realty.property.id === property.id
       ).length;
-      const percentage = (quantity / QUANTITY_SALES)*100;
-      return { 
+      const percentage = (quantity / QUANTITY_SALES) * 100;
+      return {
         property: property.name,
         quantity: Number(percentage.toFixed(2)),
       }
@@ -179,7 +178,7 @@ class SellersDashboardService {
         neighborhood: neighbor,
         quantity: quantity
       }
-    }).sort((a ,b) => b.quantity - a.quantity);
+    }).sort((a, b) => b.quantity - a.quantity);
 
     /* perfil do cliente comprador */
     // GENERO
@@ -188,7 +187,7 @@ class SellersDashboardService {
         const quantity = sales_paid.filter(
           sale => sale.client_buyer.gender === gender
         ).length;
-        const percentage = (quantity / QUANTITY_SALES)*100;
+        const percentage = (quantity / QUANTITY_SALES) * 100;
         return {
           gender: gender,
           percentage: Number(percentage.toFixed(2)),
@@ -201,7 +200,7 @@ class SellersDashboardService {
         const quantity = sales_paid.filter(
           sale => sale.client_buyer.civil_status === status
         ).length;
-        const percentage = (quantity/QUANTITY_SALES)*100;
+        const percentage = (quantity / QUANTITY_SALES) * 100;
         return {
           status: status,
           percentage: Number(percentage.toFixed(2)),
@@ -213,14 +212,14 @@ class SellersDashboardService {
       sale => sale.client_buyer.number_children
     ).reduce(
       (total, children) => total += children
-    , 0);
-    const avg_number_childrens = Number((sum_number_childrens/QUANTITY_SALES).toFixed(0));
+      , 0);
+    const avg_number_childrens = Number((sum_number_childrens / QUANTITY_SALES).toFixed(0));
 
     // Faixa Etaria
     const list_age_groups = [
-      { age_group: "0-18", min: 0, max: 18 }, 
-      { age_group: "19-39", min: 19, max: 39 }, 
-      { age_group: "40-59", min: 40, max: 59 }, 
+      { age_group: "0-18", min: 0, max: 18 },
+      { age_group: "19-39", min: 19, max: 39 },
+      { age_group: "40-59", min: 40, max: 59 },
       { age_group: "+60", min: 60, max: 150 },
     ]
 
@@ -233,7 +232,7 @@ class SellersDashboardService {
           }
         }
       ).length;
-      const percentage = (quantity/QUANTITY_SALES)*100;
+      const percentage = (quantity / QUANTITY_SALES) * 100;
       return {
         age: age_group.age_group,
         percentage: Number(percentage.toFixed(2)),

@@ -2,6 +2,6 @@ import { StatusInstallment } from "@modules/finances/infra/typeorm/entities/Inst
 
 export default interface IRequestInstallmentDTO {
   buyer_name?: string;
-  city?: string;
+  subsidiary?: string;
   status?: string | string[];
 }

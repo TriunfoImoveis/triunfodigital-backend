@@ -12,35 +12,29 @@ export default interface ISaleRepository {
   findById(id: string): Promise<Sale | undefined>;
 
   createSaleNew(
-    data: ICreateSaleNewDTO, 
+    data: ICreateSaleNewDTO,
     installments: ICreateInstallmentDTO[]
   ): Promise<Sale | undefined>;
   createSaleUsed(
-    data: ICreateSaleUsedDTO, 
+    data: ICreateSaleUsedDTO,
     installments: ICreateInstallmentDTO[]
   ): Promise<Sale | undefined>;
   update(id: string, body: IUpdateSaleDTO): Promise<Sale | undefined>;
   validSale(
-    id: string, 
+    id: string,
     status: Status
   ): Promise<void>;
   notValidSale(data: INotValidSaleDTO): Promise<void>;
 
-  salesForUserSellers(
-    id: string,
-    format_date: string,
-    date: string,
-  ): Promise<Sale[]>;
+  salesForUserSellers(data: {id: string, month?: string, year?: string}): Promise<Sale[]>;
   salesForUserCaptivators(
-    id: string,
-    format_date: string,
-    date: string,
+    data: {id: string, month?: string, year?: string}
   ): Promise<Sale[]>;
 
   salesForDashboard(id: string, date: string): Promise<Sale[]>;
 
   salesForSubsidiary(
-    id_subsidiary: string, 
+    id_subsidiary: string,
     format_date: string,
     date: string
   ): Promise<Sale[]>;

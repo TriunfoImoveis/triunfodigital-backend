@@ -9,12 +9,12 @@ import ExportCommissionService from '@modules/finances/services/ExportCommission
 
 class InstallmentController {
   async list(request: Request, response: Response): Promise<Response> {
-    const { buyer_name, city, status } = request.query;
+    const { buyer_name, subsidiary, status } = request.query;
 
     const listInstallmentService = container.resolve(ListInstallmentService);
     const listInstallments = await listInstallmentService.execute({
       buyer_name: buyer_name as string,
-      city: city as string,
+      subsidiary: subsidiary as string,
       status: status as string,
     });
 
