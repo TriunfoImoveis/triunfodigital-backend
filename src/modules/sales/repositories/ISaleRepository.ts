@@ -26,9 +26,9 @@ export default interface ISaleRepository {
   ): Promise<void>;
   notValidSale(data: INotValidSaleDTO): Promise<void>;
 
-  salesForUserSellers(data: {id: string, month: string | undefined, year: string | undefined}): Promise<Sale[]>;
+  salesForUserSellers(data: {id: string, month?: string, year?: string}): Promise<Sale[]>;
   salesForUserCaptivators(
-    data: {id: string, month: string | undefined, year: string | undefined}
+    data: {id: string, month?: string, year?: string}
   ): Promise<Sale[]>;
 
   salesForDashboard(id: string, date: string): Promise<Sale[]>;

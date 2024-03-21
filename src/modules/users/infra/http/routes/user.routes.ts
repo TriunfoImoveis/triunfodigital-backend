@@ -15,8 +15,8 @@ usersRouter.get(
   '/',
   celebrate({
     [Segments.QUERY]: {
-      name: Joi.string().default(''),
-      subsidiary: Joi.string().default(''),
+      name: Joi.string().default('').allow(''),
+      subsidiary: Joi.string().default('').allow(''),
       departament: Joi.string().default('%'),
       office: Joi.string().default('%'),
     }

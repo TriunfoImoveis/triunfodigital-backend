@@ -301,6 +301,7 @@ class SaleRepository implements ISaleRepository {
     data: ISalesForSalers
   ): Promise<Sale[]> {
     const {id, month, year} = data
+    console.log({data})
     try {
       const sales = await this.ormRepository.createQueryBuilder("sale")
         .select(["sale.id", "sale.realty_ammount"])
