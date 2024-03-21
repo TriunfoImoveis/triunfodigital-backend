@@ -16,7 +16,6 @@ class InstallmentRespository implements IInstallmentRepository {
 
   async listFilters(data: IRequestInstallmentDTO): Promise<Installment[]> {
     try {
-      console.log({data});
       const {buyer_name, subsidiary, status} = data;
       const listInstallments = await this.ormRepository.createQueryBuilder("i")
         .select()
