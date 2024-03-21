@@ -11,6 +11,10 @@ export default interface IUserRepository {
     data: IRequestUserDTO
   ): Promise<User[]>;
 
+  findUsersRealtors(): Promise<User[] | undefined>;
+  findUsersRealtorsBySubsidiary(subsidiary: string): Promise<User[] | undefined>;
+  findUsersCoordinators(): Promise<User[] | undefined>;
+  findUsersCoordinatorsBySubsidiary(subsidiary: string): Promise<User[] | undefined>;
   create(data: ICreateUsersDTO): Promise<User | undefined>;
   save(user: User): Promise<User>;
   update(id: string, data: IUpdateUserDTO): Promise<User | undefined>;

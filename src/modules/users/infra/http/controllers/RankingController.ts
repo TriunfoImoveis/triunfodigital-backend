@@ -16,8 +16,8 @@ class RankingController {
 
     const rankingService = container.resolve(RankingService);
     const ranking = await rankingService.execute({
-      year: Number(year),
-      month: month as number | undefined,
+      year: year as string | undefined,
+      month: month as string | undefined,
       subsidiary: subsidiary as string,
       user: user as string,
     });

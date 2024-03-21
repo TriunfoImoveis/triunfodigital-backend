@@ -8,18 +8,13 @@ import validatorFields from '@shared/infra/http/validators/validatorFields';
 const rankingRouter = Router();
 const rankingController = new RankingController();
 
-const CURRENT_YEAR = new Date().getFullYear()
-
 rankingRouter.use(ensuredAuthenticated);
 
 rankingRouter.get('/', celebrate({
   [Segments.QUERY]: {
-    year: Joi.number().default(CURRENT_YEAR),
-    month: Joi.number().min(1).max(12).optional()
-      .messages(
-        validatorFields({name: "'Mês'", min: 1, max: 12})
-      ),
-    subsidiary: Joi.string().required(),
+    year: Joi.string().optional().default('all'),
+    month: Joi.string().optional().default('all'),
+    subsidiary: Joi.string().optional().default('all'),
     user: Joi.string().valid('Corretor', 'Captador').required(),
   }
 }), rankingController.index);
