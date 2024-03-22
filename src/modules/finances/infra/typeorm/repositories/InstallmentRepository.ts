@@ -16,7 +16,15 @@ class InstallmentRespository implements IInstallmentRepository {
 
   async listFilters(data: IRequestInstallmentDTO): Promise<Installment[]> {
     try {
-      const {buyer_name, subsidiary, status} = data;
+      const {
+        buyer_name,
+        subsidiary,
+        status,
+        month,
+        year,
+        dateFrom,
+        dateTo
+      } = data;
       const listInstallments = await this.ormRepository.createQueryBuilder("i")
         .select()
         .innerJoinAndSelect("i.sale", "sale")
@@ -41,9 +49,19 @@ class InstallmentRespository implements IInstallmentRepository {
           if (buyer_name) {
             qb.andWhere("buyer.name ILIKE :buyer_name", {buyer_name: buyer_name+"%"})
           }
+          if (month) {
+            qb.andWhere('EXTRACT(MONTH FROM i.due_date) = :month', { month: month })
+          }
+          if(year) {
+            qb.andWhere('EXTRACT(YEAR FROM i.due_date) = :year', { year: year })
+          }
+
+          if(dateFrom && dateTo) {
+            qb.andWhere('i.due_date BETWEEN :dateFrom AND :dateTo', { dateFrom, dateTo })
+          }
         }))
         .andWhere("sale.status IN (:...status_sale)", {status_sale: ["PENDENTE", "PAGO_TOTAL", "CAIU"]})
-        .orderBy("due_date", "DESC")
+        .orderBy("i.due_date", "DESC")
         .getMany();
 
       return listInstallments;

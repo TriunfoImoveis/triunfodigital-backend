@@ -3,5 +3,9 @@ import { StatusInstallment } from "@modules/finances/infra/typeorm/entities/Inst
 export default interface IRequestInstallmentDTO {
   buyer_name?: string;
   subsidiary?: string;
-  status?: string | string[];
+  status?: StatusInstallment | StatusInstallment[];
+  month?: string;
+  year?: string;
+  dateFrom?: Date;
+  dateTo?: Date;
 }

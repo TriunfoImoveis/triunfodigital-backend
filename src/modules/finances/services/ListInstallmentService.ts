@@ -15,7 +15,11 @@ class ListInstallmentService {
   public async execute({
     buyer_name,
     subsidiary,
-    status
+    status,
+    month,
+    year,
+    dateFrom,
+    dateTo
   }: IRequestInstallmentDTO): Promise<Installment[]> {
 
     var statusFilter: any;
@@ -31,6 +35,10 @@ class ListInstallmentService {
       buyer_name,
       subsidiary,
       status: statusFilter,
+      month,
+      year,
+      dateFrom,
+      dateTo
     });
 
     if (status === StatusInstallment.PEN) {

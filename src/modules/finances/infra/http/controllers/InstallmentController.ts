@@ -6,16 +6,41 @@ import UpdateInstallmentService from '@modules/finances/services/UpdateInstallme
 import ListInstallmentService from '@modules/finances/services/ListInstallmentService';
 import ShowInstallmentService from '@modules/finances/services/ShowInstallmentService';
 import ExportCommissionService from '@modules/finances/services/ExportCommissionService';
+import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
 
+interface InstallmentRequestQuery {
+  buyer_name?: string;
+  subsidiary?: string;
+  status?: StatusInstallment;
+  month?: string;
+  year?: string;
+  dateFrom?: Date;
+  dateTo?: Date;
+}
 class InstallmentController {
-  async list(request: Request, response: Response): Promise<Response> {
-    const { buyer_name, subsidiary, status } = request.query;
+  async list(
+    request: Request<never, never, never, InstallmentRequestQuery>,
+    response: Response
+  ): Promise<Response> {
+    const {
+      buyer_name,
+      subsidiary,
+      status,
+      month,
+      year,
+      dateFrom,
+      dateTo
+    } = request.query;
 
     const listInstallmentService = container.resolve(ListInstallmentService);
     const listInstallments = await listInstallmentService.execute({
-      buyer_name: buyer_name as string,
-      subsidiary: subsidiary as string,
-      status: status as string,
+      buyer_name,
+      subsidiary,
+      status,
+      month,
+      year,
+      dateFrom,
+      dateTo
     });
 
     return response.json(listInstallments);
