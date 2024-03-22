@@ -6,6 +6,11 @@ import INotValidSaleDTO from "@modules/sales/dtos/INotValidSaleDTO";
 import ICreateInstallmentDTO from "@modules/finances/dtos/ICreateInstallmentDTO";
 import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
 
+interface ISalesForCoordinators {
+  ids: string[]
+  month?: string
+  year?: string
+}
 export default interface ISaleRepository {
   findAllWithoutFilters(): Promise<Sale[]>;
   findAll(data: IRequestSaleDTO): Promise<Sale[]>;
@@ -26,10 +31,11 @@ export default interface ISaleRepository {
   ): Promise<void>;
   notValidSale(data: INotValidSaleDTO): Promise<void>;
 
-  salesForUserSellers(data: {id: string, month?: string, year?: string}): Promise<Sale[]>;
+  salesForUserSellers(data: {ids: string[], month?: string, year?: string}): Promise<Sale[]>;
   salesForUserCaptivators(
-    data: {id: string, month?: string, year?: string}
+    data: {ids: string[], month?: string, year?: string}
   ): Promise<Sale[]>;
+  salesForUserCoordinators(data: ISalesForCoordinators): Promise<Sale[]>;
 
   salesForDashboard(id: string, date: string): Promise<Sale[]>;
 

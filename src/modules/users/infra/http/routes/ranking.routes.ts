@@ -12,10 +12,11 @@ rankingRouter.use(ensuredAuthenticated);
 
 rankingRouter.get('/', celebrate({
   [Segments.QUERY]: {
-    year: Joi.string().optional().default('all'),
-    month: Joi.string().optional().default('all'),
-    subsidiary: Joi.string().optional().default('all'),
-    user: Joi.string().valid('Corretor', 'Captador').required(),
+    year: Joi.string().optional().default('').allow(''),
+    month: Joi.string().optional().default('').allow(''),
+    subsidiary: Joi.string().optional().default('').allow(''),
+    typeRanking: Joi.string().valid('sales', 'captivator', 'coordinator').required(),
+    office: Joi.string().valid('Corretor', 'Coordenador').required(),
   }
 }), rankingController.index);
 
