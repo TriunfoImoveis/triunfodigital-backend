@@ -11,9 +11,14 @@ import IUpdateSaleDTO from "@modules/sales/dtos/IUpdateSaleDTO";
 import ICreateInstallmentDTO from "@modules/finances/dtos/ICreateInstallmentDTO";
 
 interface ISalesForSalers {
-  id: string
-  month: string
-  year: string
+  ids: string[]
+  month?: string
+  year?: string
+}
+interface ISalesForCoordinators {
+  ids: string[]
+  month?: string
+  year?: string
 }
 class SaleRepository implements ISaleRepository {
   private ormRepository: Repository<Sale>;
@@ -262,19 +267,45 @@ class SaleRepository implements ISaleRepository {
   }
 
   async salesForUserSellers(data: ISalesForSalers): Promise<Sale[]> {
-    const { id, year, month } = data;
+    const { ids, year, month } = data;
     try {
       const sales = await this.ormRepository.createQueryBuilder("sale")
-        .select(["sale.id", "sale.realty_ammount", 'sale.sale_date'])
-        .innerJoinAndSelect(
-          "sale_has_sellers", "sellers",
-          "sellers.sale_id = sale.id"
+        .select()
+        .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
+        .where("sellers.id IN (:...id_users)", { id_users: ids })
+        .andWhere(
+          "sale.status IN (:...status)",
+          { status: ["PENDENTE", "PAGO_TOTAL"] }
+        ).andWhere(
+          new Brackets(qb => {
+            if (month) {
+              qb.andWhere('EXTRACT(MONTH FROM sale.sale_date) = :month', { month: month })
+            }
+            if(year) {
+              qb.andWhere('EXTRACT(YEAR FROM sale.sale_date) = :year', { year: year })
+            }
+
+          })
         )
-        .innerJoinAndSelect(
-          "users", "user",
-          "sellers.user_id = user.id"
-        )
-        .where("user.id = :id_user", { id_user: id })
+        .orderBy("sale.sale_date", "ASC")
+        .getMany();
+
+      return sales;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async salesForUserCaptivators(
+    data: ISalesForSalers
+  ): Promise<Sale[]> {
+    const {ids, month, year} = data
+    try {
+      const sales = await this.ormRepository.createQueryBuilder("sale")
+        .select(["sale.id", "sale.realty_ammount"])
+        .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
+        .innerJoinAndSelect("sale.sale_has_captivators", "captivators")
+        .where("captivators.id IN (:...id_users)", { id_users: ids })
         .andWhere(
           "sale.status IN (:...status)",
           { status: ["PENDENTE", "PAGO_TOTAL"] }
@@ -296,23 +327,16 @@ class SaleRepository implements ISaleRepository {
       throw new AppError(err.detail);
     }
   }
-
-  async salesForUserCaptivators(
-    data: ISalesForSalers
+  async salesForUserCoordinators(
+    data: ISalesForCoordinators
   ): Promise<Sale[]> {
-    const {id, month, year} = data
+    const {ids, month, year} = data
     try {
       const sales = await this.ormRepository.createQueryBuilder("sale")
         .select(["sale.id", "sale.realty_ammount"])
-        .innerJoinAndSelect(
-          "sale_has_captivators", "captivators",
-          "captivators.sale_id = sale.id"
-        )
-        .innerJoinAndSelect(
-          "users", "user",
-          "captivators.user_id = user.id"
-        )
-        .where("user.id = :id_user", { id_user: id })
+        .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
+        .leftJoinAndSelect("sale.user_coordinator", "coordinator")
+        .where("coordinator.id IN (:...user_ids)", { user_ids: ids })
         .andWhere(
           "sale.status IN (:...status)",
           { status: ["PENDENTE", "PAGO_TOTAL"] }

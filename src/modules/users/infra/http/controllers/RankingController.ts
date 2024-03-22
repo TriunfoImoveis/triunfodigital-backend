@@ -4,22 +4,30 @@ import { container } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import RankingService from '@modules/users/services/RankingService';
 
-
+interface RankingQueryParams {
+  year?: string;
+  month?: string;
+  subsidiary?: string;
+  typeRanking: 'sales' | 'captivator';
+  office: 'Corretor' | 'Coordenador' | 'Coordenador';
+}
 class RankingController {
-  async index(request: Request, response: Response): Promise<Response> {
+  async index(request: Request<never, never, never, RankingQueryParams>, response: Response): Promise<Response> {
     const {
-      year,
+      office,
       month,
       subsidiary,
-      user,
+      year,
+      typeRanking
     } = request.query;
 
     const rankingService = container.resolve(RankingService);
     const ranking = await rankingService.execute({
-      year: year as string | undefined,
-      month: month as string | undefined,
-      subsidiary: subsidiary as string,
-      user: user as string,
+      year,
+      month,
+      subsidiary,
+      office,
+      typeRanking
     });
 
     return response.json(ranking);
