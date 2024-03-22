@@ -32,18 +32,40 @@ class RankingService {
     typeRanking
   }: IRequestRankingDTO): Promise<IResponseRankingDTO[]> {
 
-    const users = await this.usersRepository.findUsers({
-      subsidiary,
-      office: office,
-      departament: 'Comercial'
-    })
+    let users: User[] = []
 
-    if (!users) {
-      throw new AppError('resource not found', 404);
+    if (office === 'Corretor') {
+      const [realtors, coordinators] = await Promise.all([
+        this.usersRepository.findUsers({
+          subsidiary,
+          office: 'Corretor',
+          departament: 'Comercial'
+        }),
+        this.usersRepository.findUsers({
+          subsidiary,
+          office: 'Coordenador',
+          departament: 'Comercial'
+        })
+      ])
+
+      users = [...realtors, ...coordinators]
+    } else {
+      users = await this.usersRepository.findUsers({
+        subsidiary,
+        office: office,
+        departament: 'Comercial'
+      })
     }
+
+
+
 
     // // Gera o ranking e VGV de cada usuário (Corretores ou captadores)
     let ranking: IResponseRankingDTO[] = [];
+
+    if (users.length === 0) {
+      return ranking
+    }
 
     if (typeRanking === 'coordinator') {
       // Gerar ranking de Coordenadores
