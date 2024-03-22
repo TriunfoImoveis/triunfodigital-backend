@@ -44,7 +44,7 @@ class SellersDashboardService {
     }
     // Calculo VGV para corretor vendedor.
     const sales_sellers = await this.salesRepository.salesForUserSellers({
-      id: user.id,
+      ids: [user.id],
       year: ano.toString() !== 'all' ? ano.toString() : ''
     });
 
@@ -52,7 +52,7 @@ class SellersDashboardService {
     const vgv_sellers_for_month = await Promise.all(
       months.map(async month => {
         const sales = await this.salesRepository.salesForUserSellers({
-          id: user.id,
+          ids: [user.id],
           year: ano.toString() !== 'all' ? ano.toString() : '',
           month
         });
@@ -67,7 +67,7 @@ class SellersDashboardService {
 
     // Calculo VGV para corretor captador.
     const sales_captivators = await this.salesRepository.salesForUserCaptivators({
-      id: user.id,
+      ids: [user.id],
       year: ano.toString(),
     }
     );
@@ -75,7 +75,7 @@ class SellersDashboardService {
     const vgv_captivators_for_month = await Promise.all(
       months.map(async month => {
         const sales = await this.salesRepository.salesForUserCaptivators({
-          id: user.id,
+          ids: [user.id],
           year: ano.toString(),
           month
         });

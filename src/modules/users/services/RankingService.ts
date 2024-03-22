@@ -4,12 +4,14 @@ import IUserRepository from "@modules/users/repositories/IUserRepository";
 import IResponseRankingDTO from "@modules/users/dtos/IResponseRankingDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import AppError from "@shared/errors/AppError";
+import { getRanking } from "@shared/utils/get_ranking";
 
 interface IRequestRankingDTO {
   year?: string;
   month?: string;
-  subsidiary: string;
-  user: string;
+  subsidiary?: string;
+  office: 'Corretor' | 'Coordenador' | 'Diretor';
+  typeRanking: 'sales' | 'captivator' | 'coordinator';
 }
 
 @injectable()
@@ -20,101 +22,61 @@ class RankingService {
 
     @inject('SalesRepository')
     private salesRepository: ISaleRepository,
-  ) {}
+  ) { }
 
   public async execute({
     year,
     month,
     subsidiary,
-    user,
+    office,
+    typeRanking
   }: IRequestRankingDTO): Promise<IResponseRankingDTO[]> {
 
-    let usersSellers: User[] = []
-    let usersCoordinators: User[] = []
+    const users = await this.usersRepository.findUsers({
+      subsidiary,
+      office: office,
+      departament: 'Comercial'
+    })
 
-    if (!subsidiary || subsidiary === "all") {
-      const [realtors, coordinators] = await Promise.all([
-        this.usersRepository.findUsersRealtors(),
-        this.usersRepository.findUsersCoordinators()
-      ])
-
-      if (!realtors ) {
-        new AppError('error on find users')
-      }
-      if (!coordinators ) {
-        new AppError('error on find users')
-      }
-
-      usersSellers = realtors ? realtors : []
-      usersCoordinators = coordinators ? coordinators : []
-    } else {
-      usersSellers = await this.usersRepository.findUsersRealtorsBySubsidiary(subsidiary) || []
-      usersCoordinators = await this.usersRepository.findUsersCoordinatorsBySubsidiary(subsidiary) || []
+    if (!users) {
+      throw new AppError('resource not found', 404);
     }
 
-    var users = usersSellers.concat(usersCoordinators);
+    // // Gera o ranking e VGV de cada usuário (Corretores ou captadores)
+    let ranking: IResponseRankingDTO[] = [];
 
-    // Gera o ranking e VGV de cada usuário (Corretores ou captadores)
-    var ranking: IResponseRankingDTO[];
-    if (user === "Captador") {
-      // Gerar ranking de Corretores Captadores
-      ranking = await Promise.all(
-        users.map(async (user) => {
-          const sales = await this.salesRepository.salesForUserCaptivators({
-            id: user.id,
-            year: year !== 'all' ? year : '',
-            month : month !== 'all' ? month : '',
-          });
+    if (typeRanking === 'coordinator') {
+      // Gerar ranking de Coordenadores
+      const userIds = users.map(user => user.id);
+      const sales = await this.salesRepository.salesForUserCoordinators({
+        ids: userIds,
+        month,
+        year
+      })
 
-          let vgv = 0;
-          await Promise.all(
-            sales.map(async (sale) => {
+      // Calcula o vgv de cada coordenador
 
-              const quantity = await this.usersRepository.quantityCaptivators(sale.id);
-              const partialSale = sale.realty_ammount/quantity;
-              vgv += partialSale;
+      ranking = getRanking(users, sales, typeRanking);
+    }
+    if (typeRanking === 'sales') {
+      const userIds = users.map(user => user.id);
+      const sales = await this.salesRepository.salesForUserSellers({
+        ids: userIds,
+        month,
+        year
+      })
 
-            })
-          );
+      ranking = getRanking(users, sales, typeRanking);
+    }
+    if (typeRanking === 'captivator') {
+      const userIds = users.map(user => user.id);
+      const sales = await this.salesRepository.salesForUserCaptivators({
+        ids: userIds,
+        month,
+        year
+      })
 
-          return {
-            id: user.id,
-            avatar: user.avatar,
-            avatar_url: user.getAvatarUrl(),
-            name: user.name,
-            vgv: Number(vgv.toFixed(2)),
-          };
-        }),
-      );
-    } else {
-      // Gerar ranking de Corretores Vendedores
-      ranking = await Promise.all(
-        users.map(async (user) => {
-          const sales = await this.salesRepository.salesForUserSellers({
-            id: user.id,
-            year: year !== 'all' ? year : '',
-            month : month !== 'all' ? month : '',
-          });
-          let vgv = 0;
-          await Promise.all(
-            sales.map(async (sale) => {
-
-              const quantity = await this.usersRepository.quantitySellers(sale.id);
-              const partialSale = sale.realty_ammount/quantity;
-              vgv += partialSale;
-
-            })
-          );
-
-          return {
-            id: user.id,
-            avatar: user.avatar,
-            avatar_url: user.getAvatarUrl(),
-            name: user.name,
-            vgv: Number(vgv.toFixed(2)),
-          };
-        }),
-      );
+      ranking = getRanking(users, sales, typeRanking);
     }
 
     // Ordena o ranking do maior VGV para o menor
