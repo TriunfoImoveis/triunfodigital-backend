@@ -1,11 +1,10 @@
 import { Router } from 'express';
-import { celebrate, CelebrateError, Joi, Segments,  SchemaOptions} from 'celebrate';
-import {CustomHelpers, equal} from 'joi'
+import { celebrate, Joi, Segments} from 'celebrate';
+import {equal} from 'joi'
 
 import ensuredAthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 import InstallmentController from '@modules/finances/infra/http/controllers/InstallmentController';
 import validatorFields from '@shared/infra/http/validators/validatorFields';
-import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
 
 const installmentRoutes = Router();
 const installmentController = new InstallmentController();
@@ -16,13 +15,7 @@ installmentRoutes.get('/', celebrate({
   [Segments.QUERY]: {
     buyer_name: Joi.string().default('').allow(''),
     subsidiary: Joi.string().default('').allow(''),
-    status: Joi.string().valid(
-      "PENDENTE",
-      "VENCIDO",
-      "PAGO",
-      "CAIU",
-      "LIQUIDADA",
-    ).allow(''),
+    status: Joi.string().default('').allow('').empty('').trim().regex(/^[A-Z,]+$/),
     month: Joi.string().default('').allow(''),
     year: Joi.string().default('').allow(''),
     dateFrom: Joi.date().iso().allow(''),
@@ -34,6 +27,8 @@ installmentRoutes.get('/', celebrate({
       is: Joi.exist(),
       then: Joi.required()
     }),
+    page: Joi.number().optional().default(1),
+    perPage: Joi.number().optional().default(10),
   }
 }), installmentController.list);
 

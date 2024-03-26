@@ -7,16 +7,20 @@ import ListInstallmentService from '@modules/finances/services/ListInstallmentSe
 import ShowInstallmentService from '@modules/finances/services/ShowInstallmentService';
 import ExportCommissionService from '@modules/finances/services/ExportCommissionService';
 import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
+import AppError from '@shared/errors/AppError';
 
 interface InstallmentRequestQuery {
   buyer_name?: string;
   subsidiary?: string;
-  status?: StatusInstallment;
+  status?: string;
   month?: string;
   year?: string;
   dateFrom?: Date;
   dateTo?: Date;
+  page?: number;
+  perPage?: number;
 }
+
 class InstallmentController {
   async list(
     request: Request<never, never, never, InstallmentRequestQuery>,
@@ -29,18 +33,33 @@ class InstallmentController {
       month,
       year,
       dateFrom,
-      dateTo
+      dateTo,
+      page,
+      perPage
     } = request.query;
+
+    if (status) {
+      const statusInstallments = Object.values(StatusInstallment);
+      const statusRequest = status?.split(',') as StatusInstallment[];
+      const isValidateStatus = statusRequest.every(status => statusInstallments.includes(status));
+
+      if (!isValidateStatus) {
+        throw new AppError(`Invalid status: status must be ${statusInstallments.join(', ')}`, 400);
+      }
+    }
+
 
     const listInstallmentService = container.resolve(ListInstallmentService);
     const listInstallments = await listInstallmentService.execute({
       buyer_name,
       subsidiary,
-      status,
+      status: status ? status?.split(',') as StatusInstallment[] : undefined,
       month,
       year,
       dateFrom,
-      dateTo
+      dateTo,
+      page,
+      perPage
     });
 
     return response.json(listInstallments);

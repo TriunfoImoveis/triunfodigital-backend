@@ -8,4 +8,6 @@ export default interface IRequestInstallmentDTO {
   year?: string;
   dateFrom?: Date;
   dateTo?: Date;
+  page?: number;
+  perPage?: number;
 }

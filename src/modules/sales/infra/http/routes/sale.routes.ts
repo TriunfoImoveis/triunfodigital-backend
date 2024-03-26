@@ -4,7 +4,6 @@ import { celebrate, Joi, Segments } from 'celebrate';
 import ensuredAthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 import SaleController from '@modules/sales/infra/http/controllers/SaleController';
 import validatorFields from '@shared/infra/http/validators/validatorFields';
-import { max } from 'date-fns/esm';
 
 
 const saleRoutes = Router();

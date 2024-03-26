@@ -39,6 +39,7 @@ import contaRouter from '@modules/externals/infra/http/routes/conta.routes';
 
 // DASHBOARD
 import dashboardRouter from '@modules/dashboards/infra/http/routes/dashboard.routes';
+import scheduledRoutes from '@modules/finances/infra/http/routes/scheduled.routes';
 
 
 const routes = Router();
@@ -82,5 +83,8 @@ routes.use('/conta', contaRouter);
 
 // Module Dashboards
 routes.use('/dashboard', dashboardRouter);
+
+// Test Scheduled Jobs
+routes.use('/schedule', scheduledRoutes);
 
 export default routes;

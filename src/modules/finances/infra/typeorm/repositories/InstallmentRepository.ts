@@ -3,9 +3,12 @@ import { Brackets, getRepository, Repository } from 'typeorm';
 import AppError from '@shared/errors/AppError';
 import ICreateInstallmentDTO from '@modules/finances/dtos/ICreateInstallmentDTO';
 import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
-import Installment from '@modules/finances/infra/typeorm/entities/Installment';
+import Installment, { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
 import IUpdateInstallmentDTO from '@modules/finances/dtos/IUpdateInstallmentDTO';
 import IRequestInstallmentDTO from '@modules/finances/dtos/IRequestInstallmentDTO';
+import IResponseInstallmentDTO from '@modules/finances/dtos/IResponseInstallmentDTO';
+import { IRequestGetAmountInstallmentRecived } from '@modules/finances/dtos/IGetAmoutInstallmentRecived';
+import { Status } from '@modules/sales/infra/typeorm/entities/Sale';
 
 class InstallmentRespository implements IInstallmentRepository {
   private ormRepository: Repository<Installment>;
@@ -14,7 +17,9 @@ class InstallmentRespository implements IInstallmentRepository {
     this.ormRepository = getRepository(Installment);
   }
 
-  async listFilters(data: IRequestInstallmentDTO): Promise<Installment[]> {
+
+
+  async listFilters(data: IRequestInstallmentDTO): Promise<IResponseInstallmentDTO> {
     try {
       const {
         buyer_name,
@@ -23,9 +28,13 @@ class InstallmentRespository implements IInstallmentRepository {
         month,
         year,
         dateFrom,
-        dateTo
+        dateTo,
+        page = 1,
+        perPage = 10
       } = data;
-      const listInstallments = await this.ormRepository.createQueryBuilder("i")
+
+      const skip = (page - 1) * perPage;
+      const [installments, total] = await this.ormRepository.createQueryBuilder("i")
         .select()
         .innerJoinAndSelect("i.sale", "sale")
         .innerJoinAndSelect("sale.client_buyer", "buyer")
@@ -41,34 +50,127 @@ class InstallmentRespository implements IInstallmentRepository {
         .leftJoinAndSelect("calculation.bank_data", "bank_data")
         .where(new Brackets(qb => {
           if (subsidiary) {
-            qb.andWhere("subsidiary.id = :subsidiary", {subsidiary})
+            qb.andWhere("subsidiary.id = :subsidiary", { subsidiary })
           }
           if (status) {
-            qb.andWhere("i.status IN (:...status)", {status: status})
+            qb.andWhere("i.status IN (:...status)", { status: status })
           }
           if (buyer_name) {
-            qb.andWhere("buyer.name ILIKE :buyer_name", {buyer_name: buyer_name+"%"})
+            qb.andWhere("buyer.name ILIKE :buyer_name", { buyer_name: buyer_name + "%" })
           }
           if (month) {
             qb.andWhere('EXTRACT(MONTH FROM i.due_date) = :month', { month: month })
           }
-          if(year) {
+          if (year) {
             qb.andWhere('EXTRACT(YEAR FROM i.due_date) = :year', { year: year })
           }
 
-          if(dateFrom && dateTo) {
+          if (dateFrom && dateTo) {
             qb.andWhere('i.due_date BETWEEN :dateFrom AND :dateTo', { dateFrom, dateTo })
           }
         }))
-        .andWhere("sale.status IN (:...status_sale)", {status_sale: ["PENDENTE", "PAGO_TOTAL", "CAIU"]})
+        .andWhere('sale.status = :statusSale', { statusSale: Status.PE })
         .orderBy("i.due_date", "DESC")
-        .getMany();
+        .skip(skip)
+        .take(perPage)
+        .getManyAndCount();
 
-      return listInstallments;
+      return { installments, totalInstallments: total };
     } catch (err) {
       throw new AppError(err.detail);
     }
   }
+
+  async listAllInstallments(data: { subsidiariesIds: string[], status: string }): Promise<Installment[]> {
+    try {
+      const { subsidiariesIds, status } = data;
+      const installments = await this.ormRepository.createQueryBuilder("i")
+        .select()
+        .innerJoinAndSelect("i.sale", "sale")
+        .innerJoinAndSelect("sale.client_buyer", "buyer")
+        .leftJoinAndSelect("sale.client_seller", "seller")
+        .innerJoinAndSelect("sale.realty", "realty")
+        .leftJoinAndSelect("sale.builder", "builder")
+        .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
+        .innerJoinAndSelect("sale.subsidiary", "subsidiary")
+        .leftJoinAndSelect("i.calculation", "calculation")
+        .leftJoinAndSelect("calculation.divisions", "divisions")
+        .leftJoinAndSelect("divisions.division_type", "division_type")
+        .leftJoinAndSelect("calculation.participants", "participants")
+        .leftJoinAndSelect("calculation.bank_data", "bank_data")
+        .where("i.status = :status", { status })
+        .andWhere('subsidiary.id IN (:...subsidiariesIds)', { subsidiariesIds })
+        .andWhere('sale.status = :statusSale', { statusSale: Status.PE})
+        .orderBy("i.due_date", "ASC")
+        .getMany();
+
+      return installments;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async getAmountIntallmentsRecived(data: IRequestGetAmountInstallmentRecived): Promise<Installment[]> {
+    try {
+      const { subisidiaries, year, month,dateFrom,dateTo } = data;
+      const installmentsRecived = await this.ormRepository.createQueryBuilder("i")
+        .select(["i.id", "i.value"])
+        .innerJoinAndSelect("i.sale", "sale")
+        .innerJoinAndSelect("sale.subsidiary", "subsidiary")
+        .where(new Brackets(qb => {
+          if (subisidiaries) {
+            qb.andWhere("subsidiary.id iN (:...subisidiaries)", { subisidiaries })
+          }
+          if (month) {
+            qb.andWhere('EXTRACT(MONTH FROM i.due_date) = :month', { month: month })
+          }
+          if (year) {
+            qb.andWhere('EXTRACT(YEAR FROM i.due_date) = :year', { year: year })
+          }
+
+          if (dateFrom && dateTo) {
+            qb.andWhere('i.due_date BETWEEN :dateFrom AND :dateTo', { dateFrom, dateTo })
+          }
+        }))
+        .andWhere("i.status IN (:...status)", { status: [StatusInstallment.PEN, StatusInstallment.VEN] })
+        .andWhere('sale.status = :statusSale', { statusSale: Status.PE })
+        .getMany();
+      return installmentsRecived;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+  async getAmountIntallmentsPay(data: IRequestGetAmountInstallmentRecived): Promise<Installment[]> {
+    try {
+      const { subisidiaries, year, month,dateFrom,dateTo } = data;
+      const installmentsRecived = await this.ormRepository.createQueryBuilder("i")
+        .select(["i.id", "i.value"])
+        .innerJoinAndSelect("i.sale", "sale")
+        .innerJoinAndSelect("sale.subsidiary", "subsidiary")
+        .where(new Brackets(qb => {
+          if (subisidiaries) {
+            qb.andWhere("subsidiary.id iN (:...subisidiaries)", { subisidiaries })
+          }
+          if (month) {
+            qb.andWhere('EXTRACT(MONTH FROM i.due_date) = :month', { month: month })
+          }
+          if (year) {
+            qb.andWhere('EXTRACT(YEAR FROM i.due_date) = :year', { year: year })
+          }
+
+          if (dateFrom && dateTo) {
+            qb.andWhere('i.due_date BETWEEN :dateFrom AND :dateTo', { dateFrom, dateTo })
+          }
+        }))
+        .andWhere("i.status = :status", { status: StatusInstallment.PAG })
+        .andWhere('sale.status IN (:...statusSale)', { statusSale: [Status.PE, Status.PT] })
+        .getMany();
+      return installmentsRecived;
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
 
   async create(installments: ICreateInstallmentDTO[]): Promise<Installment[]> {
     try {
@@ -82,7 +184,7 @@ class InstallmentRespository implements IInstallmentRepository {
 
   async delete(installments: Installment[]): Promise<void> {
     try {
-      installments.forEach(async (installment)=>{
+      installments.forEach(async (installment) => {
         await this.ormRepository.delete(installment.id);
       });
     } catch (err) {
@@ -104,6 +206,14 @@ class InstallmentRespository implements IInstallmentRepository {
   async update(id: string, data: IUpdateInstallmentDTO): Promise<void> {
     try {
       await this.ormRepository.update(id, data);
+    } catch (err) {
+      throw new AppError(err.detail);
+    }
+  }
+
+  async updateMultipleInstallments(ids: string[], data: IUpdateInstallmentDTO): Promise<void> {
+    try {
+      await this.ormRepository.update(ids, data);
     } catch (err) {
       throw new AppError(err.detail);
     }

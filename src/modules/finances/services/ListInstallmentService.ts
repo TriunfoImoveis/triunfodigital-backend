@@ -1,9 +1,8 @@
 import { inject, injectable } from 'tsyringe';
-import { isFuture, isPast, parseISO } from 'date-fns';
 
 import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
-import Installment, { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
 import IRequestInstallmentDTO from '@modules/finances/dtos/IRequestInstallmentDTO';
+import IResponseInstallmentDTO from '../dtos/IResponseInstallmentDTO';
 
 @injectable()
 class ListInstallmentService {
@@ -19,57 +18,39 @@ class ListInstallmentService {
     month,
     year,
     dateFrom,
-    dateTo
-  }: IRequestInstallmentDTO): Promise<Installment[]> {
+    dateTo,
+    page,
+    perPage
+  }: IRequestInstallmentDTO): Promise<IResponseInstallmentDTO> {
 
-    var statusFilter: any;
-    if (!status) {
-      statusFilter = [StatusInstallment.PEN, StatusInstallment.PAG, StatusInstallment.CAI, StatusInstallment.LIQ]
-    } else if (status === StatusInstallment.VEN) {
-      statusFilter = [StatusInstallment.PEN];
-    } else {
-      statusFilter = [status];
-    }
-
-    const listInstallments = await this.installmentsRepository.listFilters({
+    const {installments, totalInstallments} = await this.installmentsRepository.listFilters({
       buyer_name,
       subsidiary,
-      status: statusFilter,
+      status,
       month,
       year,
       dateFrom,
-      dateTo
+      dateTo,
+      perPage,
+      page
     });
 
-    if (status === StatusInstallment.PEN) {
-      const installments = listInstallments.filter((installment) => {
-        const dateFormated = parseISO(installment.due_date.toString());
-        if (isFuture(dateFormated)) {
-          return installment;
-        }
-      });
+    const installmentRecived = await this.installmentsRepository.getAmountIntallmentsRecived({subisidiaries: subsidiary ? [subsidiary] : undefined, month, year, dateFrom, dateTo});
 
-      return installments;
-    } else if (status === StatusInstallment.VEN) {
-      const installments = listInstallments.filter((installment) => {
-        const dateFormated = parseISO(installment.due_date.toString());
-        if (isPast(dateFormated)) {
-          installment.status = StatusInstallment.VEN;
-          return installment;
-        }
-      });
+    const amountInCentsInstallmentRecived = installmentRecived.map(installment => Number(installment.value) * 100).reduce((total, value) => {
+      return total + value
+    }, 0)
 
-      return installments;
-    } else {
-      listInstallments.filter((installment) => {
-        const dateFormated = parseISO(installment.due_date.toString());
-        if ((installment.status === StatusInstallment.PEN) && (isPast(dateFormated))) {
-          installment.status = StatusInstallment.VEN;
-        }
-      });
-    }
+    const amountInstallmentRecived = amountInCentsInstallmentRecived / 100;
+    const installmentPay = await this.installmentsRepository.getAmountIntallmentsPay({subisidiaries: subsidiary ? [subsidiary] : undefined, month, year, dateFrom, dateTo});
 
-    return listInstallments;
+    const amountInCentsInstallmentPay = installmentPay.map(installment => Number(installment.value) * 100).reduce((total, value) => {
+      return total + value
+    }, 0)
+
+    const amountInstallmentPay = amountInCentsInstallmentPay / 100;
+
+    return {installments, totalInstallments, amountInstallmentRecived, amountInstallmentPay};
   }
 }
 
