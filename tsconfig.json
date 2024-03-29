@@ -14,8 +14,8 @@
       "@shared/*": ["shared/*"]
     },
     "esModuleInterop": true,
-    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true
   }
 }
