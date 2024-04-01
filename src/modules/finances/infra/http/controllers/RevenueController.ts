@@ -27,7 +27,7 @@ class RevenueController {
     const { status } = request.query;
     if (status) {
       const statusRevenue = Object.values(RevenueStatus);
-      const statusRequest = status?.split(',') as RevenueStatus[];
+      const statusRequest = status.split(',') as RevenueStatus[];
       const isValidateStatus = statusRequest.every(status => statusRevenue.includes(status));
 
       if (!isValidateStatus) {
@@ -37,7 +37,7 @@ class RevenueController {
     const listRevenueService = container.resolve(ListRevenueService);
     const revenues = await listRevenueService.execute({
       ...request.query,
-      status: status ? status?.split(',') as RevenueStatus[] : undefined,
+      status: status ? status.split(',') as RevenueStatus[] : undefined,
     });
     return response.json(revenues);
   }

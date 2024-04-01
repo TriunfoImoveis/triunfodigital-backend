@@ -42,7 +42,7 @@ class InstallmentController {
 
     if (status) {
       const statusInstallments = Object.values(StatusInstallment);
-      const statusRequest = status?.split(',') as StatusInstallment[];
+      const statusRequest = status.split(',') as StatusInstallment[];
       const isValidateStatus = statusRequest.every(status => statusInstallments.includes(status));
 
       if (!isValidateStatus) {
@@ -55,7 +55,7 @@ class InstallmentController {
     const listInstallments = await listInstallmentService.execute({
       buyer_name,
       subsidiary,
-      status: status ? status?.split(',') as StatusInstallment[] : undefined,
+      status: status ? status.split(',') as StatusInstallment[] : undefined,
       month,
       year,
       dateFrom,

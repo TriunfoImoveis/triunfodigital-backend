@@ -46,7 +46,7 @@ class ExpenseController {
     const { status } = request.query;
     if (status) {
       const statusInstallments = Object.values(ExpenseStatus);
-      const statusRequest = status?.split(',') as ExpenseStatus[];
+      const statusRequest = status.split(',') as ExpenseStatus[];
       const isValidateStatus = statusRequest.every(status => statusInstallments.includes(status));
 
       if (!isValidateStatus) {
