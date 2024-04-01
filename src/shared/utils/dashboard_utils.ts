@@ -23,10 +23,10 @@ interface generateValueProps {
   type: ParticipantType
 }
 export const generateBruteValue = ({installment, type}: generateValueProps) => {
-  return installment.calculation.participants?.filter(participant => participant?.participant_type === type)
-  .map(participant => participant?.comission_integral || 0).reduce((total, comissionValue) => total + Number(comissionValue), 0);
+  return installment.calculation.participants.filter(participant => participant.participant_type === type)
+  .map(participant => participant.comission_integral || 0).reduce((total, comissionValue) => total + Number(comissionValue), 0);
 }
 export const generateLiquidValue = ({installment, type}: generateValueProps) => {
-  return installment.calculation.participants?.filter(participant => participant?.participant_type === type)
-  .map(participant => participant?.comission_liquid || 0).reduce((total, comissionValue) => total + Number(comissionValue), 0);
+  return installment.calculation.participants.filter(participant => participant.participant_type === type)
+  .map(participant => participant.comission_liquid || 0).reduce((total, comissionValue) => total + Number(comissionValue), 0);
 }

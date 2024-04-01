@@ -3,6 +3,8 @@ import { inject, injectable } from 'tsyringe';
 import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
 import IRequestGetInstallmentsEntryDTO from '../dtos/IResquestGetInstallmentEntryDTO';
 import IResponseInstallmentEntryDTO from '../dtos/IResponseInstallmentEntryDTO';
+import { generateBruteValue, generateLiquidValue } from '@shared/utils/dashboard_utils';
+import { ParticipantType } from '../infra/typeorm/entities/Comission';
 
 @injectable()
 class InstallmentsEntryService {
@@ -35,14 +37,14 @@ class InstallmentsEntryService {
       sort
     });
 
-    const entry = installments?.map(installment => {
+    const entry = installments.map(installment => {
       return {
         id: installment.id,
         pay_date: installment.calculation.pay_date,
         subsidiary: installment.sale.subsidiary.name,
         description: `${installment.installment_number}° Parcela - ${installment.sale.realty.enterprise}`,
         paying_source: `${installment.sale.sale_type === 'NOVO'
-          ? installment.sale?.builder?.name
+          ? installment.sale.builder.name
           : installment.sale.client_buyer.name
           }`,
         brute_value: installment.value,
@@ -52,8 +54,8 @@ class InstallmentsEntryService {
         value_note: installment.calculation.note_value
           ? installment.calculation.note_value
           : null,
-        empressBrute: installment.calculation.participants?.find(participant => participant?.participant_type === 'EMPRESA')?.comission_integral || 0,
-        empressLiquid: installment.calculation.participants?.find(participant => participant?.participant_type === 'EMPRESA')?.comission_liquid || 0,
+        empressBrute: generateBruteValue({installment, type: ParticipantType.EMP}),
+        empressLiquid: generateLiquidValue({installment, type: ParticipantType.EMP}),
         bank: installment.calculation.bank_data
           ? `${installment.calculation.bank_data.account}`
           : null
