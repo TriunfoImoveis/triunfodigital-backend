@@ -9,6 +9,7 @@ import ExportCommissionService from '@modules/finances/services/ExportCommission
 import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
 import AppError from '@shared/errors/AppError';
 import InstallmentsEntryService from '@modules/finances/services/InstallmentsEntryService';
+import { verifyDates } from '@shared/utils/verify_dates';
 
 interface InstallmentRequestQuery {
   buyer_name?: string;
@@ -50,6 +51,12 @@ class InstallmentController {
       }
     }
 
+    const validadeDates = verifyDates(dateFrom, dateTo);
+
+    if (validadeDates.error) {
+      throw new AppError(validadeDates.errorMessage, 400);
+    }
+
 
     const listInstallmentService = container.resolve(ListInstallmentService);
     const listInstallments = await listInstallmentService.execute({
@@ -82,6 +89,12 @@ class InstallmentController {
       perPage,
       sort
     } = request.query;
+
+    const validadeDates = verifyDates(dateFrom, dateTo);
+
+    if (validadeDates.error) {
+      throw new AppError(validadeDates.errorMessage, 400);
+    }
 
     const installmentsEntryService = container.resolve(InstallmentsEntryService);
     const installmentsEntry = await installmentsEntryService.execute({

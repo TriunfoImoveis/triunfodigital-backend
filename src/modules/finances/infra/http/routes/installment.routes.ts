@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { celebrate, Joi, Segments} from 'celebrate';
-import {equal} from 'joi'
 
 import ensuredAthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 import InstallmentController from '@modules/finances/infra/http/controllers/InstallmentController';
@@ -19,14 +18,7 @@ installmentRoutes.get('/', celebrate({
     month: Joi.string().default('').allow(''),
     year: Joi.string().default('').allow(''),
     dateFrom: Joi.date().iso().allow(''),
-    dateTo: Joi.when('dateFrom', {
-      is: Joi.exist(),
-      then: Joi.date().iso().required().not(equal(Joi.ref('dateFrom'))).greater(Joi.ref('dateFrom')),
-      otherwise: Joi.date().iso().default('').allow('')
-    }).when('dateFrom', {
-      is: Joi.exist(),
-      then: Joi.required()
-    }),
+    dateTo: Joi.date().iso().allow(''),
     page: Joi.number().optional().default(1),
     perPage: Joi.number().optional().default(10),
   }
@@ -39,14 +31,7 @@ installmentRoutes.get('/entry', celebrate({
     month: Joi.string().default('').allow(''),
     year: Joi.string().default('').allow(''),
     dateFrom: Joi.date().iso().allow(''),
-    dateTo: Joi.when('dateFrom', {
-      is: Joi.exist(),
-      then: Joi.date().iso().required().not(equal(Joi.ref('dateFrom'))).greater(Joi.ref('dateFrom')),
-      otherwise: Joi.date().iso().default('').allow('')
-    }).when('dateFrom', {
-      is: Joi.exist(),
-      then: Joi.required()
-    }),
+    dateTo: Joi.date().iso().allow(''),
     page: Joi.number().optional().default(1),
     perPage: Joi.number().optional().default(10),
     sort: Joi.string().valid('ASC', 'DESC').default('DESC'),

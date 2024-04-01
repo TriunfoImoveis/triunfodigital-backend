@@ -1,12 +1,16 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
+import {isAfter, isEqual, parseISO} from 'date-fns';
 import SellersDashboardService from '@modules/dashboards/services/SellersDashboardService';
 import SubsidiariesDashboardService from '@modules/dashboards/services/SubsidiariesDashboardService';
 import MKTDashboardService from '@modules/dashboards/services/MKTDashboardService';
 import { IRequestDashboardFinancesDTO } from '@modules/dashboards/dtos/IRequestDashboardFinancesDTO';
 import ListInstallmentService from '@modules/finances/services/ListInstallmentService';
 import FinancesDashboardService from '@modules/dashboards/services/FinancesDashboardService';
+import AppError from '@shared/errors/AppError';
+import { verify } from 'jsonwebtoken';
+import { verifyDates } from '@shared/utils/verify_dates';
 
 class DashboardController {
   async dashboard_sellers(request: Request, response: Response): Promise<Response> {
@@ -47,7 +51,12 @@ class DashboardController {
   }
 
   async dashboard_finances(request: Request<never, never, never, IRequestDashboardFinancesDTO>, response: Response): Promise<Response<IRequestDashboardFinancesDTO>> {
+    const {dateFrom, dateTo} = request.query
+    const validadeDates = verifyDates(dateFrom, dateTo);
 
+    if (validadeDates.error) {
+      throw new AppError(validadeDates.errorMessage, 400);
+    }
     const financesDashboardService = container.resolve(FinancesDashboardService);
     const dashboardFinances = await financesDashboardService.execute(request.query);
 

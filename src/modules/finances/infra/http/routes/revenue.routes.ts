@@ -4,7 +4,6 @@ import { celebrate, Joi, Segments } from "celebrate";
 import ensuredAuthenticated from "@shared/infra/http/middlewares/ensuredAuthenticated";
 import RevenueController from "@modules/finances/infra/http/controllers/RevenueController";
 import validatorFields from "@shared/infra/http/validators/validatorFields";
-import { equal } from "joi";
 
 const revenueRoutes = Router();
 const revenueController = new RevenueController();
@@ -20,14 +19,7 @@ revenueRoutes.get('/', celebrate({
     month: Joi.string().default('').allow(''),
     year: Joi.string().default('').allow(''),
     dateFrom: Joi.date().iso().allow(''),
-    dateTo: Joi.when('dateFrom', {
-      is: Joi.exist(),
-      then: Joi.date().iso().required().not(equal(Joi.ref('dateFrom'))).greater(Joi.ref('dateFrom')),
-      otherwise: Joi.date().iso().default('').allow('')
-    }).when('dateFrom', {
-      is: Joi.exist(),
-      then: Joi.required()
-    }),
+    dateTo: Joi.date().iso().allow(''),
     page: Joi.number().optional().default(1),
     perPage: Joi.number().optional().default(10),
     sort: Joi.string().valid('ASC', 'DESC').default('DESC'),
