@@ -12,6 +12,7 @@ import { Status } from '@modules/sales/infra/typeorm/entities/Sale';
 import IRequestGetInstallmentsEntryDTO from '@modules/finances/dtos/IResquestGetInstallmentEntryDTO';
 import { ParticipantType } from '../entities/Comission';
 import { IListInstallmentsDTO } from '@modules/finances/dtos/IListAllInstallmentsDTO';
+import { generateLiquidValue } from '@shared/utils/dashboard_utils';
 
 class InstallmentRespository implements IInstallmentRepository {
   private ormRepository: Repository<Installment>;
@@ -222,8 +223,7 @@ class InstallmentRespository implements IInstallmentRepository {
 
       const comission = await querybuilder
         .getMany()
-        .then(installments => installments.map(installment => installment.calculation.participants
-          .find(participant => participant.participant_type === ParticipantType.EMP)?.comission_liquid || 0).reduce((total, comission) => {
+        .then(installments => installments.map(installment => generateLiquidValue({installment, type: ParticipantType.EMP})).reduce((total, comission) => {
             return total + Number(comission)
           }, 0))
 

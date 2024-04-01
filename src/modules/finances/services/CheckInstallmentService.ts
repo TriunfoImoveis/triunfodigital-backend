@@ -46,7 +46,7 @@ class CheckInstallmentService {
     }
 
     const overdueInstallments = await this.installmentsRepository.listAllInstallments({ subsidiariesIds, status: StatusInstallment.VEN })
-      ?.then(installments => installments.map(installment => {
+      .then(installments => installments.map(installment => {
         return {
           subsidiary: installment.sale.subsidiary,
           city: installment.sale.subsidiary.city,
