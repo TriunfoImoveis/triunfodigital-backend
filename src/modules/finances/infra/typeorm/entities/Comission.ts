@@ -1,14 +1,15 @@
-import { 
-  Column, 
-  Entity, 
-  JoinColumn, 
-  ManyToOne, 
-  PrimaryGeneratedColumn 
-} from "typeorm";
-
 import User from "@modules/users/infra/typeorm/entities/User";
 import Calculator from "./Calculator";
 import Subsidiary from "@modules/organizations/infra/typeorm/entities/Subsidiary";
+
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn
+} from "typeorm";
+
 
 export enum ParticipantType {
   VEN = "VENDEDOR",

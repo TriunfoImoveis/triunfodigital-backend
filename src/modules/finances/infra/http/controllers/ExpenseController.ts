@@ -11,6 +11,7 @@ import PaidExpenseService from "@modules/finances/services/PaidExpenseService";
 import ExportExpenseService from "@modules/finances/services/ExportExpenseService";
 import { ExpenseStatus } from "../../typeorm/entities/Expense";
 import AppError from "@shared/errors/AppError";
+import { verifyDates } from "@shared/utils/verify_dates";
 
 interface ExpenseRequestQuery {
   subsidiary?: string;
@@ -43,7 +44,7 @@ class ExpenseController {
 
   async list(request: Request<never, never, never, ExpenseRequestQuery>, response: Response): Promise<Response> {
 
-    const { status } = request.query;
+    const { status, dateFrom, dateTo } = request.query;
     if (status) {
       const statusInstallments = Object.values(ExpenseStatus);
       const statusRequest = status.split(',') as ExpenseStatus[];
@@ -52,6 +53,12 @@ class ExpenseController {
       if (!isValidateStatus) {
         throw new AppError(`Invalid status: status must be ${statusInstallments.join(', ')}`, 400);
       }
+    }
+
+    const validadeDates = verifyDates(dateFrom, dateTo);
+
+    if (validadeDates.error) {
+      throw new AppError(validadeDates.errorMessage, 400);
     }
 
     const listExpenseService = container.resolve(ListExpenseService);

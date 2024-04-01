@@ -28,14 +28,7 @@ dashboardRouter.get('/finances', celebrate({
     month: Joi.string().default('').allow(''),
     year: Joi.string().default('').allow(''),
     dateFrom: Joi.date().iso().allow(''),
-    dateTo: Joi.when('dateFrom', {
-      is: Joi.exist(),
-      then: Joi.date().iso().required().not(equal(Joi.ref('dateFrom'))).greater(Joi.ref('dateFrom')),
-      otherwise: Joi.date().iso().default('').allow('')
-    }).when('dateFrom', {
-      is: Joi.exist(),
-      then: Joi.required()
-    }),
+    dateTo: Joi.date().iso().allow(''),
   },
 }), dashboardController.dashboard_finances);
 

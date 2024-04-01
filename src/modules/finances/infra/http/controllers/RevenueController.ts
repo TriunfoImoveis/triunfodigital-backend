@@ -9,6 +9,7 @@ import PaidRevenueService from "@modules/finances/services/PaidRevenueService";
 import ExportRevenueService from "@modules/finances/services/ExportRevenueService";
 import { RevenueStatus, RevenueType } from "../../typeorm/entities/Revenue";
 import AppError from "@shared/errors/AppError";
+import { verifyDates } from "@shared/utils/verify_dates";
 
 interface RevenueRequestQuery {
   subsidiary?: string;
@@ -24,7 +25,7 @@ interface RevenueRequestQuery {
 }
 class RevenueController {
   async list(request: Request<never, never, never, RevenueRequestQuery>, response: Response): Promise<Response> {
-    const { status } = request.query;
+    const { status, dateFrom, dateTo } = request.query;
     if (status) {
       const statusRevenue = Object.values(RevenueStatus);
       const statusRequest = status.split(',') as RevenueStatus[];
@@ -34,6 +35,13 @@ class RevenueController {
         throw new AppError(`Invalid status: status must be ${statusRevenue.join(', ')}`, 400);
       }
     }
+
+    const validadeDates = verifyDates(dateFrom, dateTo);
+
+    if (validadeDates.error) {
+      throw new AppError(validadeDates.errorMessage, 400);
+    }
+
     const listRevenueService = container.resolve(ListRevenueService);
     const revenues = await listRevenueService.execute({
       ...request.query,
