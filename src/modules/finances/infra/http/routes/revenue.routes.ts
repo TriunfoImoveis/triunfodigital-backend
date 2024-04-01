@@ -10,7 +10,21 @@ const revenueController = new RevenueController();
 
 revenueRoutes.use(ensuredAuthenticated);
 
-revenueRoutes.get('/', revenueController.list);
+revenueRoutes.get('/', celebrate({
+  [Segments.QUERY]: {
+    buyer_name: Joi.string().default('').allow(''),
+    subsidiary: Joi.string().default('').allow(''),
+    revenue_type: Joi.string().valid('CREDITO', 'DESPACHANTE').default('').allow(''),
+    status: Joi.string().default('').allow('').empty('').trim().regex(/^[A-Z,]+$/),
+    month: Joi.string().default('').allow(''),
+    year: Joi.string().default('').allow(''),
+    dateFrom: Joi.date().iso().allow(''),
+    dateTo: Joi.date().iso().allow(''),
+    page: Joi.number().optional().default(1),
+    perPage: Joi.number().optional().default(10),
+    sort: Joi.string().valid('ASC', 'DESC').default('DESC'),
+  }
+}), revenueController.list);
 
 revenueRoutes.post('/', celebrate({
   [Segments.BODY]: {
@@ -18,7 +32,7 @@ revenueRoutes.post('/', celebrate({
       "CREDITO",
       "DESPACHANTE",
     ).required().messages(validatorFields({
-      name: "'Tipo de Receita'", 
+      name: "'Tipo de Receita'",
       ref: "[CREDITO ou DESPACHANTE]"
     })),
     description: Joi.string().required().messages(validatorFields({
@@ -55,7 +69,7 @@ revenueRoutes.put('/:id', celebrate({
       "CREDITO",
       "DESPACHANTE",
     ).messages(validatorFields({
-      name: "'Tipo de Receita'", 
+      name: "'Tipo de Receita'",
       ref: "[CREDITO ou DESPACHANTE]"
     })),
     description: Joi.string().messages(validatorFields({

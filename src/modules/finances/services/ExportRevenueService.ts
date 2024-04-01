@@ -22,7 +22,7 @@ class ExportRevenueService {
   ) { }
 
   public async execute(): Promise<IResponseDTO | undefined> {
-    const revenues = await this.revenueRepository.list();
+    const revenues = await this.revenueRepository.listAll();
 
     const workSheetColumnNames = [
       { header: 'TIPO DE RECEITA', key: 'revenue_type', width: 15},
@@ -57,11 +57,11 @@ class ExportRevenueService {
     });
 
     const filePath = await this.storagePrivider.saveReportFile(
-      { 
+      {
         workSheetData: {
           headers: workSheetColumnNames,
           data: data
-        }, 
+        },
         fileName: 'revenues',
         refCol: "A1:L1"
       }

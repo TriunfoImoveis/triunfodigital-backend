@@ -19,54 +19,52 @@ class CheckInstallmentService {
 
     @inject('UsersRepository')
     private usersRepository: IUserRepository,
-  ) {}
+  ) { }
 
   public async execute(): Promise<void> {
 
     const subsidiaries = await this.subsidiariesRepository.findSubsidiarysActive();
-    const cities = ["Fortaleza", "São Luís", "Teresina"];
+    const subsidiariesIds = subsidiaries.map(subsidiary => subsidiary.id);
 
-    const installmentsForCities = await Promise.all(
-      subsidiaries.map(async (subsidiary) => {
-        // Busca todas as pascelas pendentes em cada filial por vez.
-        const installments = await this.installmentsRepository.listFilters({
-          subsidiary: subsidiary.id,
-          status: [StatusInstallment.PEN],
-        });
+    const pendingInstallments = await this.installmentsRepository.listAllInstallments({ subsidiariesIds, status: StatusInstallment.PEN })
 
-        // Verifica cada parcela se está vencida e as retorna.
-        const installmentsLate = installments.filter((installment) => {
-          const dateFormated = parseISO(installment.due_date.toString());
-          if (isPast(dateFormated)) {
-            installment.status = StatusInstallment.VEN;
-            return installment;
-          }
-        });
-
-        // Só retorna se houver parcelas vencidas na filial.
-        return {
-          subsidiary,
-          city: subsidiary.city,
-          installmentsLate,
+    const hasPendingInstallments = pendingInstallments.length > 0;
+    if (hasPendingInstallments) {
+      const overduePendingInstallments = pendingInstallments.filter((installment) => {
+        const dateFormated = parseISO(installment.due_date.toString());
+        if (isPast(dateFormated)) {
+          return installment;
         }
       })
-    );
 
-    // Retorna true caso não exista parcelas vencidas em todas as filiais, caso contrario retona false.
-    const checkInstallmentsAllCities = installmentsForCities.filter((installmentsForCity) => {
-      if (installmentsForCity.installmentsLate.length > 0) {
-        return installmentsForCity;
+      const hasOverduePendingInstallments = overduePendingInstallments.length > 0;
+      if (hasOverduePendingInstallments) {
+        const overduePendingInstallmentsIds = overduePendingInstallments.map(installment => installment.id);
+        await this.installmentsRepository.updateMultipleInstallments(overduePendingInstallmentsIds, { status: StatusInstallment.VEN });
       }
-    });
 
-    // Verifica se existem parcelas vencidas em todas as filiais.
-    if (checkInstallmentsAllCities.length > 0) {
-      const users = await this.usersRepository.findUsers({
+    }
+
+    const overdueInstallments = await this.installmentsRepository.listAllInstallments({ subsidiariesIds, status: StatusInstallment.VEN })
+      .then(installments => installments.map(installment => {
+        return {
+          subsidiary: installment.sale.subsidiary,
+          city: installment.sale.subsidiary.city,
+          installment
+        }
+      }))
+
+
+    const hasOverdueInstallments = overdueInstallments.length > 0;
+
+    if (hasOverdueInstallments) {
+      const managers = await this.usersRepository.findUsers({
         office: 'Gerente',
       });
 
-      // Só envia os e-mails se houver usuário Gerente.
-      if (users.length > 0) {
+
+      const hasManager = managers.length > 0;
+      if (hasManager) {
         const pathInstallmentTemplate = path.resolve(
           __dirname,
           '..',
@@ -76,25 +74,13 @@ class CheckInstallmentService {
 
         const sendEmailJob = container.resolve(SendEmailJob);
         await sendEmailJob.run({
-          to_users: users,
+          to_users: managers,
           subject: "[Triunfo Digital] Parcelas Vencidas",
           file: pathInstallmentTemplate,
           variables: {
-            installmentsForCities
+            overdueInstallments
           }
         });
-
-        // Adicionar job ForgotPasswordJob na fila
-        // await mailQueue.add('CheckInstallmentJob',
-        //   {
-        //     to_users: emails.toString(),
-        //     subject: "[Triunfo Digital] Parcelas Vencidas",
-        //     file: pathInstallmentTemplate,
-        //     variables: {
-        //       installmentsForCities
-        //     }
-        //   }
-        // );
       }
     }
   }

@@ -1,8 +1,5 @@
 import 'reflect-metadata';
 import * as dotenv from 'dotenv';
-import * as http from "http";
-import * as io from 'socket.io';
-import path from 'path';
 
 import express, { Request, Response, NextFunction, Express } from 'express';
 import cors from 'cors';

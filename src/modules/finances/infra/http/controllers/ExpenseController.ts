@@ -9,7 +9,23 @@ import DeleteExpenseService from "@modules/finances/services/DeleteExpenseServic
 import ShowExpenseService from "@modules/finances/services/ShowExpenseService";
 import PaidExpenseService from "@modules/finances/services/PaidExpenseService";
 import ExportExpenseService from "@modules/finances/services/ExportExpenseService";
+import { ExpenseStatus } from "../../typeorm/entities/Expense";
+import AppError from "@shared/errors/AppError";
+import { verifyDates } from "@shared/utils/verify_dates";
 
+interface ExpenseRequestQuery {
+  subsidiary?: string;
+  expense_type?: string;
+  status?: string;
+  month?: string;
+  year?: string;
+  dateFrom?: Date;
+  dateTo?: Date;
+  group?: string;
+  page?: number;
+  perPage?: number;
+  sort?: 'ASC' | 'DESC';
+}
 
 class ExpenseController {
   async listGroups(request: Request, response: Response): Promise<Response> {
@@ -17,7 +33,7 @@ class ExpenseController {
     const groups = await groupsRepository.list();
 
     return response.json(groups);
-  } 
+  }
 
   async createGroup(request: Request, response: Response): Promise<Response> {
     const groupsRepository = new GroupExpenseRepository();
@@ -26,12 +42,30 @@ class ExpenseController {
     return response.json(group);
   }
 
-  async list(request: Request, response: Response): Promise<Response> {
-    const { status } = request.query;
+  async list(request: Request<never, never, never, ExpenseRequestQuery>, response: Response): Promise<Response> {
+
+    const { status, dateFrom, dateTo } = request.query;
+    if (status) {
+      const statusInstallments = Object.values(ExpenseStatus);
+      const statusRequest = status.split(',') as ExpenseStatus[];
+      const isValidateStatus = statusRequest.every(status => statusInstallments.includes(status));
+
+      if (!isValidateStatus) {
+        throw new AppError(`Invalid status: status must be ${statusInstallments.join(', ')}`, 400);
+      }
+    }
+
+    const validadeDates = verifyDates(dateFrom, dateTo);
+
+    if (validadeDates.error) {
+      throw new AppError(validadeDates.errorMessage, 400);
+    }
+
     const listExpenseService = container.resolve(ListExpenseService);
-    const listExpense = await listExpenseService.execute(
-      status as string | undefined
-    );
+    const listExpense = await listExpenseService.execute({
+      ...request.query,
+      status: status ? status as ExpenseStatus : undefined
+    });
 
     return response.json(listExpense);
   }

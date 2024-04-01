@@ -21,7 +21,7 @@ class ExportExpenseService {
   ) {}
 
   public async execute(): Promise<IResponseDTO | undefined> {
-    const expenses = await this.expenseRepository.list();
+    const expenses = await this.expenseRepository.listAll();
 
     const workSheetColumnNames = [
       { header: 'TIPO DE DESPESA', key: 'expense_type', width: 15},
@@ -54,11 +54,11 @@ class ExportExpenseService {
     });
 
     const filePath = await this.storagePrivider.saveReportFile(
-      { 
+      {
         workSheetData: {
           headers: workSheetColumnNames,
           data: data
-        }, 
+        },
         fileName: 'expenses',
         refCol: "A1:K1"
       }
