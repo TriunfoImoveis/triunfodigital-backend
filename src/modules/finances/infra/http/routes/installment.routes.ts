@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { celebrate, Joi, Segments } from 'celebrate';
+import { celebrate, Joi, Segments} from 'celebrate';
+import {equal} from 'joi'
 
 import ensuredAthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 import InstallmentController from '@modules/finances/infra/http/controllers/InstallmentController';
 import validatorFields from '@shared/infra/http/validators/validatorFields';
-import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
 
 const installmentRoutes = Router();
 const installmentController = new InstallmentController();
@@ -13,17 +13,45 @@ installmentRoutes.use(ensuredAthenticated);
 
 installmentRoutes.get('/', celebrate({
   [Segments.QUERY]: {
-    buyer_name: Joi.string().default(''),
-    subsidiary: Joi.string().default(''),
-    status: Joi.string().valid(
-      "PENDENTE",
-      "VENCIDO",
-      "PAGO",
-      "CAIU",
-      "LIQUIDADA",
-    ),
+    buyer_name: Joi.string().default('').allow(''),
+    subsidiary: Joi.string().default('').allow(''),
+    status: Joi.string().default('').allow('').empty('').trim().regex(/^[A-Z,]+$/),
+    month: Joi.string().default('').allow(''),
+    year: Joi.string().default('').allow(''),
+    dateFrom: Joi.date().iso().allow(''),
+    dateTo: Joi.when('dateFrom', {
+      is: Joi.exist(),
+      then: Joi.date().iso().required().not(equal(Joi.ref('dateFrom'))).greater(Joi.ref('dateFrom')),
+      otherwise: Joi.date().iso().default('').allow('')
+    }).when('dateFrom', {
+      is: Joi.exist(),
+      then: Joi.required()
+    }),
+    page: Joi.number().optional().default(1),
+    perPage: Joi.number().optional().default(10),
   }
 }), installmentController.list);
+
+installmentRoutes.get('/entry', celebrate({
+  [Segments.QUERY]: {
+    buyer_name: Joi.string().default('').allow(''),
+    subsidiary: Joi.string().default('').allow(''),
+    month: Joi.string().default('').allow(''),
+    year: Joi.string().default('').allow(''),
+    dateFrom: Joi.date().iso().allow(''),
+    dateTo: Joi.when('dateFrom', {
+      is: Joi.exist(),
+      then: Joi.date().iso().required().not(equal(Joi.ref('dateFrom'))).greater(Joi.ref('dateFrom')),
+      otherwise: Joi.date().iso().default('').allow('')
+    }).when('dateFrom', {
+      is: Joi.exist(),
+      then: Joi.required()
+    }),
+    page: Joi.number().optional().default(1),
+    perPage: Joi.number().optional().default(10),
+    sort: Joi.string().valid('ASC', 'DESC').default('DESC'),
+  }
+}), installmentController.getEntry);
 
 installmentRoutes.post('/:id', celebrate({
   [Segments.PARAMS]: {
@@ -33,13 +61,13 @@ installmentRoutes.post('/:id', celebrate({
     installments: Joi.array().items(
       Joi.object({
         installment_number: Joi.number().positive().required()
-          .messages(validatorFields({name: "'número da parcela'"})),
+          .messages(validatorFields({ name: "'número da parcela'" })),
         value: Joi.number().positive().required()
-          .messages(validatorFields({name: "'valor'"})),
+          .messages(validatorFields({ name: "'valor'" })),
         due_date: Joi.date().iso().required()
-          .messages(validatorFields({name: "'data de vencimento'"})),
+          .messages(validatorFields({ name: "'data de vencimento'" })),
       })
-    ).min(1).required().messages(validatorFields({name: "'parcelas'", min: 1}))
+    ).min(1).required().messages(validatorFields({ name: "'parcelas'", min: 1 }))
   }
 }), installmentController.create);
 

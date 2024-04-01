@@ -1,9 +1,8 @@
 import { inject, injectable } from 'tsyringe';
-import { isFuture, isPast, parseISO } from 'date-fns';
 
 import IInstallmentRepository from '@modules/finances/repositories/IInstallmentRepository';
-import Installment, { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
 import IRequestInstallmentDTO from '@modules/finances/dtos/IRequestInstallmentDTO';
+import IResponseInstallmentDTO from '../dtos/IResponseInstallmentDTO';
 
 @injectable()
 class ListInstallmentService {
@@ -15,53 +14,29 @@ class ListInstallmentService {
   public async execute({
     buyer_name,
     subsidiary,
-    status
-  }: IRequestInstallmentDTO): Promise<Installment[]> {
+    status,
+    month,
+    year,
+    dateFrom,
+    dateTo,
+    page,
+    perPage
+  }: IRequestInstallmentDTO): Promise<IResponseInstallmentDTO> {
 
-    var statusFilter: any;
-    if (!status) {
-      statusFilter = [StatusInstallment.PEN, StatusInstallment.PAG, StatusInstallment.CAI, StatusInstallment.LIQ]
-    } else if (status === StatusInstallment.VEN) {
-      statusFilter = [StatusInstallment.PEN];
-    } else {
-      statusFilter = [status];
-    }
-
-    const listInstallments = await this.installmentsRepository.listFilters({
+    const {installments, totalInstallments, totalValueInstallments} = await this.installmentsRepository.listFilters({
       buyer_name,
       subsidiary,
-      status: statusFilter,
+      status,
+      month,
+      year,
+      dateFrom,
+      dateTo,
+      perPage,
+      page
     });
 
-    if (status === StatusInstallment.PEN) {
-      const installments = listInstallments.filter((installment) => {
-        const dateFormated = parseISO(installment.due_date.toString());
-        if (isFuture(dateFormated)) {
-          return installment;
-        }
-      });
 
-      return installments;
-    } else if (status === StatusInstallment.VEN) {
-      const installments = listInstallments.filter((installment) => {
-        const dateFormated = parseISO(installment.due_date.toString());
-        if (isPast(dateFormated)) {
-          installment.status = StatusInstallment.VEN;
-          return installment;
-        }
-      });
-
-      return installments;
-    } else {
-      listInstallments.filter((installment) => {
-        const dateFormated = parseISO(installment.due_date.toString());
-        if ((installment.status === StatusInstallment.PEN) && (isPast(dateFormated))) {
-          installment.status = StatusInstallment.VEN;
-        }
-      });
-    }
-
-    return listInstallments;
+    return {installments, totalInstallments, totalValueInstallments};
   }
 }
 

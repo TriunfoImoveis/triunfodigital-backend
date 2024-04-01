@@ -7,11 +7,38 @@ import UpdateRevenueService from "@modules/finances/services/UpdateRevenueServic
 import ShowRevenueService from "@modules/finances/services/ShowRevenueService";
 import PaidRevenueService from "@modules/finances/services/PaidRevenueService";
 import ExportRevenueService from "@modules/finances/services/ExportRevenueService";
+import { RevenueStatus, RevenueType } from "../../typeorm/entities/Revenue";
+import AppError from "@shared/errors/AppError";
 
+interface RevenueRequestQuery {
+  subsidiary?: string;
+  revenue_type: RevenueType;
+  status?: string;
+  month?: string;
+  year?: string;
+  dateFrom?: Date;
+  dateTo?: Date;
+  page?: number;
+  perPage?: number;
+  sort?: 'ASC' | 'DESC';
+}
 class RevenueController {
-  async list(request: Request, response: Response): Promise<Response> {
+  async list(request: Request<never, never, never, RevenueRequestQuery>, response: Response): Promise<Response> {
+    const { status } = request.query;
+    if (status) {
+      const statusRevenue = Object.values(RevenueStatus);
+      const statusRequest = status?.split(',') as RevenueStatus[];
+      const isValidateStatus = statusRequest.every(status => statusRevenue.includes(status));
+
+      if (!isValidateStatus) {
+        throw new AppError(`Invalid status: status must be ${statusRevenue.join(', ')}`, 400);
+      }
+    }
     const listRevenueService = container.resolve(ListRevenueService);
-    const revenues = await listRevenueService.execute();
+    const revenues = await listRevenueService.execute({
+      ...request.query,
+      status: status ? status?.split(',') as RevenueStatus[] : undefined,
+    });
     return response.json(revenues);
   }
 
@@ -32,7 +59,7 @@ class RevenueController {
       client,
       subsidiary,
     } = request.body;
-    
+
     const createRevenueService = container.resolve(CreateRevenueService);
     const newRevenue = await createRevenueService.execute({
       revenue_type,

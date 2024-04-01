@@ -1,10 +1,9 @@
 import { inject, injectable } from "tsyringe";
-import { isPast, parseISO } from "date-fns";
 
 import IRevenueRepository from "@modules/finances/repositories/IRevenueRepository";
-import { RevenueStatus } from "@modules/finances/infra/typeorm/entities/Revenue";
-import calculate_tax_rate from "@shared/utils/calculate_tax_rate";
 import IResponseRevenueDTO from "@modules/finances/dtos/IResponseRevenueDTO";
+import IRequestRevenueDTO from "../dtos/IRequestRevenueDTO";
+import { RevenueStatus } from "../infra/typeorm/entities/Revenue";
 
 @injectable()
 class ListRevenueService {
@@ -13,25 +12,21 @@ class ListRevenueService {
     private revenueRepository: IRevenueRepository,
   ) {}
 
-  public async execute(): Promise<IResponseRevenueDTO[]> {
-    const listRevenue = await this.revenueRepository.list();
+  public async execute(props: IRequestRevenueDTO): Promise<IResponseRevenueDTO> {
 
-    listRevenue.map((revenue) => {
-      // Colocar status de Vencido
-      if (revenue.status == RevenueStatus.PEND) {
-        const dueDateFormated = parseISO(revenue.due_date.toString());
-        if (isPast(dueDateFormated)) {
-          revenue.status = RevenueStatus.VENC;
-        }
-      }
+    const {status} = props;
 
-      // Calculo do valor liquido.
-      const value_liquid = calculate_tax_rate(revenue.value_integral, revenue.tax_rate);
-      const responseRevenue: IResponseRevenueDTO = revenue;
-      responseRevenue.value_liquid = value_liquid;
-    });
-  
-    return listRevenue;
+    const isFilterDateByPayDate = status && status.includes(RevenueStatus.PAGO) || false;
+
+    if (isFilterDateByPayDate) {
+      const {revenues, total, totalValueIntegralRevenues} = await this.revenueRepository.listAndFilterByPayDate(props);
+
+      return {revenues, total, totalValueIntegralRevenues};
+    }
+
+    const {revenues, total, totalValueIntegralRevenues} = await this.revenueRepository.list(props);
+
+    return {revenues, total, totalValueIntegralRevenues};
   }
 }
 

@@ -6,19 +6,97 @@ import UpdateInstallmentService from '@modules/finances/services/UpdateInstallme
 import ListInstallmentService from '@modules/finances/services/ListInstallmentService';
 import ShowInstallmentService from '@modules/finances/services/ShowInstallmentService';
 import ExportCommissionService from '@modules/finances/services/ExportCommissionService';
+import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
+import AppError from '@shared/errors/AppError';
+import InstallmentsEntryService from '@modules/finances/services/InstallmentsEntryService';
+
+interface InstallmentRequestQuery {
+  buyer_name?: string;
+  subsidiary?: string;
+  status?: string;
+  month?: string;
+  year?: string;
+  dateFrom?: Date;
+  dateTo?: Date;
+  page?: number;
+  perPage?: number;
+  sort?: 'ASC' | 'DESC';
+}
 
 class InstallmentController {
-  async list(request: Request, response: Response): Promise<Response> {
-    const { buyer_name, subsidiary, status } = request.query;
+  async list(
+    request: Request<never, never, never, InstallmentRequestQuery>,
+    response: Response
+  ): Promise<Response> {
+    const {
+      buyer_name,
+      subsidiary,
+      status,
+      month,
+      year,
+      dateFrom,
+      dateTo,
+      page,
+      perPage
+    } = request.query;
+
+    if (status) {
+      const statusInstallments = Object.values(StatusInstallment);
+      const statusRequest = status?.split(',') as StatusInstallment[];
+      const isValidateStatus = statusRequest.every(status => statusInstallments.includes(status));
+
+      if (!isValidateStatus) {
+        throw new AppError(`Invalid status: status must be ${statusInstallments.join(', ')}`, 400);
+      }
+    }
+
 
     const listInstallmentService = container.resolve(ListInstallmentService);
     const listInstallments = await listInstallmentService.execute({
-      buyer_name: buyer_name as string,
-      subsidiary: subsidiary as string,
-      status: status as string,
+      buyer_name,
+      subsidiary,
+      status: status ? status?.split(',') as StatusInstallment[] : undefined,
+      month,
+      year,
+      dateFrom,
+      dateTo,
+      page,
+      perPage
     });
 
     return response.json(listInstallments);
+  }
+
+  async getEntry(
+    request: Request<never, never, never, InstallmentRequestQuery>,
+    response: Response
+  ): Promise<Response> {
+    const {
+      buyer_name,
+      subsidiary,
+      month,
+      year,
+      dateFrom,
+      dateTo,
+      page,
+      perPage,
+      sort
+    } = request.query;
+
+    const installmentsEntryService = container.resolve(InstallmentsEntryService);
+    const installmentsEntry = await installmentsEntryService.execute({
+      buyer_name,
+      subsidiary,
+      month,
+      year,
+      dateFrom,
+      dateTo,
+      page,
+      perPage,
+      sort
+    });
+
+    return response.json(installmentsEntry);
   }
 
   async show(request: Request, response: Response): Promise<Response> {

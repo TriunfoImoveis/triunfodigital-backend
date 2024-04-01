@@ -1,4 +1,4 @@
-import { getRepository, Repository } from "typeorm";
+import { Brackets, getRepository, QueryFailedError, Repository } from "typeorm";
 
 import Expense from "@modules/finances/infra/typeorm/entities/Expense";
 import AppError from "@shared/errors/AppError";
@@ -6,6 +6,8 @@ import IExpenseRepository from "@modules/finances/repositories/IExpenseRepositor
 import ICreateExpenseDTO from "@modules/finances/dtos/ICreateExpenseDTO";
 import IUpdateExpenseDTO from "@modules/finances/dtos/IUpdateExpenseDTO";
 import IRequestSaldoDTO from "@modules/externals/dtos/IRequestSaldoDTO";
+import { IResponseExpenseDTO } from "@modules/finances/dtos/IResponseExpenseDTO";
+import { IExpenseRequest } from "@modules/finances/dtos/IRequestExpenseDTO";
 
 class ExpenseRepository implements IExpenseRepository {
   private ormRepository: Repository<Expense>;
@@ -20,7 +22,11 @@ class ExpenseRepository implements IExpenseRepository {
 
       return expense;
     } catch (err) {
-      throw new AppError(err.detail);
+      if (err instanceof QueryFailedError) {
+        throw new AppError(err.message, 500);
+      }
+
+      throw new AppError('Internal Server Error', 500);
     }
   }
 
@@ -34,7 +40,11 @@ class ExpenseRepository implements IExpenseRepository {
       });
       return expenses;
     }  catch (err) {
-      throw new AppError(err.detail);
+      if (err instanceof QueryFailedError) {
+        throw new AppError(err.message, 500);
+      }
+
+      throw new AppError('Internal Server Error', 500);
     }
   }
 
@@ -55,22 +65,92 @@ class ExpenseRepository implements IExpenseRepository {
       .andWhere("subsidiary.id::text LIKE :escritorio", {escritorio: escritorio})
       .andWhere("bank_data.id::text LIKE :conta", { conta: conta })
       .andWhere(
-        "expenses.pay_date BETWEEN :inicio AND :fim", 
+        "expenses.pay_date BETWEEN :inicio AND :fim",
         {inicio: data_inicio, fim: data_fim}
       ).getMany();
 
       return expenses;
     } catch (err) {
-      throw new AppError(err.detail);
+      if (err instanceof QueryFailedError) {
+        throw new AppError(err.message, 500);
+      }
+
+      throw new AppError('Internal Server Error', 500);
+    }
+  }
+  async listAll(): Promise<Expense[]> {
+    try {
+      const expenses = await this.ormRepository
+        .createQueryBuilder("expense")
+        .leftJoinAndSelect("expense.subsidiary", "subsidiary")
+        .leftJoinAndSelect("expense.bank_data", "bank_data")
+        .leftJoinAndSelect("expense.group", "group")
+        .leftJoinAndSelect("expense.user", "user")
+        .orderBy("expense.due_date", 'DESC')
+        .getMany();
+
+      return expenses;
+    }  catch (err) {
+      if (err instanceof QueryFailedError) {
+        throw new AppError(err.message, 500);
+      }
+
+      throw new AppError('Internal Server Error', 500);
     }
   }
 
-  async list(): Promise<Expense[]> {
+  async list(data: IExpenseRequest): Promise<IResponseExpenseDTO> {
+    const {subsidiary, dateFrom, dateTo, month, year, status, group, expense_type, page = 1, perPage = 10, sort = 'DESC'} = data;
+    const skip = (page - 1) * perPage;
     try {
-      const expenses = await this.ormRepository.find({relations: ["group", "subsidiary", "bank_data", "user"]});
-      return expenses;
+      let querybuilder = this.ormRepository
+        .createQueryBuilder("expense")
+        .leftJoinAndSelect("expense.subsidiary", "subsidiary")
+        .leftJoinAndSelect("expense.bank_data", "bank_data")
+        .leftJoinAndSelect("expense.group", "group")
+        .leftJoinAndSelect("expense.user", "user")
+        .where(new Brackets(qb => {
+          if (expense_type) {
+            qb.andWhere("expense.expense_type = :expense_type", { expense_type: expense_type})
+          }
+          if (subsidiary) {
+            qb.andWhere("subsidiary.id = :subsidiary", { subsidiary: subsidiary})
+          }
+          if (group) {
+            qb.andWhere("group.id = :group", { group })
+          }
+          if (status) {
+            qb.andWhere("expense.status = :status", { status: status })
+          }
+          if (month) {
+            qb.andWhere('EXTRACT(MONTH FROM expense.due_date) = :month', { month: month })
+          }
+          if (year) {
+            qb.andWhere('EXTRACT(YEAR FROM expense.due_date) = :year', { year: year })
+          }
+
+          if (dateFrom && dateTo) {
+            qb.andWhere('expense.due_date BETWEEN :dateFrom AND :dateTo', { dateFrom, dateTo })
+          }
+        }))
+        .orderBy("expense.due_date", sort)
+
+        const totalValue = await querybuilder
+          .getMany()
+          .then(expenses => expenses.reduce((acc, curr) => acc + Number(curr.value), 0));
+
+          const [expenses, totalCount] = await querybuilder
+          .skip(skip)
+          .take(perPage)
+          .getManyAndCount();
+
+      return {expenses, totalExpenses: totalCount, totalValue};
     }  catch (err) {
-      throw new AppError(err.detail);
+      if (err instanceof QueryFailedError) {
+        throw new AppError(err.message, 500);
+      }
+
+      throw new AppError('Internal Server Error', 500);
     }
   }
 
@@ -81,7 +161,11 @@ class ExpenseRepository implements IExpenseRepository {
 
       return newExpense;
     } catch (err) {
-      throw new AppError(err.detail);
+      if (err instanceof QueryFailedError) {
+        throw new AppError(err.message, 500);
+      }
+
+      throw new AppError('Internal Server Error', 500);
     }
   }
 
@@ -89,7 +173,11 @@ class ExpenseRepository implements IExpenseRepository {
     try {
       await this.ormRepository.update(id, data);
     } catch (err) {
-      throw new AppError(err.detail);
+      if (err instanceof QueryFailedError) {
+        throw new AppError(err.message, 500);
+      }
+
+      throw new AppError('Internal Server Error', 500);
     }
   }
 
@@ -97,7 +185,11 @@ class ExpenseRepository implements IExpenseRepository {
     try {
       await this.ormRepository.delete(id);
     } catch (err) {
-      throw new AppError(err.detail);
+      if (err instanceof QueryFailedError) {
+        throw new AppError(err.message, 500);
+      }
+
+      throw new AppError('Internal Server Error', 500);
     }
   }
 }
