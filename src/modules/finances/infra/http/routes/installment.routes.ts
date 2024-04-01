@@ -32,6 +32,27 @@ installmentRoutes.get('/', celebrate({
   }
 }), installmentController.list);
 
+installmentRoutes.get('/entry', celebrate({
+  [Segments.QUERY]: {
+    buyer_name: Joi.string().default('').allow(''),
+    subsidiary: Joi.string().default('').allow(''),
+    month: Joi.string().default('').allow(''),
+    year: Joi.string().default('').allow(''),
+    dateFrom: Joi.date().iso().allow(''),
+    dateTo: Joi.when('dateFrom', {
+      is: Joi.exist(),
+      then: Joi.date().iso().required().not(equal(Joi.ref('dateFrom'))).greater(Joi.ref('dateFrom')),
+      otherwise: Joi.date().iso().default('').allow('')
+    }).when('dateFrom', {
+      is: Joi.exist(),
+      then: Joi.required()
+    }),
+    page: Joi.number().optional().default(1),
+    perPage: Joi.number().optional().default(10),
+    sort: Joi.string().valid('ASC', 'DESC').default('DESC'),
+  }
+}), installmentController.getEntry);
+
 installmentRoutes.post('/:id', celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid(),

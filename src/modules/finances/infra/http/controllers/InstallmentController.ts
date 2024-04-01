@@ -8,6 +8,7 @@ import ShowInstallmentService from '@modules/finances/services/ShowInstallmentSe
 import ExportCommissionService from '@modules/finances/services/ExportCommissionService';
 import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
 import AppError from '@shared/errors/AppError';
+import InstallmentsEntryService from '@modules/finances/services/InstallmentsEntryService';
 
 interface InstallmentRequestQuery {
   buyer_name?: string;
@@ -19,6 +20,7 @@ interface InstallmentRequestQuery {
   dateTo?: Date;
   page?: number;
   perPage?: number;
+  sort?: 'ASC' | 'DESC';
 }
 
 class InstallmentController {
@@ -63,6 +65,38 @@ class InstallmentController {
     });
 
     return response.json(listInstallments);
+  }
+
+  async getEntry(
+    request: Request<never, never, never, InstallmentRequestQuery>,
+    response: Response
+  ): Promise<Response> {
+    const {
+      buyer_name,
+      subsidiary,
+      month,
+      year,
+      dateFrom,
+      dateTo,
+      page,
+      perPage,
+      sort
+    } = request.query;
+
+    const installmentsEntryService = container.resolve(InstallmentsEntryService);
+    const installmentsEntry = await installmentsEntryService.execute({
+      buyer_name,
+      subsidiary,
+      month,
+      year,
+      dateFrom,
+      dateTo,
+      page,
+      perPage,
+      sort
+    });
+
+    return response.json(installmentsEntry);
   }
 
   async show(request: Request, response: Response): Promise<Response> {

@@ -30,6 +30,7 @@ revenueRoutes.get('/', celebrate({
     }),
     page: Joi.number().optional().default(1),
     perPage: Joi.number().optional().default(10),
+    sort: Joi.string().valid('ASC', 'DESC').default('DESC'),
   }
 }), revenueController.list);
 

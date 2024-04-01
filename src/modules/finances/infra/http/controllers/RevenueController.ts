@@ -20,6 +20,7 @@ interface RevenueRequestQuery {
   dateTo?: Date;
   page?: number;
   perPage?: number;
+  sort?: 'ASC' | 'DESC';
 }
 class RevenueController {
   async list(request: Request<never, never, never, RevenueRequestQuery>, response: Response): Promise<Response> {

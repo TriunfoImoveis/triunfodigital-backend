@@ -1,23 +1,20 @@
 import { inject, injectable } from "tsyringe";
 
 import IExpenseRepository from "@modules/finances/repositories/IExpenseRepository";
-import Expense from "@modules/finances/infra/typeorm/entities/Expense";
+import { IResponseExpenseDTO } from "../dtos/IResponseExpenseDTO";
+import { IExpenseRequest } from "../dtos/IRequestExpenseDTO";
 
 @injectable()
 class ListExpenseService {
   constructor(
     @inject('ExpenseRepository')
-    private expenseRepository: IExpenseRepository, 
+    private expenseRepository: IExpenseRepository,
   ) {}
 
-  public async execute(status: string | undefined): Promise<Expense[]> {
-    if (status !== undefined) {
-      var listExpense = await this.expenseRepository.findByStatus(status);
-    } else {
-      var listExpense = await this.expenseRepository.list();
-    }
+  public async execute(data: IExpenseRequest): Promise<IResponseExpenseDTO> {
+    const {expenses, totalExpenses, totalValue} = await this.expenseRepository.list(data);
 
-    return listExpense;
+    return {expenses, totalExpenses, totalValue};
   }
 }
 

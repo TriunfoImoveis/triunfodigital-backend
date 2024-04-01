@@ -23,7 +23,7 @@ class ListInstallmentService {
     perPage
   }: IRequestInstallmentDTO): Promise<IResponseInstallmentDTO> {
 
-    const {installments, totalInstallments} = await this.installmentsRepository.listFilters({
+    const {installments, totalInstallments, totalValueInstallments} = await this.installmentsRepository.listFilters({
       buyer_name,
       subsidiary,
       status,
@@ -35,22 +35,8 @@ class ListInstallmentService {
       page
     });
 
-    const installmentRecived = await this.installmentsRepository.getAmountIntallmentsRecived({subisidiaries: subsidiary ? [subsidiary] : undefined, month, year, dateFrom, dateTo});
 
-    const amountInCentsInstallmentRecived = installmentRecived.map(installment => Number(installment.value) * 100).reduce((total, value) => {
-      return total + value
-    }, 0)
-
-    const amountInstallmentRecived = amountInCentsInstallmentRecived / 100;
-    const installmentPay = await this.installmentsRepository.getAmountIntallmentsPay({subisidiaries: subsidiary ? [subsidiary] : undefined, month, year, dateFrom, dateTo});
-
-    const amountInCentsInstallmentPay = installmentPay.map(installment => Number(installment.value) * 100).reduce((total, value) => {
-      return total + value
-    }, 0)
-
-    const amountInstallmentPay = amountInCentsInstallmentPay / 100;
-
-    return {installments, totalInstallments, amountInstallmentRecived, amountInstallmentPay};
+    return {installments, totalInstallments, totalValueInstallments};
   }
 }
 

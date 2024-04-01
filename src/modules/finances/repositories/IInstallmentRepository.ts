@@ -4,10 +4,12 @@ import IUpdateInstallmentDTO from '@modules/finances/dtos/IUpdateInstallmentDTO'
 import IRequestInstallmentDTO from '@modules/finances/dtos/IRequestInstallmentDTO';
 import IResponseInstallmentDTO from '@modules/finances/dtos/IResponseInstallmentDTO';
 import { IRequestGetAmountInstallmentRecived } from '../dtos/IGetAmoutInstallmentRecived';
+import IRequestGetInstallmentsEntryDTO from '../dtos/IResquestGetInstallmentEntryDTO';
+import { IListInstallmentsDTO } from '../dtos/IListAllInstallmentsDTO';
 
 export default interface IInstallmentRepository {
   listFilters(data: IRequestInstallmentDTO): Promise<IResponseInstallmentDTO>;
-  listAllInstallments(data: {subsidiariesIds: string[], status: string}): Promise<Installment[]>;
+  listAllInstallments(data: IListInstallmentsDTO): Promise<Installment[]>;
   findById(id: string): Promise<Installment | undefined>;
   create(instalments: ICreateInstallmentDTO[]): Promise<Installment[]>;
   delete(installments: Installment[]): Promise<void>;
@@ -15,4 +17,5 @@ export default interface IInstallmentRepository {
   updateMultipleInstallments(ids: string[], data: IUpdateInstallmentDTO): Promise<void>;
   getAmountIntallmentsRecived(data: IRequestGetAmountInstallmentRecived): Promise<Installment[]>;
   getAmountIntallmentsPay(data: IRequestGetAmountInstallmentRecived): Promise<Installment[]>;
+  getInstallmentsEntry(data: IRequestGetInstallmentsEntryDTO): Promise<IResponseInstallmentDTO>
 }
