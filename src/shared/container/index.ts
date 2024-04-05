@@ -56,6 +56,9 @@ import ContaRepository from '@modules/externals/infra/typeorm/repositories/Conta
 import ISaldoRepository from '@modules/externals/repositories/ISaldoRepository';
 import SaldoRepository from '@modules/externals/infra/typeorm/repositories/SaldoRepository';
 
+import INeighborhoodRepository from '@modules/externals/repositories/INeighborhoodRepository';
+import NeighborhoodRepository from '@modules/externals/infra/typeorm/repositories/NeighborhoodRepository';
+
 
 // USER
 container.registerSingleton<IUsersRepository>(
@@ -172,5 +175,9 @@ container.registerSingleton<IContaRepository>(
 container.registerSingleton<ISaldoRepository>(
   'SaldoRepository',
   SaldoRepository,
+);
+
+container.registerSingleton<INeighborhoodRepository>(
+  'NeighborhoodRepository', NeighborhoodRepository
 );
 // EXTERNAL
