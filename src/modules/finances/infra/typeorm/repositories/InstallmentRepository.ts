@@ -217,7 +217,6 @@ class InstallmentRespository implements IInstallmentRepository {
           }
         }))
         .andWhere("i.status = :status", { status: StatusInstallment.LIQ })
-        .andWhere('sale.status = :statusSale', { statusSale: Status.PE })
         .orderBy("calculation.pay_date", sort)
 
       const comission = await querybuilder
