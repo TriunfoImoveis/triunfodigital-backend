@@ -23,6 +23,7 @@ class ListInstallmentService {
     perPage
   }: IRequestInstallmentDTO): Promise<IResponseInstallmentDTO> {
 
+
     const {installments, totalInstallments, totalValueInstallments} = await this.installmentsRepository.listFilters({
       buyer_name,
       subsidiary,

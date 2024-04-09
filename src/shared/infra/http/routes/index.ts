@@ -40,6 +40,7 @@ import contaRouter from '@modules/externals/infra/http/routes/conta.routes';
 // DASHBOARD
 import dashboardRouter from '@modules/dashboards/infra/http/routes/dashboard.routes';
 import scheduledRoutes from '@modules/finances/infra/http/routes/scheduled.routes';
+import neighborhoodRouter from '@modules/externals/infra/http/routes/neighborhood.routes';
 
 
 const routes = Router();
@@ -80,6 +81,7 @@ routes.use('/notification', notificationRouter);
 routes.use('/despesa', despesaRouter);
 routes.use('/escritorio', escritorioRouter);
 routes.use('/conta', contaRouter);
+routes.use('/neighborhood', neighborhoodRouter);
 
 // Module Dashboards
 routes.use('/dashboard', dashboardRouter);

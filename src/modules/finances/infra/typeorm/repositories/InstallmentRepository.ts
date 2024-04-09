@@ -72,7 +72,6 @@ class InstallmentRespository implements IInstallmentRepository {
             qb.andWhere('i.due_date BETWEEN :dateFrom AND :dateTo', { dateFrom, dateTo })
           }
         }))
-        .andWhere('sale.status = :statusSale', { statusSale: Status.PE })
         .orderBy("i.due_date", "DESC")
 
       const totalValueInstallments = await querybuilder
@@ -218,7 +217,6 @@ class InstallmentRespository implements IInstallmentRepository {
           }
         }))
         .andWhere("i.status = :status", { status: StatusInstallment.LIQ })
-        .andWhere('sale.status = :statusSale', { statusSale: Status.PE })
         .orderBy("calculation.pay_date", sort)
 
       const comission = await querybuilder
