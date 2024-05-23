@@ -43,8 +43,15 @@ class AuthenticateUserService {
 
     if (!user) {
       throw new AppError(
-        "Combinação de email/senha incorreta.", 
+        "Combinação de email/senha incorreta.",
         401
+      );
+    }
+
+    if (!user.office.active) {
+      throw new AppError(
+        "Combinação de email/senha/cargo incorreta.",
+        401,
       );
     }
 
@@ -52,7 +59,7 @@ class AuthenticateUserService {
 
     if (!passwordMatched) {
       throw new AppError(
-        "Combinação de email/senha incorreta.", 
+        "Combinação de email/senha incorreta.",
         401
       );
     }
