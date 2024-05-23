@@ -48,7 +48,7 @@ class AuthenticateUserService {
       );
     }
 
-    if (!user.office.active) {
+    if (!user.active) {
       throw new AppError(
         "Combinação de email/senha/cargo incorreta.",
         401,
