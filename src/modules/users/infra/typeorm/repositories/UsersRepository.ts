@@ -49,6 +49,7 @@ class UsersRepository implements IUserRepository {
           "goal",
           "password",
           "validated_account",
+          "active"
         ],
         where: { email },
         relations: [
