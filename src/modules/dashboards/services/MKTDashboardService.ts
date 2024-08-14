@@ -18,7 +18,7 @@ class SellersDashboardService {
       const captivators = sale.sale_has_captivators ? sale.sale_has_captivators.map(captivator => captivator.name).join(',') : '';
       const selers =  sale.sale_has_sellers ? sale.sale_has_sellers.map(seller => seller.name).join(',') : '';
       return {
-        'FILIAL': sale.realty.state,
+        'FILIAL': sale.subsidiary.name,
         'CIDADE': sale.realty.city,
         'TIPO DE VENDA': sale.sale_type,
         'DATA DA VENDA': sale.sale_date,
