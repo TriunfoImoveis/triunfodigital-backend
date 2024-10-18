@@ -6,9 +6,11 @@ import UsersController from '@modules/users/infra/http/controllers/UsersControll
 import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 import uploadConfig from '@config/upload';
 import validatorFields from '@shared/infra/http/validators/validatorFields';
+import BankDataController from '../controllers/BankDataController';
 
 const usersRouter = Router();
 const usersController = new UsersController();
+const bankDataController = new BankDataController();
 const upload = multer(uploadConfig.multer);
 
 usersRouter.get(
@@ -30,7 +32,7 @@ usersRouter.post(
   '/',
   celebrate({
     [Segments.BODY]: {
-      name: Joi.string().required()
+      name: Joi.string().optional()
         .messages(validatorFields({name: "'nome'"})),
       email: Joi.string().email().required()
         .messages(validatorFields({name: "'email'"})),
@@ -154,5 +156,47 @@ usersRouter.patch('/active/:id', celebrate({
     id: Joi.string().uuid(),
   }
 }), usersController.updateStatusUser);
+
+usersRouter.post('/:userId/create-bank-data',
+  celebrate({
+  [Segments.PARAMS]: {
+    userId: Joi.string().uuid(),
+  },
+  [Segments.BODY]: {
+    bank_name: Joi.string().required()
+      .messages(validatorFields({name: "'Instituição Financeira'"})),
+    agency: Joi.string().required()
+      .messages(validatorFields({name: "'Agência'"})),
+    account: Joi.string().required()
+      .messages(validatorFields({name: "'Número da Conta'"})),
+    account_type: Joi.string().required().valid(
+      'CORRENTE', 'POUPANCA', 'SALARIO',
+    ).messages(validatorFields({
+      name: "'Tipo da Conta'",
+      ref: "[CORRENTE, POUPANCA, SALARIO]",
+    })),
+  }
+}), bankDataController.create);
+usersRouter.put('/:userId/update-bank-data/:bankDataId',
+  celebrate({
+  [Segments.PARAMS]: {
+    userId: Joi.string().uuid(),
+    bankDataId: Joi.string().uuid(),
+  },
+  [Segments.BODY]: {
+    bank_name: Joi.string().optional()
+      .messages(validatorFields({name: "'Instituição Financeira'"})),
+    agency: Joi.string().optional()
+      .messages(validatorFields({name: "'Agência'"})),
+    account: Joi.string().optional()
+      .messages(validatorFields({name: "'Número da Conta'"})),
+    account_type: Joi.string().optional().valid(
+      'CORRENTE', 'POUPANCA', 'SALARIO',
+    ).messages(validatorFields({
+      name: "'Tipo da Conta'",
+      ref: "[CORRENTE, POUPANCA, SALARIO]",
+    })),
+  }
+}), bankDataController.update);
 
 export default usersRouter;

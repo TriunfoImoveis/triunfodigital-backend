@@ -86,7 +86,7 @@ class UsersController {
   }
 
   async update(request: Request, response: Response): Promise<Response> {
-    const {old_password} = request.body;
+    const {old_password = ""} = request.body;
 
     delete request.body.old_password;
     delete request.body.password_confirmation;
@@ -121,6 +121,24 @@ class UsersController {
     );
 
     return response.status(204).send();
+  }
+
+  async createBankData(request: Request, response: Response): Promise<Response> {
+    const {bank_data} = request.body;
+    const {userId} = request.params;
+
+    const updateStatusUserService = container.resolve(UpdateStatusUserService);
+
+    console.log(bank_data);
+    console.log(userId);
+    // const createBankDataService = container.resolve(UpdateUserService);
+    // const user = await createBankDataService.execute({
+    //   id,
+    //   body: {
+    //     bank_data
+    //   }
+    // });
+    return response.json({ok: true});
   }
 }
 
