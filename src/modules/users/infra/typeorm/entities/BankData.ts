@@ -1,9 +1,10 @@
-import { 
-  Column, 
-  Entity, 
-  JoinColumn, 
+import { Exclude } from 'class-transformer';
+import {
+  Column,
+  Entity,
+  JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn 
+  PrimaryGeneratedColumn
 } from "typeorm";
 
 import User from "./User";
@@ -32,11 +33,12 @@ class BankData {
   account: string;
 
   @ManyToOne(type => User, user => user.bank_data, {
-    nullable: false, 
-    onUpdate: "CASCADE", 
+    nullable: false,
+    onUpdate: "CASCADE",
     onDelete: "CASCADE"
   })
   @JoinColumn({ name: 'user_id' })
+  @Exclude()
   user: User;
 }
 
