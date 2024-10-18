@@ -32,12 +32,13 @@ class UpdateUserService {
       throw new AppError('Usuário não existe.', 404);
     }
 
-    if (old_password) { // Verifica se a senha antiga é a mesma no banco de dados.
-      const passwordMatched = await compare(old_password, user.password);
-      if (!passwordMatched) {
-        throw new AppError('Senha incorreta.', 401);
-      }
-    }
+    // if (old_password) { // Verifica se a senha antiga é a mesma no banco de dados.
+    //   console.log("entrou no old password");
+    //   const passwordMatched = await compare(old_password, user.password);
+    //   if (!passwordMatched) {
+    //     throw new AppError('Senha incorreta.', 401);
+    //   }
+    // }
 
     if (body.password) { // Faz o hash da nova senha.
       body.password = await hash(body.password, 8);
@@ -52,7 +53,7 @@ class UpdateUserService {
         const emailExists = await this.usersRepository.findByEmail(email);
         if (emailExists) {
           throw new AppError(
-            "Usuário com este e-mail já existe, tente outro e-mail.", 
+            "Usuário com este e-mail já existe, tente outro e-mail.",
             400
           );
         }
@@ -60,7 +61,7 @@ class UpdateUserService {
         // Enviar e-mail de validação de conta
         const sendValidEmailService = container.resolve(SendValidEmailService);
         await sendValidEmailService.execute(user.email);
-      }  
+      }
     }
 
     if (body.admission_date) {
@@ -78,7 +79,7 @@ class UpdateUserService {
       await this.usersRepository.save(user);
       delete body.bank_data;
     }
-    
+
     const userUpdate = await this.usersRepository.update(id, body);
 
     return userUpdate;

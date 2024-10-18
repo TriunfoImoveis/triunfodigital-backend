@@ -58,6 +58,8 @@ import SaldoRepository from '@modules/externals/infra/typeorm/repositories/Saldo
 
 import INeighborhoodRepository from '@modules/externals/repositories/INeighborhoodRepository';
 import NeighborhoodRepository from '@modules/externals/infra/typeorm/repositories/NeighborhoodRepository';
+import IBankDataRepository from '@modules/users/repositories/IBankDataRepository';
+import BankDataRepository from '@modules/users/infra/typeorm/repositories/BankDataRepository';
 
 
 // USER
@@ -68,6 +70,10 @@ container.registerSingleton<IUsersRepository>(
 container.registerSingleton<IUserTokenRepository>(
   'UserTokensRepository',
   UserTokensRepository,
+);
+container.registerSingleton<IBankDataRepository>(
+  'BankDataRepository',
+  BankDataRepository,
 );
 // USER
 
