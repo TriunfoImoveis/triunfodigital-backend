@@ -1,5 +1,5 @@
 import UpdateBankDataService from '@modules/users/services/UpdateBankDataUserServicer';
-import CreateBankDataService from '@modules/users/services/UpdateBankDataUserServicer';
+import CreateBankDataService from '@modules/users/services/CreateBankDataUserServicer';
 import { classToClass } from 'class-transformer';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
