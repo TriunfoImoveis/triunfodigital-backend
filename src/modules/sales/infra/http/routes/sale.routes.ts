@@ -415,7 +415,7 @@ saleRoutes.put('/:id', celebrate({
         })),
       address: Joi.string().messages(validatorFields({ name: "'endereço do vendedor'" })),
     }),
-    user_coordinator: Joi.string().uuid()
+    user_coordinator: Joi.string().uuid().allow(null)
       .messages(validatorFields({ name: "'coordenador'" })),
     users_directors: Joi.array().length(2)
       .messages(validatorFields({ name: "'diretor'", max: 2 })),
