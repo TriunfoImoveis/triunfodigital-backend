@@ -49,5 +49,4 @@ jobs:
             yarn
             ./node_modules/.bin/typeorm migration:run
             pm2 restart api-dev
-            pm2 restart job-dev
 
