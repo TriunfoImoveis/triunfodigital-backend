@@ -3,6 +3,7 @@ import { celebrate, Joi, Segments } from 'celebrate';
 
 import DashboardController from '@modules/dashboards/infra/http/controllers/DashboardController';
 import { equal } from 'joi';
+import basicAuthenticated from '@shared/infra/http/middlewares/basicAuth';
 
 const dashboardRouter = Router();
 const dashboardController = new DashboardController();
@@ -32,6 +33,6 @@ dashboardRouter.get('/finances', celebrate({
   },
 }), dashboardController.dashboard_finances);
 
-dashboardRouter.get('/mkt/sales', dashboardController.dashboard_mkt)
+dashboardRouter.get('/mkt/sales', basicAuthenticated, dashboardController.dashboard_mkt)
 
 export default dashboardRouter;
