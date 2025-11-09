@@ -41,6 +41,7 @@ import contaRouter from '@modules/externals/infra/http/routes/conta.routes';
 import dashboardRouter from '@modules/dashboards/infra/http/routes/dashboard.routes';
 import scheduledRoutes from '@modules/finances/infra/http/routes/scheduled.routes';
 import neighborhoodRouter from '@modules/externals/infra/http/routes/neighborhood.routes';
+import professionRouter from '@modules/sales/infra/http/routes/professions.routes';
 
 
 const routes = Router();
@@ -88,5 +89,8 @@ routes.use('/dashboard', dashboardRouter);
 
 // Test Scheduled Jobs
 routes.use('/schedule', scheduledRoutes);
+
+// Module Professions
+routes.use('/professions', professionRouter);
 
 export default routes;
