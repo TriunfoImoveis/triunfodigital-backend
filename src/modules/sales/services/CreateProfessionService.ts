@@ -8,7 +8,7 @@ import Profession from '../infra/typeorm/entities/Professions';
 @injectable()
 class CreateBuilderService {
   constructor(
-    @inject('ProfessionRepository')
+    @inject('ProfessionsRepository')
     private professionRepository: IProfessionRepository,
   ){}
 

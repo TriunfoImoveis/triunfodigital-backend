@@ -4,7 +4,7 @@ import IProfessionRepository from "@modules/sales/repositories/IProfessionReposi
 import Profession from "../entities/Professions";
 import ICreateProfessionDTO from "@modules/sales/dtos/ICreateProfessionDTO";
 import IUpdateProfessionDTO from "@modules/sales/dtos/IUpdateProfessionDTO";
-import normalizeName from "@shared/utils/nomalize_name";
+import {normalizeName} from "@shared/utils/nomalizeName";
 
 class ProfessionsRepository implements IProfessionRepository {
   private ormRepository: Repository<Profession>;

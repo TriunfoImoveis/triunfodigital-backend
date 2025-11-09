@@ -29,6 +29,16 @@ professionRouter.get(
   professionController.index,
 );
 
+professionRouter.get(
+  '/:id',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
+    },
+  }),
+  professionController.show,
+);
+
 professionRouter.put(
   '/:id',
   celebrate({

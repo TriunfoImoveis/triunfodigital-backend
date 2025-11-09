@@ -8,7 +8,7 @@ import IUpdateProfessionDTO from '../dtos/IUpdateProfessionDTO';
 @injectable()
 class UpdateProfessionService {
   constructor(
-    @inject('ProfessionRepository')
+    @inject('ProfessionsRepository')
     private professionRepository: IProfessionRepository,
   ) {}
 
