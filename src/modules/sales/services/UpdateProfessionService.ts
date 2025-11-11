@@ -33,7 +33,7 @@ class UpdateProfessionService {
 
     const updated = await this.professionRepository.update({
       id,
-      name: name ?? profession.name,
+      name: name ? name : profession.name,
       active: typeof active === 'boolean' ? active : profession.active,
     });
 
