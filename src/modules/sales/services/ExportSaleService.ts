@@ -153,13 +153,17 @@ class ExportSaleService {
         client_seller_datebirth: clientSeller_datebirth,
         client_seller_email: client_seller ? client_seller.email : null,
         client_seller_phone: client_seller ? client_seller.phone : null,
-        client_seller_occupation: client_seller ? client_seller.occupation : null,
+        client_seller_occupation: client_seller.profession_id
+        ? client_seller.profession.name : client_seller.occupation
+        ? client_seller.occupation : null,
         client_seller_civilStatus: client_seller ? client_seller.civil_status : null,
         client_buyer_name: client_buyer ? client_buyer.name : null,
         client_buyer_datebirth: clientBuyer_datebirth,
         client_buyer_email: client_buyer ? client_buyer.email : null,
         client_buyer_phone: client_buyer ? client_buyer.phone : null,
-        client_buyer_occupation: client_buyer ? client_buyer.occupation : null,
+        client_buyer_occupation: client_buyer.profession_id
+        ? client_buyer.profession.name : client_buyer.occupation
+        ? client_buyer.occupation : null,
         client_buyer_civilStatus: client_buyer ? client_buyer.civil_status : null,
         directors: directors.toString(),
         coordinator: sale.user_coordinator ? sale.user_coordinator.name : null,

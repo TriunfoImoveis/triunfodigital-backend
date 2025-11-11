@@ -33,6 +33,6 @@ dashboardRouter.get('/finances', celebrate({
   },
 }), dashboardController.dashboard_finances);
 
-dashboardRouter.get('/mkt/sales', basicAuthenticated, dashboardController.dashboard_mkt)
+dashboardRouter.get('/mkt/sales', dashboardController.dashboard_mkt)
 
 export default dashboardRouter;

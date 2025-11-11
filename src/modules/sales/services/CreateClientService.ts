@@ -21,11 +21,11 @@ class CreateClientService {
     email,
     phone,
     whatsapp,
-    occupation,
     civil_status,
     number_children,
     gender,
     address,
+    profession_id
   }: ICreateClientDTO): Promise<Client> {
     const cpf_cnpj = cpf ? cpf : cnpj;
     const clientExists = await this.clientsRepository.findByCPFOrCNPJ(String(cpf_cnpj));
@@ -44,7 +44,7 @@ class CreateClientService {
       email,
       phone,
       whatsapp,
-      occupation,
+      profession_id,
       civil_status,
       number_children,
       gender,
