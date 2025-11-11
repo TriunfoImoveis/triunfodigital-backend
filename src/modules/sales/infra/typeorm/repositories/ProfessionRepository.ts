@@ -48,7 +48,7 @@ class ProfessionsRepository implements IProfessionRepository {
     const profession = await this.ormRepository.findOne(data.id);
     if (!profession) return undefined;
 
-    profession.name = data.name ?? profession.name;
+    profession.name = data.name ? data.name : profession.name;
     profession.active = typeof data.active === 'boolean' ? data.active : profession.active;
     profession.normalized_name = normalizeName(profession.name);
 
