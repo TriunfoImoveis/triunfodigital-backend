@@ -16,7 +16,18 @@ class ClientsRepository implements IClientRepository {
 
   async findById(id: string): Promise<Client | undefined> {
     try {
-      const client = await this.ormRepository.findOne(id);
+       const client = await this.ormRepository
+        .createQueryBuilder('client')
+        .leftJoin('client.profession', 'profession')
+        .select([
+          'client',
+          'profession.id',
+          'profession.name',
+          'profession.normalized_name',
+        ])
+        .where('client.id = :id', { id })
+        .getOne();
+
       return client;
     } catch (err) {
       throw new AppError(err.detail);
@@ -25,12 +36,19 @@ class ClientsRepository implements IClientRepository {
 
   async findByIdAndActivate(id: string): Promise<Client | undefined> {
     try {
-      const client = await this.ormRepository.findOne(
-        id,
-        {
-          where: { active: true }
-        }
-      );
+     const client = await this.ormRepository
+        .createQueryBuilder('client')
+        .leftJoin('client.profession', 'profession')
+        .select([
+          'client',
+          'profession.id',
+          'profession.name',
+          'profession.normalized_name',
+        ])
+        .where('client.id = :id', { id })
+        .andWhere('client.active = true')
+        .getOne();
+
       return client;
     } catch (err) {
       throw new AppError(err.detail);
@@ -39,9 +57,18 @@ class ClientsRepository implements IClientRepository {
 
   async findByName(name: string): Promise<Client | undefined> {
     try {
-      const client = await this.ormRepository.findOne({
-        where: { name },
-      });
+      const client = await this.ormRepository
+        .createQueryBuilder('client')
+        .leftJoin('client.profession', 'profession')
+        .select([
+          'client',
+          'profession.id',
+          'profession.name',
+          'profession.normalized_name',
+        ])
+        .where('client.name = :name', { name })
+        .getOne();
+
       return client;
     } catch (err) {
       throw new AppError(err.detail);
@@ -50,12 +77,19 @@ class ClientsRepository implements IClientRepository {
 
   async findByCPFOrCNPJ(cpf_cnpj: string): Promise<Client | undefined> {
     try {
-      const client = await this.ormRepository.findOne({
-        where: [
-          { cpf: cpf_cnpj },
-          { cnpj: cpf_cnpj },
-        ]
-      });
+      const client = await this.ormRepository
+        .createQueryBuilder('client')
+        .leftJoin('client.profession', 'profession')
+        .select([
+          'client',
+          'profession.id',
+          'profession.name',
+          'profession.normalized_name',
+        ])
+        .where('client.cpf = :cpf', { cpf: cpf_cnpj })
+        .orWhere('client.cnpj = :cnpj', { cnpj: cpf_cnpj })
+        .getOne();
+
       return client;
     } catch (err) {
       throw new AppError(err.detail);
@@ -64,11 +98,18 @@ class ClientsRepository implements IClientRepository {
 
   async findClientsActive(): Promise<Client[]> {
     try {
-      const clients = await this.ormRepository.find({
-        where: {
-          active: true,
-        },
-      });
+      const clients = await this.ormRepository
+        .createQueryBuilder('client')
+        .leftJoin('client.profession', 'profession')
+        .select([
+          'client',
+          'profession.id',
+          'profession.name',
+          'profession.normalized_name',
+        ])
+        .where('client.active = true')
+        .orderBy('client.name', 'ASC')
+        .getMany();
 
       return clients;
     } catch (err) {
@@ -89,7 +130,7 @@ class ClientsRepository implements IClientRepository {
   async update(id: string, data: IUpdateClientDTO): Promise<Client | undefined> {
     try {
       await this.ormRepository.update(id, data);
-      const clientUpdated = await this.ormRepository.findOne(id);
+      const clientUpdated = await this.findById(id);
       return clientUpdated;
     } catch (err) {
       throw new AppError(err);
@@ -107,7 +148,9 @@ class ClientsRepository implements IClientRepository {
   async activate(id: string): Promise<Client | undefined> {
     try {
       await this.ormRepository.update(id, {active: true});
-      const client = await this.ormRepository.findOne(id);
+      const client = await this.ormRepository.findOne(id, {
+        relations: ['profession'],
+      });
       return client;
     } catch (err) {
       throw new AppError(err.detail);

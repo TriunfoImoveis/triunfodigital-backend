@@ -4,7 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
+import Profession from './Professions';
 
 export enum CivilStatus {
   C = 'CASADO(A)',
@@ -49,6 +52,13 @@ class Client {
   @Column({ type: 'varchar', length: 150, nullable: true })
   occupation: string;
 
+  @ManyToOne(() => Profession)
+  @JoinColumn({ name: 'profession_id' })
+  profession: Profession;
+
+  @Column()
+  profession_id: string;
+
   @Column({ type: 'enum', enum: CivilStatus, nullable: true })
   civil_status: CivilStatus;
 
@@ -73,3 +83,4 @@ class Client {
 }
 
 export default Client;
+

@@ -37,13 +37,19 @@ class SellersDashboardService {
         'CLIENTE VENDEDOR - DATA DE NASCIMENTO': sale.client_seller ? sale.client_seller.date_birth : '',
         'CLIENTE VENDEDOR - EMAIL': sale.client_seller ? sale.client_seller.email : '',
         'CLIENTE VENDEDOR - TELEFONE': sale.client_seller ? sale.client_seller.phone : '',
-        'CLIENTE VENDEDOR - PROFISSAO': sale.client_seller ? sale.client_seller.occupation : '',
+        'CLIENTE VENDEDOR - PROFISSAO': sale.client_seller
+        ? sale.client_seller.profession_id
+        ? sale.client_seller.profession.name
+        : sale.client_seller.occupation : '',
         'CLIENTE VENDEDOR - ESTADO CIVIL': sale.client_seller ? sale.client_seller.civil_status : '',
         'CLIENTE COMPRADOR - NOME': sale.client_buyer.name,
         'CLIENTE COMPRADOR - DATA DE NASCIMENTO': sale.client_buyer.date_birth,
         'CLIENTE COMPRADOR - EMAIL': sale.client_buyer.email,
         'CLIENTE COMPRADOR - TELEFONE': sale.client_buyer.phone,
-        'CLIENTE COMPRADOR - PROFISSAO': sale.client_buyer.occupation,
+        'CLIENTE COMPRADOR - PROFISSAO': sale.client_buyer
+        ? sale.client_buyer.profession_id
+        ? sale.client_buyer.profession.name
+        : sale.client_buyer.occupation : '',
         'CLIENTE COMPRADOR - ESTADO CIVIL': sale.client_buyer.civil_status,
         'DIRETORES': directores,
         'COOREDENADOR': sale.user_coordinator ? sale.user_coordinator.name : '',

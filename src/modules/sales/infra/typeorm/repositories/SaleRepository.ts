@@ -39,7 +39,19 @@ class SaleRepository implements ISaleRepository {
       .leftJoinAndSelect("sale.builder", "builder")
       .leftJoinAndSelect("sale.subsidiary", "subsidiary")
       .innerJoinAndSelect("sale.client_buyer", "client_buyer")
+      .leftJoin("client_buyer.profession", "client_buyer_profession")
+     .addSelect([
+       "client_buyer_profession.id",
+       "client_buyer_profession.name",
+       "client_buyer_profession.normalized_name",
+     ])
       .leftJoinAndSelect("sale.client_seller", "client_seller")
+     .leftJoin("client_seller.profession", "client_seller_profession")
+     .addSelect([
+       "client_seller_profession.id",
+       "client_seller_profession.name",
+       "client_seller_profession.normalized_name",
+     ])
       .innerJoinAndSelect("sale.users_directors", "directors")
       .leftJoinAndSelect("directors.subsidiary", "directors_subsidiary")
       .leftJoinAndSelect("sale.user_coordinator", "coordinator")
@@ -70,7 +82,19 @@ class SaleRepository implements ISaleRepository {
       .leftJoinAndSelect("sale.builder", "builder")
       .leftJoinAndSelect("sale.subsidiary", "subsidiary")
       .innerJoinAndSelect("sale.client_buyer", "client_buyer")
+      .leftJoin("client_buyer.profession", "client_buyer_profession")
+    .addSelect([
+      "client_buyer_profession.id",
+      "client_buyer_profession.name",
+      "client_buyer_profession.normalized_name",
+    ])
       .leftJoinAndSelect("sale.client_seller", "client_seller")
+    .leftJoin("client_seller.profession", "client_seller_profession")
+    .addSelect([
+      "client_seller_profession.id",
+      "client_seller_profession.name",
+      "client_seller_profession.normalized_name",
+    ])
       .innerJoinAndSelect("sale.users_directors", "directors")
       .leftJoinAndSelect("directors.subsidiary", "directors_subsidiary")
       .leftJoinAndSelect("sale.user_coordinator", "coordinator")

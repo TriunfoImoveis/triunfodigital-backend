@@ -7,7 +7,7 @@ export default interface IUpdateClientDTO {
   date_birth?: Date;
   email?: string;
   phone?: string;
-  occupation?: string;
+  profession_id?: string;
   civil_status?: CivilStatus;
   number_children?: number;
   gender?: Gender;
