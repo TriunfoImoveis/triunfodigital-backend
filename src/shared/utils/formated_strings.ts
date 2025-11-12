@@ -1,9 +1,13 @@
+interface IProfession {
+  id?: string;
+  name?: string;
+  normalized_name?: string;
+}
+
 interface IClientWithProfession {
-  profession_id?: string;
-  profession?: {
-    name: string;
-  };
-  occupation?: string;
+  profession_id?: string | null;
+  profession?: IProfession | null;
+  occupation?: string | null;
 }
 
 export default function formated_strings(text: string): string {
@@ -14,18 +18,26 @@ export default function formated_strings(text: string): string {
 }
 
 export function getProfessionName(
-  client: IClientWithProfession | null | undefined
+  client: IClientWithProfession | null | undefined,
 ): string | null {
   if (!client) {
     return null;
   }
-
-  if (client.profession_id && client.profession?.name) {
+  if (
+    client.profession_id !== undefined &&
+    client.profession_id !== null &&
+    client.profession &&
+    typeof client.profession.name === 'string' &&
+    client.profession.name.trim() !== ''
+  ) {
     return client.profession.name;
   }
 
-  if (client.occupation) {
-    return client.occupation;
+  if (client.occupation && typeof client.occupation === 'string') {
+    const occ = client.occupation.trim();
+    if (occ !== '') {
+      return occ;
+    }
   }
 
   return null;
