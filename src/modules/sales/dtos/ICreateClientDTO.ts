@@ -8,9 +8,9 @@ export default interface ICreateClientDTO {
   email: string;
   phone?: string;
   whatsapp?: string;
-  occupation?: string;
   civil_status?: CivilStatus;
   number_children?: number;
   gender?: Gender;
   address?: string;
+  profession_id?: string;
 }

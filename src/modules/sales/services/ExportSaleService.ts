@@ -3,6 +3,7 @@ import { format, parseISO } from "date-fns";
 
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import IStorageProvider from "@shared/container/providers/StorageProvider/models/IStorageProvider";
+import { getProfessionName } from "@shared/utils/formated_strings";
 
 interface IRequestRepository {
   subsidiaryId?: string,
@@ -153,13 +154,13 @@ class ExportSaleService {
         client_seller_datebirth: clientSeller_datebirth,
         client_seller_email: client_seller ? client_seller.email : null,
         client_seller_phone: client_seller ? client_seller.phone : null,
-        client_seller_occupation: client_seller ? client_seller.occupation : null,
+        client_seller_occupation: getProfessionName(client_seller),
         client_seller_civilStatus: client_seller ? client_seller.civil_status : null,
         client_buyer_name: client_buyer ? client_buyer.name : null,
         client_buyer_datebirth: clientBuyer_datebirth,
         client_buyer_email: client_buyer ? client_buyer.email : null,
         client_buyer_phone: client_buyer ? client_buyer.phone : null,
-        client_buyer_occupation: client_buyer ? client_buyer.occupation : null,
+        client_buyer_occupation: getProfessionName(client_buyer),
         client_buyer_civilStatus: client_buyer ? client_buyer.civil_status : null,
         directors: directors.toString(),
         coordinator: sale.user_coordinator ? sale.user_coordinator.name : null,

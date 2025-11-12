@@ -88,9 +88,8 @@ saleRoutes.post('/new', celebrate({
       date_birth: Joi.date().iso().messages(
         validatorFields({ name: "'data de nascimento do comprador'" })
       ),
-      occupation: Joi.string().messages(
-        validatorFields({ name: "'segmento de atuação do comprador'" })
-      ),
+      profession_id: Joi.string().optional().uuid()
+        .messages(validatorFields({ name: "'segmento de atuação do comprador'" })),
       civil_status: Joi.string().valid(
         'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
       ).messages(validatorFields({
@@ -184,7 +183,7 @@ saleRoutes.post('/used', celebrate({
       whatsapp: Joi.string().messages(validatorFields({ name: "'whatsapp do comprador'" })),
       date_birth: Joi.date().iso()
         .messages(validatorFields({ name: "'data de nascimento do comprador'" })),
-      occupation: Joi.string()
+      profession_id: Joi.string().optional().uuid()
         .messages(validatorFields({ name: "'segmento de atuação do comprador'" })),
       civil_status: Joi.string().valid(
         'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
@@ -224,8 +223,8 @@ saleRoutes.post('/used', celebrate({
         .messages(validatorFields({ name: "'whatsapp do vendedor'" })),
       date_birth: Joi.date().iso()
         .messages(validatorFields({ name: "'data de nascimento do vendedor'" })),
-      occupation: Joi.string()
-        .messages(validatorFields({ name: "'segmento de atuação do vendedor'" })),
+      profession_id: Joi.string().optional().uuid()
+        .messages(validatorFields({ name: "'segmento de atuação do comprador'" })),
       civil_status: Joi.string().valid(
         'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
       ).messages(validatorFields({
@@ -354,7 +353,7 @@ saleRoutes.put('/:id', celebrate({
         .messages(validatorFields({ name: "'whatsapp do comprador'" })),
       date_birth: Joi.date().iso()
         .messages(validatorFields({ name: "'data de nascimento do comprador'" })),
-      occupation: Joi.string()
+      profession_id: Joi.string().uuid()
         .messages(validatorFields({ name: "'profissão do comprador'" })),
       civil_status: Joi.string()
         .valid(
@@ -396,7 +395,7 @@ saleRoutes.put('/:id', celebrate({
         .messages(validatorFields({ name: "'whatsapp do vendedor'" })),
       date_birth: Joi.date().iso()
         .messages(validatorFields({ name: "'data de nascimento do vendedor'" })),
-      occupation: Joi.string()
+      profession_id: Joi.string().uuid()
         .messages(validatorFields({ name: "'profissão do vendedor'" })),
       civil_status: Joi.string()
         .valid(
