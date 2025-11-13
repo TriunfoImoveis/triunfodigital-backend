@@ -14,18 +14,30 @@ class BuildersRespository implements IBuilderRepository {
     this.ormRepository = getRepository(Builder);
   }
 
-  async findBuildersActive(data: IRequestBuilderDTO): Promise<Builder[]> {
-    const {name, uf, city} = data;
+  async findBuildersActive(data?: IRequestBuilderDTO): Promise<Builder[]> {
     try {
+      const { name, uf, city } = data || {};
+
+      const where: any = {
+        active: true,
+      };
+
+      if (name && name.trim() !== '') {
+        where.name = Like(name + '%');
+      }
+
+      if (uf && uf.trim() !== '') {
+        where.state = uf;
+      }
+
+      if (city && city.trim() !== '') {
+        where.city = Like(city + '%');
+      }
+
       const builders = await this.ormRepository.find({
-        where: {
-          name: Like(name+"%"),
-          state: uf,
-          city: Like(city),
-          active: true,
-        },
+        where,
         order: {
-          name: "ASC",
+          name: 'ASC',
         },
       });
 
@@ -34,6 +46,7 @@ class BuildersRespository implements IBuilderRepository {
       throw new AppError(err.detail);
     }
   }
+
 
   async findById(id: string): Promise<Builder | undefined> {
     try {
