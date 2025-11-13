@@ -8,6 +8,7 @@ import DeactivateBuilderService from '@modules/sales/services/DeactivateBuilderS
 import ActivateBuilderService from '@modules/sales/services/ActivateBuilderService';
 import ListBuilderService from '@modules/sales/services/ListBuilderService';
 import AppError from '@shared/errors/AppError';
+import ExportBuilderService from '@modules/sales/services/ExportBuilderService';
 
 class BuilderController {
   async index(request: Request, response: Response): Promise<Response> {
@@ -23,8 +24,8 @@ class BuilderController {
 
     const listBuilderService = container.resolve(ListBuilderService);
     const builders = await listBuilderService.execute({
-      name, 
-      uf, 
+      name,
+      uf,
       city
     });
 
@@ -91,6 +92,21 @@ class BuilderController {
     });
 
     return response.json(builderActivated);
+  }
+
+  async exportExcel(request: Request, response: Response): Promise<Response> {
+    const {uf} = request.query;
+
+    if (typeof uf != "string") {
+      throw new AppError("Estado não é uma string válida.");
+    }
+
+    const exportBuilderService = container.resolve(ExportBuilderService);
+    const link_url = await exportBuilderService.execute({
+      uf: uf as string || '',
+    });
+
+    return response.status(201).json(link_url);
   }
 }
 
