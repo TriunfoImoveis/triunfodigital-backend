@@ -79,4 +79,10 @@ builderRouter.patch('/activate/:id', celebrate({
   }
 }), builderController.activate);
 
+builderRouter.get('/export/excel',celebrate({
+  [Segments.QUERY]: {
+    uf: Joi.string().allow(''),
+  }
+}), builderController.exportExcel);
+
 export default builderRouter;
