@@ -33,7 +33,7 @@ class CreateClientService {
     );
 
     if (clientExists) {
-      throw new AppError('Cliente já existe com este CPF/CNPJ', 409);
+      return clientExists;
     }
 
     const date_birth_formated = date_birth
