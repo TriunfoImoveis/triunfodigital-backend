@@ -6,7 +6,6 @@ import IClientRepository from '@modules/sales/repositories/IClientRepository';
 import ICreateClientDTO from '@modules/sales/dtos/ICreateClientDTO';
 import IUpdateClientDTO from '@modules/sales/dtos/IUpdateClientDTO';
 
-
 class ClientsRepository implements IClientRepository {
   private ormRepository: Repository<Client>;
 
@@ -16,7 +15,7 @@ class ClientsRepository implements IClientRepository {
 
   async findById(id: string): Promise<Client | undefined> {
     try {
-       const client = await this.ormRepository
+      const client = await this.ormRepository
         .createQueryBuilder('client')
         .leftJoin('client.profession', 'profession')
         .select([
@@ -36,7 +35,7 @@ class ClientsRepository implements IClientRepository {
 
   async findByIdAndActivate(id: string): Promise<Client | undefined> {
     try {
-     const client = await this.ormRepository
+      const client = await this.ormRepository
         .createQueryBuilder('client')
         .leftJoin('client.profession', 'profession')
         .select([
@@ -121,13 +120,16 @@ class ClientsRepository implements IClientRepository {
     try {
       const client = this.ormRepository.create(data);
 
-      return client;
+      return await this.ormRepository.save(client);
     } catch (err) {
       throw new AppError(err);
     }
   }
 
-  async update(id: string, data: IUpdateClientDTO): Promise<Client | undefined> {
+  async update(
+    id: string,
+    data: IUpdateClientDTO,
+  ): Promise<Client | undefined> {
     try {
       await this.ormRepository.update(id, data);
       const clientUpdated = await this.findById(id);
@@ -139,7 +141,7 @@ class ClientsRepository implements IClientRepository {
 
   async deactivate(id: string): Promise<void> {
     try {
-      await this.ormRepository.update(id, {active: false});
+      await this.ormRepository.update(id, { active: false });
     } catch (err) {
       throw new AppError(err.detail);
     }
@@ -147,7 +149,7 @@ class ClientsRepository implements IClientRepository {
 
   async activate(id: string): Promise<Client | undefined> {
     try {
-      await this.ormRepository.update(id, {active: true});
+      await this.ormRepository.update(id, { active: true });
       const client = await this.ormRepository.findOne(id, {
         relations: ['profession'],
       });
