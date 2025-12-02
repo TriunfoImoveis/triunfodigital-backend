@@ -13,4 +13,5 @@ export default interface ICreateClientDTO {
   gender?: Gender;
   address?: string;
   profession_id?: string;
+  origin_id?: string;
 }
