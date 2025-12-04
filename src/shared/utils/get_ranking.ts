@@ -38,7 +38,8 @@ const filterSalesByRole = (sales: Sale[], userId: string, role: RankingType) => 
         return sale.sale_has_captivators.some(captivator => captivator.id === userId);
       }
 
-      return sale.user_coordinator?.id === userId;
+      const hasCoordinator = sale.user_coordinator && sale.user_coordinator.id;
+      return hasCoordinator === userId;
     })
     .map(sale => ({
       ...sale,
