@@ -65,46 +65,8 @@ saleRoutes.post('/new', celebrate({
     }).required().messages(validatorFields({ name: "'imóvel'" })),
     builder: Joi.string().uuid().required()
       .messages(validatorFields({ name: "'construtora'" })),
-    client_buyer: Joi.object({
-      name: Joi.string().max(80).required()
-        .messages(validatorFields({ name: "'nome do comprador'", max: 80 })),
-      client_type: Joi.string().valid('FISICA', 'JURIDICA').required().messages(
-        validatorFields({ name: "'tipo de cliente'", ref: "[FISICA, JURIDICA]" })),
-      cpf: Joi.when('client_type', {
-        is: "FISICA",
-        then: Joi.string().pattern(/^[0-9]{11,11}$/).required()
-          .messages(validatorFields({ name: "'cpf do comprador'", max: 11 })),
-      }),
-      cnpj: Joi.when('client_type', {
-        is: "JURIDICA",
-        then: Joi.string().pattern(/^[0-9]{14,14}$/).required()
-          .messages(validatorFields({ name: "'cnpj do comprador'", max: 14 })),
-      }),
-      email: Joi.string().email().required()
-        .messages(validatorFields({ name: "'email do comprador'" })),
-      phone: Joi.string().pattern(/^[0-9]{11,11}$/)
-        .messages(validatorFields({ name: "'telefone do comprador'", max: 11 })),
-      whatsapp: Joi.string().messages(validatorFields({ name: "'whatsapp do comprador'" })),
-      date_birth: Joi.date().iso().messages(
-        validatorFields({ name: "'data de nascimento do comprador'" })
-      ),
-      profession_id: Joi.string().optional().uuid()
-        .messages(validatorFields({ name: "'segmento de atuação do comprador'" })),
-      civil_status: Joi.string().valid(
-        'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
-      ).messages(validatorFields({
-        name: "'estado civil do comprador'",
-        ref: "[CASADO(A), DIVORCIADO(A), SOLTEIRO(A), VIUVO(A)]"
-      })),
-      number_children: Joi.number().integer().min(0)
-        .messages(validatorFields({ name: "'nº de filhos do comprador'", min: 0 })),
-      gender: Joi.string().valid('MASCULINO', 'FEMININO', 'OUTRO')
-        .messages(validatorFields({
-          name: "'gênero do comprador'",
-          ref: "[MASCULINO, FEMININO, OUTRO]"
-        })),
-      address: Joi.string().messages(validatorFields({ name: "'endereço do comprador'" })),
-    }).required().messages(validatorFields({ name: "'cliente comprador'" })),
+    client_buyer: Joi.string().uuid().required()
+      .messages(validatorFields({ name: "'cliente comprador'" })),
     user_coordinator: Joi.string().uuid()
       .messages(validatorFields({ name: "'coordenador'" })),
     users_directors: Joi.array().min(1).required()
@@ -161,85 +123,10 @@ saleRoutes.post('/used', celebrate({
       property: Joi.string().uuid().required()
         .messages(validatorFields({ name: "'tipo de imóvel'" })),
     }).required().messages(validatorFields({ name: "'imóvel'" })),
-    client_buyer: Joi.object({
-      name: Joi.string().max(80).required()
-        .messages(validatorFields({ name: "'nome do comprador'", max: 80 })),
-      client_type: Joi.string().valid('FISICA', 'JURIDICA').required().messages(
-        validatorFields({ name: "'tipo de cliente'", ref: "[FISICA, JURIDICA]" })),
-      cpf: Joi.when('client_type', {
-        is: "FISICA",
-        then: Joi.string().pattern(/^[0-9]{11,11}$/).required()
-          .messages(validatorFields({ name: "'cpf do comprador'", max: 11 })),
-      }),
-      cnpj: Joi.when('client_type', {
-        is: "JURIDICA",
-        then: Joi.string().pattern(/^[0-9]{14,14}$/).required()
-          .messages(validatorFields({ name: "'cnpj do comprador'", max: 14 })),
-      }),
-      email: Joi.string().email().required()
-        .messages(validatorFields({ name: "'email do comprador'" })),
-      phone: Joi.string().pattern(/^[0-9]{11,11}$/)
-        .messages(validatorFields({ name: "'telefone do comprador'", max: 11 })),
-      whatsapp: Joi.string().messages(validatorFields({ name: "'whatsapp do comprador'" })),
-      date_birth: Joi.date().iso()
-        .messages(validatorFields({ name: "'data de nascimento do comprador'" })),
-      profession_id: Joi.string().optional().uuid()
-        .messages(validatorFields({ name: "'segmento de atuação do comprador'" })),
-      civil_status: Joi.string().valid(
-        'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
-      ).messages(validatorFields({
-        name: "'estado civil do comprador'",
-        ref: "[CASADO(A), DIVORCIADO(A), SOLTEIRO(A), VIUVO(A)]"
-      })),
-      number_children: Joi.number().integer().min(0)
-        .messages(validatorFields({ name: "'nº de filhos do comprador'", min: 0 })),
-      gender: Joi.string().valid('MASCULINO', 'FEMININO', 'OUTRO')
-        .messages(validatorFields({
-          name: "'gênero do comprador'",
-          ref: "[MASCULINO, FEMININO, OUTRO]"
-        })),
-      address: Joi.string().messages(validatorFields({ name: "'endereço do comprador'" })),
-    }).required().messages(validatorFields({ name: "'cliente comprador'" })),
-    client_seller: Joi.object({
-      name: Joi.string().max(80).required()
-        .messages(validatorFields({ name: "'nome do vendedor'", max: 80 })),
-      client_type: Joi.string().valid('FISICA', 'JURIDICA').required().messages(
-        validatorFields({ name: "'tipo de cliente'", ref: "[FISICA, JURIDICA]" })),
-      cpf: Joi.when('client_type', {
-        is: "FISICA",
-        then: Joi.string().pattern(/^[0-9]{11,11}$/).required()
-          .messages(validatorFields({ name: "'cpf do vendedor'", max: 11 })),
-      }),
-      cnpj: Joi.when('client_type', {
-        is: "JURIDICA",
-        then: Joi.string().pattern(/^[0-9]{14,14}$/).required()
-          .messages(validatorFields({ name: "'cnpj do vendedor'", max: 14 })),
-      }),
-      email: Joi.string().email().required()
-        .messages(validatorFields({ name: "'email do vendedor'" })),
-      phone: Joi.string().pattern(/^[0-9]{11,11}$/)
-        .messages(validatorFields({ name: "'telefone do vendedor'", max: 11 })),
-      whatsapp: Joi.string()
-        .messages(validatorFields({ name: "'whatsapp do vendedor'" })),
-      date_birth: Joi.date().iso()
-        .messages(validatorFields({ name: "'data de nascimento do vendedor'" })),
-      profession_id: Joi.string().optional().uuid()
-        .messages(validatorFields({ name: "'segmento de atuação do comprador'" })),
-      civil_status: Joi.string().valid(
-        'CASADO(A)', 'DIVORCIADO(A)', 'SOLTEIRO(A)', 'VIUVO(A)'
-      ).messages(validatorFields({
-        name: "'estado civil do vendedor'",
-        ref: "[CASADO(A), DIVORCIADO(A), SOLTEIRO(A), VIUVO(A)]"
-      })),
-      number_children: Joi.number().integer().min(0)
-        .messages(validatorFields({ name: "'nº de filhos do vendedor'", min: 0 })),
-      gender: Joi.string().valid('MASCULINO', 'FEMININO', 'OUTRO')
-        .messages(validatorFields({
-          name: "'gênero do vendedor'",
-          ref: "[MASCULINO, FEMININO, OUTRO]"
-        })),
-      address: Joi.string().messages(validatorFields({ name: "'endereço do vendedor'" })),
-    }).required().messages(validatorFields({ name: "'cliente vendedor'" })),
+    client_buyer: Joi.string().uuid().required()
+      .messages(validatorFields({ name: "'cliente comprador'" })),
+    client_seller: Joi.string().uuid().required()
+      .messages(validatorFields({ name: "'cliente vendedor'" })),
     user_coordinator: Joi.string().uuid()
       .messages(validatorFields({ name: "'coordenador'" })),
     users_directors: Joi.array().min(1).required()

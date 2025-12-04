@@ -3,7 +3,6 @@ import { classToClass } from 'class-transformer';
 import { container } from 'tsyringe';
 
 import CreateRealtyService from '@modules/sales/services/CreateRealtyService';
-import CreateClientService from '@modules/sales/services/CreateClientService';
 import CreateSaleNewService from '@modules/sales/services/CreateSaleNewService';
 import CreateSaleUsedService from '@modules/sales/services/CreateSaleUsedService';
 import { SaleType, Status } from '@modules/sales/infra/typeorm/entities/Sale';
@@ -76,22 +75,6 @@ class SaleController {
       property: realty.property,
     });
 
-    const createClientService = container.resolve(CreateClientService);
-    const client_buyerId = await createClientService.execute({
-      name: client_buyer.name,
-      cpf: client_buyer.cpf,
-      cnpj: client_buyer.cnpj,
-      date_birth: client_buyer.date_birth,
-      email: client_buyer.email,
-      phone: client_buyer.phone,
-      whatsapp: client_buyer.whatsapp,
-      profession_id: client_buyer.profession_id,
-      civil_status: client_buyer.civil_status,
-      number_children: client_buyer.number_children,
-      gender: client_buyer.gender,
-      address: client_buyer.address,
-    });
-
     const createSaleNewService = container.resolve(CreateSaleNewService);
     const sale = await createSaleNewService.execute({
       sale_type: SaleType.N,
@@ -104,7 +87,7 @@ class SaleController {
       payment_type,
       realty: realtyId,
       builder,
-      client_buyer: client_buyerId,
+      client_buyer,
       user_coordinator,
       users_directors,
       users_sellers,
@@ -151,37 +134,6 @@ class SaleController {
       property: realty.property,
     });
 
-    const createClientService = container.resolve(CreateClientService);
-    const client_buyerId = await createClientService.execute({
-      name: client_buyer.name,
-      cpf: client_buyer.cpf,
-      cnpj: client_buyer.cnpj,
-      date_birth: client_buyer.date_birth,
-      email: client_buyer.email,
-      phone: client_buyer.phone,
-      whatsapp: client_buyer.whatsapp,
-      profession_id: client_buyer.profession_id,
-      civil_status: client_buyer.civil_status,
-      number_children: client_buyer.number_children,
-      gender: client_buyer.gender,
-      address: client_buyer.address,
-    });
-
-    const client_sellerId = await createClientService.execute({
-      name: client_seller.name,
-      cpf: client_seller.cpf,
-      cnpj: client_seller.cnpj,
-      date_birth: client_seller.date_birth,
-      email: client_seller.email,
-      phone: client_seller.phone,
-      whatsapp: client_seller.whatsapp,
-      profession_id: client_seller.profession_id,
-      civil_status: client_seller.civil_status,
-      number_children: client_seller.number_children,
-      gender: client_seller.gender,
-      address: client_seller.address,
-    });
-
     const createSaleUsedService = container.resolve(CreateSaleUsedService);
     const sale = await createSaleUsedService.execute({
       sale_type: SaleType.U,
@@ -193,8 +145,8 @@ class SaleController {
       origin,
       payment_type,
       realty: realtyId,
-      client_buyer: client_buyerId,
-      client_seller: client_sellerId,
+      client_buyer,
+      client_seller,
       user_coordinator,
       users_directors,
       users_captivators,
