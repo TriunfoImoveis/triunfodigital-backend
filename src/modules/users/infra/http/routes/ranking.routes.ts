@@ -1,14 +1,24 @@
 import {Router} from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 
-import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
 import RankingController from '@modules/users/infra/http/controllers/RankingController';
 import validatorFields from '@shared/infra/http/validators/validatorFields';
+import ensuredAuthenticated from '@shared/infra/http/middlewares/ensuredAuthenticated';
+import basicAuthenticated from '@shared/infra/http/middlewares/basicAuth';
 
 const rankingRouter = Router();
 const rankingController = new RankingController();
 
-rankingRouter.use(ensuredAuthenticated);
+rankingRouter.use((req, res, next) => {
+  const authHeader = req.headers.authorization || '';
+  const [scheme] = authHeader.split(' ');
+
+  if (scheme && scheme.toLowerCase() === 'basic') {
+    return basicAuthenticated(req, res, next);
+  }
+
+  return ensuredAuthenticated(req, res, next);
+});
 
 rankingRouter.get('/', celebrate({
   [Segments.QUERY]: {
