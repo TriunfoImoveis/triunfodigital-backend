@@ -1,5 +1,4 @@
 import User from "@modules/users/infra/typeorm/entities/User";
-import Client from "@modules/sales/infra/typeorm/entities/Client";
 import OriginSale from "@modules/sales/infra/typeorm/entities/OriginSale";
 import Subsidiary from "@modules/organizations/infra/typeorm/entities/Subsidiary";
 import Realty from "@modules/sales/infra/typeorm/entities/Realty";
@@ -16,8 +15,8 @@ export default interface ICreateSaleUsedDTO {
   origin: OriginSale;
   payment_type: PaymentType;
   realty: Realty;
-  client_buyer: Client;
-  client_seller: Client;
+  client_buyer: string;
+  client_seller: string;
   user_coordinator?: User;
   users_directors: User[];
   users_captivators: User[];

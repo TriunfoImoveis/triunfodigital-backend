@@ -26,6 +26,7 @@ class CreateClientService {
     gender,
     address,
     profession_id,
+    origin_id,
   }: ICreateClientDTO): Promise<Client> {
     const cpf_cnpj = cpf ? cpf : cnpj;
     const clientExists = await this.clientsRepository.findByCPFOrCNPJ(
@@ -33,7 +34,7 @@ class CreateClientService {
     );
 
     if (clientExists) {
-      return clientExists;
+      throw new AppError('Cliente já existe para esse CPF/CNPJ.', 409);
     }
 
     const date_birth_formated = date_birth
@@ -53,6 +54,7 @@ class CreateClientService {
       number_children,
       gender,
       address,
+      origin_id,
     });
 
     if (!client) {

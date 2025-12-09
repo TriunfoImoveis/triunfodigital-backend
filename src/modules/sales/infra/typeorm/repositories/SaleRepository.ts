@@ -2,6 +2,7 @@ import { getRepository, Repository, getConnection, Brackets } from "typeorm";
 
 import AppError from '@shared/errors/AppError';
 import Sale, { Status } from "@modules/sales/infra/typeorm/entities/Sale";
+import Client from "@modules/sales/infra/typeorm/entities/Client";
 import ICreateSaleNewDTO from "@modules/sales/dtos/ICreateSaleNewDTO";
 import ICreateSaleUsedDTO from "@modules/sales/dtos/ICreateSaleUsedDTO";
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
@@ -39,6 +40,7 @@ class SaleRepository implements ISaleRepository {
       .leftJoinAndSelect("sale.builder", "builder")
       .leftJoinAndSelect("sale.subsidiary", "subsidiary")
       .innerJoinAndSelect("sale.client_buyer", "client_buyer")
+      .leftJoinAndSelect("client_buyer.origin", "client_buyer_origin")
       .leftJoin("client_buyer.profession", "client_buyer_profession")
      .addSelect([
        "client_buyer_profession.id",
@@ -46,6 +48,7 @@ class SaleRepository implements ISaleRepository {
        "client_buyer_profession.normalized_name",
      ])
       .leftJoinAndSelect("sale.client_seller", "client_seller")
+     .leftJoinAndSelect("client_seller.origin", "client_seller_origin")
      .leftJoin("client_seller.profession", "client_seller_profession")
      .addSelect([
        "client_seller_profession.id",
@@ -82,6 +85,7 @@ class SaleRepository implements ISaleRepository {
       .leftJoinAndSelect("sale.builder", "builder")
       .leftJoinAndSelect("sale.subsidiary", "subsidiary")
       .innerJoinAndSelect("sale.client_buyer", "client_buyer")
+      .leftJoinAndSelect("client_buyer.origin", "client_buyer_origin")
       .leftJoin("client_buyer.profession", "client_buyer_profession")
     .addSelect([
       "client_buyer_profession.id",
@@ -89,6 +93,7 @@ class SaleRepository implements ISaleRepository {
       "client_buyer_profession.normalized_name",
     ])
       .leftJoinAndSelect("sale.client_seller", "client_seller")
+    .leftJoinAndSelect("client_seller.origin", "client_seller_origin")
     .leftJoin("client_seller.profession", "client_seller_profession")
     .addSelect([
       "client_seller_profession.id",
@@ -179,17 +184,17 @@ class SaleRepository implements ISaleRepository {
     try {
 
         const realtyId = await queryRunner.manager.save(realty);
-        const client_buyerId = await queryRunner.manager.save(client_buyer);
 
-        data.realty = realtyId;
-        data.client_buyer = client_buyerId;
-
-        const sale = this.ormRepository.create(data);
+        const sale = this.ormRepository.create({
+          ...data,
+          realty: realtyId,
+          client_buyer: { id: client_buyer } as Client,
+        });
         sale.users_directors = users_directors;
         sale.sale_has_sellers = users_sellers;
         const newSale = await queryRunner.manager.save(sale);
 
-        installments.forEach(async (installment)=>{
+        installments.forEach((installment) => {
           installment.sale = newSale;
         });
 
@@ -231,20 +236,19 @@ class SaleRepository implements ISaleRepository {
     try {
 
         const realtyId = await queryRunner.manager.save(realty);
-        const client_buyerId = await queryRunner.manager.save(client_buyer);
-        const client_sellerId = await queryRunner.manager.save(client_seller);
 
-        data.realty = realtyId;
-        data.client_buyer = client_buyerId;
-        data.client_seller = client_sellerId;
-
-        const sale = this.ormRepository.create(data);
+        const sale = this.ormRepository.create({
+          ...data,
+          realty: realtyId,
+          client_buyer: { id: client_buyer } as Client,
+          client_seller: { id: client_seller } as Client,
+        });
         sale.users_directors = users_directors;
         sale.sale_has_captivators = users_captivators;
         sale.sale_has_sellers = users_sellers;
         const newSale = await queryRunner.manager.save(sale);
 
-        installments.forEach(async (installment)=>{
+        installments.forEach((installment) => {
           installment.sale = newSale;
         });
 

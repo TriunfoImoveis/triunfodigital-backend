@@ -18,11 +18,15 @@ class ClientsRepository implements IClientRepository {
       const client = await this.ormRepository
         .createQueryBuilder('client')
         .leftJoin('client.profession', 'profession')
+        .leftJoin('client.origin', 'origin')
         .select([
           'client',
           'profession.id',
           'profession.name',
           'profession.normalized_name',
+          'origin.id',
+          'origin.name',
+          'origin.active',
         ])
         .where('client.id = :id', { id })
         .getOne();
@@ -38,11 +42,15 @@ class ClientsRepository implements IClientRepository {
       const client = await this.ormRepository
         .createQueryBuilder('client')
         .leftJoin('client.profession', 'profession')
+        .leftJoin('client.origin', 'origin')
         .select([
           'client',
           'profession.id',
           'profession.name',
           'profession.normalized_name',
+          'origin.id',
+          'origin.name',
+          'origin.active',
         ])
         .where('client.id = :id', { id })
         .andWhere('client.active = true')
@@ -59,11 +67,15 @@ class ClientsRepository implements IClientRepository {
       const client = await this.ormRepository
         .createQueryBuilder('client')
         .leftJoin('client.profession', 'profession')
+        .leftJoin('client.origin', 'origin')
         .select([
           'client',
           'profession.id',
           'profession.name',
           'profession.normalized_name',
+          'origin.id',
+          'origin.name',
+          'origin.active',
         ])
         .where('client.name = :name', { name })
         .getOne();
@@ -79,11 +91,15 @@ class ClientsRepository implements IClientRepository {
       const client = await this.ormRepository
         .createQueryBuilder('client')
         .leftJoin('client.profession', 'profession')
+        .leftJoin('client.origin', 'origin')
         .select([
           'client',
           'profession.id',
           'profession.name',
           'profession.normalized_name',
+          'origin.id',
+          'origin.name',
+          'origin.active',
         ])
         .where('client.cpf = :cpf', { cpf: cpf_cnpj })
         .orWhere('client.cnpj = :cnpj', { cnpj: cpf_cnpj })
@@ -100,11 +116,15 @@ class ClientsRepository implements IClientRepository {
       const clients = await this.ormRepository
         .createQueryBuilder('client')
         .leftJoin('client.profession', 'profession')
+        .leftJoin('client.origin', 'origin')
         .select([
           'client',
           'profession.id',
           'profession.name',
           'profession.normalized_name',
+          'origin.id',
+          'origin.name',
+          'origin.active',
         ])
         .where('client.active = true')
         .orderBy('client.name', 'ASC')
@@ -151,7 +171,7 @@ class ClientsRepository implements IClientRepository {
     try {
       await this.ormRepository.update(id, { active: true });
       const client = await this.ormRepository.findOne(id, {
-        relations: ['profession'],
+        relations: ['profession', 'origin'],
       });
       return client;
     } catch (err) {
