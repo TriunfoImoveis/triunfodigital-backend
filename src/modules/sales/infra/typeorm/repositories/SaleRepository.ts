@@ -40,6 +40,7 @@ class SaleRepository implements ISaleRepository {
       .leftJoinAndSelect("sale.builder", "builder")
       .leftJoinAndSelect("sale.subsidiary", "subsidiary")
       .innerJoinAndSelect("sale.client_buyer", "client_buyer")
+      .leftJoinAndSelect("client_buyer.origin", "client_buyer_origin")
       .leftJoin("client_buyer.profession", "client_buyer_profession")
      .addSelect([
        "client_buyer_profession.id",
@@ -47,6 +48,7 @@ class SaleRepository implements ISaleRepository {
        "client_buyer_profession.normalized_name",
      ])
       .leftJoinAndSelect("sale.client_seller", "client_seller")
+     .leftJoinAndSelect("client_seller.origin", "client_seller_origin")
      .leftJoin("client_seller.profession", "client_seller_profession")
      .addSelect([
        "client_seller_profession.id",
@@ -83,6 +85,7 @@ class SaleRepository implements ISaleRepository {
       .leftJoinAndSelect("sale.builder", "builder")
       .leftJoinAndSelect("sale.subsidiary", "subsidiary")
       .innerJoinAndSelect("sale.client_buyer", "client_buyer")
+      .leftJoinAndSelect("client_buyer.origin", "client_buyer_origin")
       .leftJoin("client_buyer.profession", "client_buyer_profession")
     .addSelect([
       "client_buyer_profession.id",
@@ -90,6 +93,7 @@ class SaleRepository implements ISaleRepository {
       "client_buyer_profession.normalized_name",
     ])
       .leftJoinAndSelect("sale.client_seller", "client_seller")
+    .leftJoinAndSelect("client_seller.origin", "client_seller_origin")
     .leftJoin("client_seller.profession", "client_seller_profession")
     .addSelect([
       "client_seller_profession.id",
