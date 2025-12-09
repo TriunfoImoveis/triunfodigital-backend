@@ -8,6 +8,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import Profession from './Professions';
+import OriginSale from './OriginSale';
 
 export enum CivilStatus {
   C = 'CASADO(A)',
@@ -58,6 +59,13 @@ class Client {
 
   @Column()
   profession_id: string;
+
+  @ManyToOne(() => OriginSale, { nullable: true })
+  @JoinColumn({ name: 'origin_id' })
+  origin?: OriginSale;
+
+  @Column({ nullable: true })
+  origin_id?: string;
 
   @Column({ type: 'enum', enum: CivilStatus, nullable: true })
   civil_status: CivilStatus;

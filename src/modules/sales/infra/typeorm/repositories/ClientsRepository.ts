@@ -6,7 +6,6 @@ import IClientRepository from '@modules/sales/repositories/IClientRepository';
 import ICreateClientDTO from '@modules/sales/dtos/ICreateClientDTO';
 import IUpdateClientDTO from '@modules/sales/dtos/IUpdateClientDTO';
 
-
 class ClientsRepository implements IClientRepository {
   private ormRepository: Repository<Client>;
 
@@ -16,14 +15,18 @@ class ClientsRepository implements IClientRepository {
 
   async findById(id: string): Promise<Client | undefined> {
     try {
-       const client = await this.ormRepository
+      const client = await this.ormRepository
         .createQueryBuilder('client')
         .leftJoin('client.profession', 'profession')
+        .leftJoin('client.origin', 'origin')
         .select([
           'client',
           'profession.id',
           'profession.name',
           'profession.normalized_name',
+          'origin.id',
+          'origin.name',
+          'origin.active',
         ])
         .where('client.id = :id', { id })
         .getOne();
@@ -36,14 +39,18 @@ class ClientsRepository implements IClientRepository {
 
   async findByIdAndActivate(id: string): Promise<Client | undefined> {
     try {
-     const client = await this.ormRepository
+      const client = await this.ormRepository
         .createQueryBuilder('client')
         .leftJoin('client.profession', 'profession')
+        .leftJoin('client.origin', 'origin')
         .select([
           'client',
           'profession.id',
           'profession.name',
           'profession.normalized_name',
+          'origin.id',
+          'origin.name',
+          'origin.active',
         ])
         .where('client.id = :id', { id })
         .andWhere('client.active = true')
@@ -60,11 +67,15 @@ class ClientsRepository implements IClientRepository {
       const client = await this.ormRepository
         .createQueryBuilder('client')
         .leftJoin('client.profession', 'profession')
+        .leftJoin('client.origin', 'origin')
         .select([
           'client',
           'profession.id',
           'profession.name',
           'profession.normalized_name',
+          'origin.id',
+          'origin.name',
+          'origin.active',
         ])
         .where('client.name = :name', { name })
         .getOne();
@@ -80,11 +91,15 @@ class ClientsRepository implements IClientRepository {
       const client = await this.ormRepository
         .createQueryBuilder('client')
         .leftJoin('client.profession', 'profession')
+        .leftJoin('client.origin', 'origin')
         .select([
           'client',
           'profession.id',
           'profession.name',
           'profession.normalized_name',
+          'origin.id',
+          'origin.name',
+          'origin.active',
         ])
         .where('client.cpf = :cpf', { cpf: cpf_cnpj })
         .orWhere('client.cnpj = :cnpj', { cnpj: cpf_cnpj })
@@ -101,11 +116,15 @@ class ClientsRepository implements IClientRepository {
       const clients = await this.ormRepository
         .createQueryBuilder('client')
         .leftJoin('client.profession', 'profession')
+        .leftJoin('client.origin', 'origin')
         .select([
           'client',
           'profession.id',
           'profession.name',
           'profession.normalized_name',
+          'origin.id',
+          'origin.name',
+          'origin.active',
         ])
         .where('client.active = true')
         .orderBy('client.name', 'ASC')
@@ -121,13 +140,16 @@ class ClientsRepository implements IClientRepository {
     try {
       const client = this.ormRepository.create(data);
 
-      return client;
+      return await this.ormRepository.save(client);
     } catch (err) {
       throw new AppError(err);
     }
   }
 
-  async update(id: string, data: IUpdateClientDTO): Promise<Client | undefined> {
+  async update(
+    id: string,
+    data: IUpdateClientDTO,
+  ): Promise<Client | undefined> {
     try {
       await this.ormRepository.update(id, data);
       const clientUpdated = await this.findById(id);
@@ -139,7 +161,7 @@ class ClientsRepository implements IClientRepository {
 
   async deactivate(id: string): Promise<void> {
     try {
-      await this.ormRepository.update(id, {active: false});
+      await this.ormRepository.update(id, { active: false });
     } catch (err) {
       throw new AppError(err.detail);
     }
@@ -147,9 +169,9 @@ class ClientsRepository implements IClientRepository {
 
   async activate(id: string): Promise<Client | undefined> {
     try {
-      await this.ormRepository.update(id, {active: true});
+      await this.ormRepository.update(id, { active: true });
       const client = await this.ormRepository.findOne(id, {
-        relations: ['profession'],
+        relations: ['profession', 'origin'],
       });
       return client;
     } catch (err) {

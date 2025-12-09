@@ -1,10 +1,10 @@
-import { add } from "date-fns";
-import { inject, injectable } from "tsyringe";
+import { add } from 'date-fns';
+import { inject, injectable } from 'tsyringe';
 
-import ICreateClientDTO from "@modules/sales/dtos/ICreateClientDTO";
-import IClientRepository from "@modules/sales/repositories/IClientRepository";
+import ICreateClientDTO from '@modules/sales/dtos/ICreateClientDTO';
+import IClientRepository from '@modules/sales/repositories/IClientRepository';
 import AppError from '@shared/errors/AppError';
-import Client from "@modules/sales/infra/typeorm/entities/Client";
+import Client from '@modules/sales/infra/typeorm/entities/Client';
 
 @injectable()
 class CreateClientService {
@@ -25,16 +25,21 @@ class CreateClientService {
     number_children,
     gender,
     address,
-    profession_id
+    profession_id,
+    origin_id,
   }: ICreateClientDTO): Promise<Client> {
     const cpf_cnpj = cpf ? cpf : cnpj;
-    const clientExists = await this.clientsRepository.findByCPFOrCNPJ(String(cpf_cnpj));
+    const clientExists = await this.clientsRepository.findByCPFOrCNPJ(
+      String(cpf_cnpj),
+    );
 
     if (clientExists) {
-      return clientExists;
+      throw new AppError('Cliente já existe para esse CPF/CNPJ.', 409);
     }
 
-    const date_birth_formated = date_birth ? add(date_birth, {hours: 3}) : undefined;
+    const date_birth_formated = date_birth
+      ? add(date_birth, { hours: 3 })
+      : undefined;
 
     const client = await this.clientsRepository.createInstance({
       name,
@@ -49,12 +54,13 @@ class CreateClientService {
       number_children,
       gender,
       address,
+      origin_id,
     });
 
     if (!client) {
       throw new AppError(
-        "Erro durante a criação do cliente, ckeck seus dados",
-        400
+        'Erro durante a criação do cliente, ckeck seus dados',
+        400,
       );
     }
 

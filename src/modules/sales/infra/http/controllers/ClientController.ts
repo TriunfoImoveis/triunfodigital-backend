@@ -54,6 +54,7 @@ class ClientController {
       civil_status,
       number_children,
       gender,
+      origin_id,
     } = request.body;
 
     const clientsRepository = new ClientsRepository();
@@ -69,6 +70,7 @@ class ClientController {
       civil_status,
       number_children,
       gender,
+      origin_id,
     });
 
     return response.json(newClient);
