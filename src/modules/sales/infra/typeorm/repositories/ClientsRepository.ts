@@ -140,7 +140,7 @@ class ClientsRepository implements IClientRepository {
     try {
       const client = this.ormRepository.create(data);
 
-      return this.ormRepository.save(client);
+      return await this.ormRepository.save(client);
     } catch (err) {
       throw new AppError(err);
     }
