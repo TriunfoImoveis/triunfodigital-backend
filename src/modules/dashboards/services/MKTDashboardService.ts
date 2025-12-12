@@ -84,8 +84,9 @@ class SellersDashboardService {
         CAPTADORES: captivators,
         VENDEDORES: selers,
         STATUS: sale.status,
-        'TEM PARCERIA ?': sale.has_partnership ? 'SIM' : 'NÃO',
-        'TIPO DA PARCERIA': sale.partnership_type
+        CANAL: sale.origin.name,
+        'TEM PARCERIA EXTERNA?': sale.has_partnership ? 'SIM' : 'NÃO',
+        'TIPO DE PARCERIA EXTERNA': sale.partnership_type
           ? PARTNER_TYPES[sale.partnership_type]
           : '',
         'TIPO PAGAMENTO': sale.payment_type.name,
