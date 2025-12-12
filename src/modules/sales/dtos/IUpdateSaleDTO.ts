@@ -3,7 +3,7 @@ import Subsidiary from "@modules/organizations/infra/typeorm/entities/Subsidiary
 import Client from "@modules/sales/infra/typeorm/entities/Client";
 import OriginSale from "@modules/sales/infra/typeorm/entities/OriginSale";
 import Realty from "@modules/sales/infra/typeorm/entities/Realty";
-import { SaleType, Status } from "@modules/sales/infra/typeorm/entities/Sale";
+import { PartnershipType, SaleType, Status } from "@modules/sales/infra/typeorm/entities/Sale";
 import PaymentType from "@modules/sales/infra/typeorm/entities/PaymentType";
 import Company from "@modules/organizations/infra/typeorm/entities/Company";
 import Builder from "@modules/sales/infra/typeorm/entities/Builder";
@@ -33,4 +33,6 @@ export default interface IUpdateSaleDTO {
   observation?: string;
   status?: Status;
   subsidiary?: Subsidiary;
+  has_partnership?: boolean;
+  partnership_type?: PartnershipType;
 }
