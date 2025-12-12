@@ -127,6 +127,14 @@ saleRoutes.post(
       observation: Joi.string().messages(
         validatorFields({ name: "'observação'" }),
       ),
+      has_partnership: Joi.boolean().default(false),
+      partnership_type: Joi.string()
+        .valid('PROPERTY', 'CLIENT', 'BOTH')
+        .when('has_partnership', {
+          is: true,
+          then: Joi.required(),
+          otherwise: Joi.allow(null),
+        }),
       installments: Joi.array()
         .items(
           Joi.object({
@@ -248,6 +256,14 @@ saleRoutes.post(
       observation: Joi.string().messages(
         validatorFields({ name: "'observação'" }),
       ),
+      has_partnership: Joi.boolean().default(false),
+      partnership_type: Joi.string()
+        .valid('PROPERTY', 'CLIENT', 'BOTH')
+        .when('has_partnership', {
+          is: true,
+          then: Joi.required(),
+          otherwise: Joi.allow(null),
+        }),
       installments: Joi.array()
         .items(
           Joi.object({
@@ -536,6 +552,10 @@ saleRoutes.put(
       observation: Joi.string().messages(
         validatorFields({ name: "'observação'" }),
       ),
+      has_partnership: Joi.boolean(),
+      partnership_type: Joi.string()
+        .valid('PROPERTY', 'CLIENT', 'BOTH')
+        .allow(null),
       status: Joi.string()
         .valid('NAO_VALIDADO', 'PENDENTE', 'PAGO_TOTAL')
         .messages(
@@ -574,3 +594,4 @@ saleRoutes.post(
 );
 
 export default saleRoutes;
+

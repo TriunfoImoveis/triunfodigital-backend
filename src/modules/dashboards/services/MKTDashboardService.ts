@@ -3,6 +3,12 @@ import { inject, injectable } from 'tsyringe';
 import IRequestMKTDashboardDTO from '@modules/dashboards/dtos/IRequestMKTDashboardDTO';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 
+const PARTNER_TYPES = {
+  CLIENT: 'CLIENTE',
+  PROPERTY: 'IMÓVEL',
+  BOTH: 'AMBOS',
+};
+
 @injectable()
 class SellersDashboardService {
   constructor(
@@ -77,7 +83,11 @@ class SellersDashboardService {
         COOREDENADOR: sale.user_coordinator ? sale.user_coordinator.name : '',
         CAPTADORES: captivators,
         VENDEDORES: selers,
-        SATUS: sale.status,
+        STATUS: sale.status,
+        'TEM PARCERIA ?': sale.has_partnership ? 'SIM' : 'NÃO',
+        'TIPO DA PARCERIA': sale.partnership_type
+          ? PARTNER_TYPES[sale.partnership_type]
+          : '',
         'TIPO PAGAMENTO': sale.payment_type.name,
         '1º PARCELA': sale.installments[0] ? sale.installments[0].value : '',
         '1º PARCELA DT PAG': sale.installments[0]

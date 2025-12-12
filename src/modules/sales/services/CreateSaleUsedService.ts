@@ -41,7 +41,9 @@ class CreateSaleUsedService {
     value_signal,
     pay_date_signal,
     observation,
-    subsidiary
+    subsidiary,
+    has_partnership,
+    partnership_type
   }: ICreateSaleUsedDTO, installments: ICreateInstallmentDTO[]): Promise<Sale> {
 
     var totalValueInstallments = 0;
@@ -84,7 +86,9 @@ class CreateSaleUsedService {
       value_signal,
       pay_date_signal: ajusted_date_signal,
       observation,
-      subsidiary
+      subsidiary,
+      has_partnership,
+      partnership_type,
     }, installments);
 
     if (sale) {

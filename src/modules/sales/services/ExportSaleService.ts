@@ -24,6 +24,12 @@ interface InstallmentType {
   status: string;
 }
 
+const PARTNER_TYPES = {
+  CLIENT: 'CLIENTE',
+  PROPERTY: 'IMÓVEL',
+  BOTH: 'AMBOS',
+};
+
 @injectable()
 class ExportSaleService {
   constructor(
@@ -190,6 +196,8 @@ class ExportSaleService {
       { header: 'VENDEDORES', key: 'sellers', width: 20 },
       { header: 'STATUS', key: 'status', width: 15 },
       { header: 'TIPO DE PAGAMENTO', key: 'payment_type', width: 20 },
+      { header: 'TEM PARCERIA ?', key: 'has_partnership', width: 18 },
+      { header: 'TIPO DE PARCERIA', key: 'partnership_type', width: 18 },
       {
         header: '1º PARCELA',
         key: 'installment_value_0',
@@ -345,6 +353,10 @@ class ExportSaleService {
         sellers: sellers.toString(),
         status: sale.status,
         payment_type: sale.payment_type.name,
+        has_partnership: sale.has_partnership ? 'SIM' : 'NÃO',
+        partnership_type: sale.partnership_type
+          ? PARTNER_TYPES[sale.partnership_type]
+          : '',
         ...installmentFields,
       };
 
