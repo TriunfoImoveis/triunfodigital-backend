@@ -330,7 +330,7 @@ class SaleRepository implements ISaleRepository {
     const {ids, month, year} = data
     try {
       const sales = await this.ormRepository.createQueryBuilder("sale")
-        .select(["sale.id", "sale.realty_ammount"])
+        .select(["sale.id", "sale.realty_ammount", "sale.has_partnership", "sale.partnership_type"])
         .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
         .innerJoinAndSelect("sale.sale_has_captivators", "captivators")
         .where("captivators.id IN (:...id_users)", { id_users: ids })
@@ -361,7 +361,7 @@ class SaleRepository implements ISaleRepository {
     const {ids, month, year} = data
     try {
       const sales = await this.ormRepository.createQueryBuilder("sale")
-        .select(["sale.id", "sale.realty_ammount"])
+        .select(["sale.id", "sale.realty_ammount", "sale.has_partnership", "sale.partnership_type"])
         .innerJoinAndSelect("sale.sale_has_sellers", "sellers")
         .leftJoinAndSelect("sale.user_coordinator", "coordinator")
         .where("coordinator.id IN (:...user_ids)", { user_ids: ids })

@@ -14,17 +14,38 @@ const safeDivide = (value: number, divisor: number) => {
   return Math.round(value / divisor);
 };
 
+const getPartnershipFactor = (sale: Sale, role: RankingType) => {
+  if (!sale.has_partnership) {
+    return 1;
+  }
+
+  const type = sale.partnership_type;
+
+  if (role === "captivator" && (type === "PROPERTY" || type === "BOTH")) {
+    return 0.5;
+  }
+
+  if ((role === "sales" || role === "coordinator") && (type === "CLIENT" || type === "BOTH")) {
+    return 0.5;
+  }
+
+  return 1;
+};
+
 const splitSaleByRole = (sale: Sale, role: RankingType) => {
+  const factor = getPartnershipFactor(sale, role);
+  const adjustedAmountCents = toCents(Number(sale.realty_ammount) * factor);
+
   if (role === "sales") {
-    return safeDivide(toCents(sale.realty_ammount), sale.sale_has_sellers.length);
+    return safeDivide(adjustedAmountCents, sale.sale_has_sellers.length);
   }
 
   if (role === "captivator") {
-    return safeDivide(toCents(sale.realty_ammount), sale.sale_has_captivators.length);
+    return safeDivide(adjustedAmountCents, sale.sale_has_captivators.length);
   }
 
   // Coordenador: modelo atual aceita apenas um coordenador por venda.
-  return safeDivide(toCents(sale.realty_ammount), 1);
+  return safeDivide(adjustedAmountCents, 1);
 };
 
 const filterSalesByRole = (sales: Sale[], userId: string, role: RankingType) => {

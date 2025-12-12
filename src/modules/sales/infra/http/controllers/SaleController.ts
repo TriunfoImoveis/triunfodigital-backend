@@ -61,6 +61,8 @@ class SaleController {
       value_signal,
       pay_date_signal,
       observation,
+      has_partnership,
+      partnership_type,
       installments,
       subsidiary,
     } = request.body;
@@ -94,6 +96,8 @@ class SaleController {
       value_signal,
       pay_date_signal,
       observation,
+      has_partnership,
+      partnership_type,
       subsidiary
     }, installments);
 
@@ -121,6 +125,8 @@ class SaleController {
       pay_date_signal,
       installments,
       observation,
+      has_partnership,
+      partnership_type,
       subsidiary
     } = request.body;
 
@@ -154,6 +160,8 @@ class SaleController {
       value_signal,
       pay_date_signal,
       observation,
+      has_partnership,
+      partnership_type,
       subsidiary
     }, installments);
 

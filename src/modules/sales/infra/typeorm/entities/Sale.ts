@@ -34,6 +34,12 @@ export enum Status {
   PT  = 'PAGO_TOTAL',
 }
 
+export enum PartnershipType {
+  PROPERTY = 'PROPERTY',
+  CLIENT = 'CLIENT',
+  BOTH = 'BOTH',
+}
+
 @Entity('sales')
 class Sale {
   @PrimaryGeneratedColumn('uuid')
@@ -158,6 +164,12 @@ class Sale {
 
   @OneToMany(type => Installment, installment => installment.sale)
   installments: Installment[];
+
+  @Column({ type: 'boolean', default: false })
+  has_partnership: boolean;
+
+  @Column({ type: 'enum', enum: PartnershipType, nullable: true })
+  partnership_type: PartnershipType;
 
   @ManyToOne(type => Subsidiary, {nullable: true})
   @JoinColumn({name: 'subsidiary_id'})
