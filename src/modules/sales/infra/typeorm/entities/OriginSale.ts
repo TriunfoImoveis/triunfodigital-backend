@@ -19,6 +19,12 @@ class OriginSale {
   @Column({ type: 'boolean', default: true })
   active: boolean;
 
+  @Column({ type: 'boolean', default: true })
+  isOriginClient: boolean;
+
+  @Column({ type: 'boolean', default: true })
+  isOriginChannel: boolean;
+
   @OneToMany(type => Sale, origin => OriginSale)
   sales: Sale[];
 }

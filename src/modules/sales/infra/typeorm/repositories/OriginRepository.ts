@@ -4,11 +4,12 @@ import AppError from '@shared/errors/AppError';
 import IOriginRepository from "@modules/sales/repositories/IOriginRepository";
 import OriginSale from "@modules/sales/infra/typeorm/entities/OriginSale";
 import ICreateOriginDTO from "@modules/sales/dtos/ICreateOriginDTO";
-import { response } from "express";
 
 interface UpdateData {
-  id: string,
-  name: string
+  id: string;
+  name: string;
+  isOriginClient?: boolean;
+  isOriginChannel?: boolean;
 }
 
 class OriginsRepository implements IOriginRepository {
@@ -31,12 +32,19 @@ class OriginsRepository implements IOriginRepository {
       throw new AppError(err.detail);
     }
   }
-  async findAllActive(): Promise<OriginSale[]> {
+  async findAllActive(filters?: {
+    isOriginClient?: boolean;
+    isOriginChannel?: boolean;
+  }): Promise<OriginSale[]> {
     try {
+      const where = {
+        active: true,
+        ...(filters?.isOriginClient ? { isOriginClient: true } : {}),
+        ...(filters?.isOriginChannel ? { isOriginChannel: true } : {}),
+      };
+
       const origins = await this.ormRepository.find({
-        where: {
-          active: true
-        },
+        where,
         order: {
           name: "ASC",
         },
@@ -68,12 +76,14 @@ class OriginsRepository implements IOriginRepository {
       throw new AppError(err.detail);
     }
   }
-  async update({id, name}: UpdateData): Promise<OriginSale> {
+  async update({id, name, isOriginClient, isOriginChannel}: UpdateData): Promise<OriginSale> {
     try {
       const origin = await this.ormRepository.findOne(id);
       const updateOrigin = {
         ...origin,
-        name
+        name,
+        isOriginClient: isOriginClient ?? false,
+        isOriginChannel: isOriginChannel ?? false
       }
 
       const updatedOrigin = await this.ormRepository.save(updateOrigin);

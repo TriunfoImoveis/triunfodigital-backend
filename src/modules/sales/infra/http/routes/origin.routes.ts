@@ -18,6 +18,8 @@ originRoutes.post('/', celebrate({
   [Segments.BODY]: {
     name: Joi.string().required()
       .messages(validatorFields({name: "'nome'"})),
+    isOriginClient: Joi.boolean().default(false),
+    isOriginChannel: Joi.boolean().default(false),
   }
 }), originController.create);
 
@@ -28,6 +30,8 @@ originRoutes.put('/update/:id', celebrate({
   [Segments.BODY]: {
     name: Joi.string().required()
       .messages(validatorFields({name: "'nome'"})),
+    isOriginClient: Joi.boolean().default(false),
+    isOriginChannel: Joi.boolean().default(false),
   }
 }), originController.update);
 
