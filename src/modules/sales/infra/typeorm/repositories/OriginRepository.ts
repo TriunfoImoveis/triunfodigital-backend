@@ -37,11 +37,19 @@ class OriginsRepository implements IOriginRepository {
     isOriginChannel?: boolean;
   }): Promise<OriginSale[]> {
     try {
-      const where = {
-        active: true,
-        ...(filters?.isOriginClient ? { isOriginClient: true } : {}),
-        ...(filters?.isOriginChannel ? { isOriginChannel: true } : {}),
-      };
+      const where: {
+        active: boolean;
+        isOriginClient?: boolean;
+        isOriginChannel?: boolean;
+      } = { active: true };
+
+      if (filters && filters.isOriginClient) {
+        where.isOriginClient = true;
+      }
+
+      if (filters && filters.isOriginChannel) {
+        where.isOriginChannel = true;
+      }
 
       const origins = await this.ormRepository.find({
         where,
@@ -82,8 +90,8 @@ class OriginsRepository implements IOriginRepository {
       const updateOrigin = {
         ...origin,
         name,
-        isOriginClient: isOriginClient ?? false,
-        isOriginChannel: isOriginChannel ?? false
+        isOriginClient: typeof isOriginClient === 'boolean' ? isOriginClient : false,
+        isOriginChannel: typeof isOriginChannel === 'boolean' ? isOriginChannel : false
       }
 
       const updatedOrigin = await this.ormRepository.save(updateOrigin);

@@ -9,7 +9,12 @@ import validatorFields from '@shared/infra/http/validators/validatorFields';
 const originRoutes = Router();
 const originController = new OriginController();
 
-originRoutes.get('/', originController.index);
+originRoutes.get('/', celebrate({
+  [Segments.QUERY]: {
+    client: Joi.boolean(),
+    channel: Joi.boolean(),
+  }
+}), originController.index);
 originRoutes.get('/all', originController.showAll);
 
 originRoutes.use(ensuredAthenticated);
