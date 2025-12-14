@@ -43,11 +43,11 @@ class OriginsRepository implements IOriginRepository {
         isOriginChannel?: boolean;
       } = { active: true };
 
-      if (typeof filters?.isOriginClient === 'boolean') {
+      if (filters && typeof filters.isOriginClient === 'boolean') {
         where.isOriginClient = filters.isOriginClient;
       }
 
-      if (typeof filters?.isOriginChannel === 'boolean') {
+      if (filters && typeof filters.isOriginChannel === 'boolean') {
         where.isOriginChannel = filters.isOriginChannel;
       }
 
@@ -136,4 +136,3 @@ class OriginsRepository implements IOriginRepository {
 }
 
 export default OriginsRepository;
-
