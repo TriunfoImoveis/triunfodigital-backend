@@ -1,14 +1,19 @@
-import { Request, Response } from "express";
+﻿import { Request, Response } from "express";
 
 import OriginsRepository from "@modules/sales/infra/typeorm/repositories/OriginRepository";
 
 class OriginController {
   async index(request: Request, response: Response): Promise<Response> {
     const originsRepository = new OriginsRepository();
-    const clientFilter =
-      `${request.query.client}`.toLowerCase() === 'true';
-    const channelFilter =
-      `${request.query.channel}`.toLowerCase() === 'true';
+
+    const parseBool = (value: unknown): boolean | undefined => {
+      if (typeof value === 'boolean') return value;
+      if (typeof value === 'string') return value.toLowerCase() === 'true';
+      return undefined;
+    };
+
+    const clientFilter = parseBool(request.query.client);
+    const channelFilter = parseBool(request.query.channel);
 
     const origins = await originsRepository.findAllActive({
       isOriginClient: clientFilter,
@@ -74,3 +79,4 @@ class OriginController {
 }
 
 export default OriginController;
+
