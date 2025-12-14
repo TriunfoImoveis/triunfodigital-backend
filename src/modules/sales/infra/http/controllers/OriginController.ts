@@ -1,11 +1,24 @@
-import { Request, Response } from "express";
+﻿import { Request, Response } from "express";
 
 import OriginsRepository from "@modules/sales/infra/typeorm/repositories/OriginRepository";
 
 class OriginController {
   async index(request: Request, response: Response): Promise<Response> {
     const originsRepository = new OriginsRepository();
-    const origins = await originsRepository.findAllActive();
+
+    const parseBool = (value: unknown): boolean | undefined => {
+      if (typeof value === 'boolean') return value;
+      if (typeof value === 'string') return value.toLowerCase() === 'true';
+      return undefined;
+    };
+
+    const clientFilter = parseBool(request.query.client);
+    const channelFilter = parseBool(request.query.channel);
+
+    const origins = await originsRepository.findAllActive({
+      isOriginClient: clientFilter,
+      isOriginChannel: channelFilter,
+    });
 
     return response.json(origins);
   }
@@ -18,17 +31,34 @@ class OriginController {
   }
 
   async create(request: Request, response: Response): Promise<Response> {
-    const { name } = request.body;
+    const {
+      name,
+      isOriginClient = false,
+      isOriginChannel = false
+    } = request.body;
     const originsRepository = new OriginsRepository();
-    const newOrigin = await originsRepository.create({name});
+    const newOrigin = await originsRepository.create({
+      name,
+      isOriginClient,
+      isOriginChannel
+    });
 
     return response.json(newOrigin);
   }
   async update(request: Request, response: Response): Promise<Response> {
     const {id} = request.params;
-    const { name } = request.body;
+    const {
+      name,
+      isOriginClient = false,
+      isOriginChannel = false
+    } = request.body;
     const originsRepository = new OriginsRepository();
-    const updated = await originsRepository.update({id, name});
+    const updated = await originsRepository.update({
+      id,
+      name,
+      isOriginClient,
+      isOriginChannel
+    });
 
     return response.json(updated);
   }
@@ -49,3 +79,4 @@ class OriginController {
 }
 
 export default OriginController;
+
