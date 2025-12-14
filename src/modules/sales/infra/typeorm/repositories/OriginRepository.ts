@@ -1,4 +1,4 @@
-import { getRepository, Repository } from "typeorm";
+﻿import { getRepository, Repository } from "typeorm";
 
 import AppError from '@shared/errors/AppError';
 import IOriginRepository from "@modules/sales/repositories/IOriginRepository";
@@ -43,12 +43,12 @@ class OriginsRepository implements IOriginRepository {
         isOriginChannel?: boolean;
       } = { active: true };
 
-      if (filters && filters.isOriginClient) {
-        where.isOriginClient = true;
+      if (typeof filters?.isOriginClient === 'boolean') {
+        where.isOriginClient = filters.isOriginClient;
       }
 
-      if (filters && filters.isOriginChannel) {
-        where.isOriginChannel = true;
+      if (typeof filters?.isOriginChannel === 'boolean') {
+        where.isOriginChannel = filters.isOriginChannel;
       }
 
       const origins = await this.ormRepository.find({
@@ -136,3 +136,4 @@ class OriginsRepository implements IOriginRepository {
 }
 
 export default OriginsRepository;
+
