@@ -557,11 +557,11 @@ saleRoutes.put(
         .valid('PROPERTY', 'CLIENT', 'BOTH')
         .allow(null),
       status: Joi.string()
-        .valid('NAO_VALIDADO', 'PENDENTE', 'PAGO_TOTAL')
+        .valid('NAO_VALIDADO', 'PENDENTE', 'PAGO_TOTAL', 'CAIU')
         .messages(
           validatorFields({
             name: "'status'",
-            ref: '[NAO_VALIDADO, PENDENTE, PAGO_TOTAL]',
+            ref: '[NAO_VALIDADO, PENDENTE, PAGO_TOTAL, CAIU]',
           }),
         ),
       subsidiary: Joi.string().uuid(),
@@ -594,4 +594,3 @@ saleRoutes.post(
 );
 
 export default saleRoutes;
-
