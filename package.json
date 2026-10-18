@@ -14,6 +14,9 @@
   "jest": {
     "testEnvironment": "node"
   },
+  "resolutions": {
+    "babel-preset-current-node-syntax": "1.0.0"
+  },
   "dependencies": {
     "aws-sdk": "2.767.0",
     "bcryptjs": "2.4.3",
