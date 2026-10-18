@@ -20,24 +20,26 @@ app.use('/sessions', sessionsRouter);
 app.use('/sale', saleRoutes);
 app.use('/users', usersRouter);
 app.use(errors());
-app.use((
-  error: Error,
-  _request: Request,
-  response: Response,
-  _next: NextFunction,
-) => {
-  if (error instanceof AppError) {
-    return response.status(error.statusCode).json({
-      status: 'error',
-      message: error.message,
-    });
-  }
+app.use(
+  (
+    error: Error,
+    _request: Request,
+    response: Response,
+    _next: NextFunction,
+  ) => {
+    if (error instanceof AppError) {
+      return response.status(error.statusCode).json({
+        status: 'error',
+        message: error.message,
+      });
+    }
 
-  return response.status(500).json({
-    status: 'error',
-    message: 'Internal server error.',
-  });
-});
+    return response.status(500).json({
+      status: 'error',
+      message: 'Internal server error.',
+    });
+  },
+);
 
 describe('HTTP routes', () => {
   it('rejects invalid session credentials before authentication', async () => {
@@ -64,12 +66,14 @@ describe('HTTP routes', () => {
         departament: '550e8400-e29b-41d4-a716-446655440000',
         subsidiary: '550e8400-e29b-41d4-a716-446655440001',
         office: '550e8400-e29b-41d4-a716-446655440002',
-        bank_data: [{
-          bank_name: 'Bank',
-          agency: '1234',
-          account: '123456',
-          account_type: 'CORRENTE',
-        }],
+        bank_data: [
+          {
+            bank_name: 'Bank',
+            agency: '1234',
+            account: '123456',
+            account_type: 'CORRENTE',
+          },
+        ],
       })
       .expect(401, {
         status: 'error',
@@ -78,39 +82,26 @@ describe('HTTP routes', () => {
   });
 
   it('rejects unsupported filters when listing sales', async () => {
-    await request(app)
-      .get('/sale/')
-      .query({ status: 'UNKNOWN' })
-      .expect(400);
+    await request(app).get('/sale/').query({ status: 'UNKNOWN' }).expect(400);
   });
 
   it('validates the required fields when creating a new-property sale', async () => {
-    await request(app)
-      .post('/sale/new')
-      .send({})
-      .expect(400);
+    await request(app).post('/sale/new').send({}).expect(400);
   });
 
   it('validates the required fields when creating a used-property sale', async () => {
-    await request(app)
-      .post('/sale/used')
-      .send({})
-      .expect(400);
+    await request(app).post('/sale/used').send({}).expect(400);
   });
 
   it('requires authentication to access ranking', async () => {
-    await request(app)
-      .get('/ranking')
-      .expect(401, {
-        status: 'error',
-        message: 'JWT token is missing',
-      });
+    await request(app).get('/ranking').expect(401, {
+      status: 'error',
+      message: 'JWT token is missing',
+    });
   });
 
   it('validates the required user when accessing the sellers dashboard', async () => {
-    await request(app)
-      .get('/dashboard/sellers')
-      .expect(400);
+    await request(app).get('/dashboard/sellers').expect(400);
   });
 
   it('rejects unsupported filters when exporting sales to Excel', async () => {
