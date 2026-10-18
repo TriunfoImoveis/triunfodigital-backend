@@ -456,6 +456,10 @@ saleRoutes.put(
         address: Joi.string().messages(
           validatorFields({ name: "'endereço do comprador'" }),
         ),
+        origin_id: Joi.string()
+          .uuid()
+          .allow(null)
+          .messages(validatorFields({ name: "'origem do comprador'" })),
       }),
       client_seller: Joi.object({
         name: Joi.string().messages(
@@ -529,6 +533,10 @@ saleRoutes.put(
         address: Joi.string().messages(
           validatorFields({ name: "'endereço do vendedor'" }),
         ),
+        origin_id: Joi.string()
+          .uuid()
+          .allow(null)
+          .messages(validatorFields({ name: "'origem do vendedor'" })),
       }),
       user_coordinator: Joi.string()
         .uuid()

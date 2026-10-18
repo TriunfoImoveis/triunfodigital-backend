@@ -139,25 +139,28 @@ class SaleRepository implements ISaleRepository {
 
   async findById(id: string): Promise<Sale | undefined> {
     try {
-      const sale = await this.ormRepository.findOne(id, {
-        relations: [
-          'origin',
-          'company',
-          'payment_type',
-          'realty',
-          'builder',
-          'client_buyer',
-          'client_seller',
-          'user_coordinator',
-          'users_directors',
-          'sale_has_captivators',
-          'sale_has_sellers',
-          'motive',
-          'installments',
-          'subsidiary'
-        ],
+      const sale = await this.ormRepository.createQueryBuilder("sale")
+        .select()
+        .innerJoinAndSelect("sale.origin", "origin")
+        .leftJoinAndSelect("sale.company", "company")
+        .innerJoinAndSelect("sale.payment_type", "payment")
+        .innerJoinAndSelect("sale.realty", "realty")
+        .innerJoinAndSelect("realty.property", "property")
+        .leftJoinAndSelect("sale.builder", "builder")
+        .leftJoinAndSelect("sale.subsidiary", "subsidiary")
+        .innerJoinAndSelect("sale.client_buyer", "client_buyer")
+        .leftJoinAndSelect("client_buyer.origin", "client_buyer_origin")
+        .leftJoinAndSelect("sale.client_seller", "client_seller")
+        .leftJoinAndSelect("client_seller.origin", "client_seller_origin")
+        .leftJoinAndSelect("sale.user_coordinator", "coordinator")
+        .innerJoinAndSelect("sale.users_directors", "directors")
+        .leftJoinAndSelect("sale.sale_has_captivators", "captivators")
+        .leftJoinAndSelect("sale.sale_has_sellers", "sellers")
+        .leftJoinAndSelect("sale.motive", "motive")
+        .leftJoinAndSelect("sale.installments", "installments")
+        .where("sale.id = :id", { id })
+        .getOne();
 
-      });
       return sale;
     } catch (err) {
       throw new AppError(err.detail);
