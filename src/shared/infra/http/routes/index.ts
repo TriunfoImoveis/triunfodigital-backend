@@ -43,7 +43,6 @@ import scheduledRoutes from '@modules/finances/infra/http/routes/scheduled.route
 import neighborhoodRouter from '@modules/externals/infra/http/routes/neighborhood.routes';
 import professionRouter from '@modules/sales/infra/http/routes/professions.routes';
 
-
 const routes = Router();
 
 // Module Users
