@@ -11,6 +11,7 @@ import CreateNotificationService from "@modules/notifications/services/CreateNot
 import IUserRepository from "@modules/users/repositories/IUserRepository";
 import SendEmailSaleService from "./SendEmailSaleService";
 import SendEmailJob from "@shared/container/providers/JobProvider/implementations/SendEmailJob";
+import toCents from '@shared/utils/toCents';
 
 @injectable()
 class CreateSaleUsedService {
@@ -53,11 +54,11 @@ class CreateSaleUsedService {
           installment.due_date,
           {hours: 3}
         )
-        totalValueInstallments += Number(installment.value);
+        totalValueInstallments += toCents(installment.value);
       }
     );
     // Comparar o total das parcelas com o valor da comissão.
-    if (totalValueInstallments > commission) {
+    if (totalValueInstallments > toCents(commission)) {
       throw new AppError(
         "O valor total das parcelas não pode ser maior que o valor da comissão.",
         400
