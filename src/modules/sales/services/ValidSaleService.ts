@@ -4,6 +4,7 @@ import AppError from '@shared/errors/AppError';
 import ISaleRepository from '@modules/sales/repositories/ISaleRepository';
 import { Status } from '@modules/sales/infra/typeorm/entities/Sale';
 import { StatusInstallment } from '@modules/finances/infra/typeorm/entities/Installment';
+import toCents from '@shared/utils/toCents';
 
 @injectable()
 class ValidSaleService {
@@ -31,11 +32,11 @@ class ValidSaleService {
     } else {
       var totalValueInstallments = 0;
       sale.installments.forEach((installment)=>{
-        totalValueInstallments += Number(installment.value);
+        totalValueInstallments += toCents(installment.value);
       });
 
       // Comparar o total das parcelas com o valor da comissão.
-      if (totalValueInstallments !== Number(sale.commission)) {
+      if (totalValueInstallments !== toCents(sale.commission)) {
         throw new AppError(
           "O valor total das parcelas não confere com o valor da comissão.", 
           400

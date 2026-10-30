@@ -7,6 +7,7 @@ import IInstallmentRepository from "@modules/finances/repositories/IInstallmentR
 import ISaleRepository from "@modules/sales/repositories/ISaleRepository";
 import Installment, { StatusInstallment } from "@modules/finances/infra/typeorm/entities/Installment";
 import { Status } from "@modules/sales/infra/typeorm/entities/Sale";
+import toCents from '@shared/utils/toCents';
 
 interface IRequestDTO {
   id: string;
@@ -41,11 +42,11 @@ class CreateInstallmentService {
           {hours: 3}
         )
         installment.sale = sale;
-        totalValueInstallments += Number(installment.value);
+        totalValueInstallments += toCents(installment.value);
       }
     );
     // Comparar o total das parcelas com o valor da comissão.
-    if (totalValueInstallments !== Number(sale.commission)) {
+    if (totalValueInstallments !== toCents(sale.commission)) {
       throw new AppError(
         "O valor total das parcelas não confere com o valor da comissão.", 
         400
